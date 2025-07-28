@@ -15,6 +15,10 @@ interface RecyclingEntry {
   date: string;
 }
 
+interface RecyclingCalculatorProps {
+  onEntriesUpdate?: (entries: RecyclingEntry[]) => void;
+}
+
 // Fatores de conversão baseados em estudos ambientais (kg CO2 evitado por kg de material reciclado)
 const CO2_FACTORS: Record<string, number> = {
   papel: 1.1, // 1.1 kg CO2 evitado por kg de papel reciclado
@@ -42,7 +46,7 @@ const MATERIAL_LABELS: Record<string, string> = {
   madeira: 'Madeira'
 };
 
-export default function RecyclingCalculator() {
+export default function RecyclingCalculator({ onEntriesUpdate }: RecyclingCalculatorProps) {
   const [selectedMaterial, setSelectedMaterial] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
   const [entries, setEntries] = useState<RecyclingEntry[]>([]);
@@ -69,7 +73,14 @@ export default function RecyclingCalculator() {
       date: new Date().toLocaleDateString('pt-BR')
     };
 
-    setEntries(prev => [newEntry, ...prev]);
+    const updatedEntries = [newEntry, ...entries];
+    setEntries(updatedEntries);
+    
+    // Notificar componente pai sobre mudança
+    if (onEntriesUpdate) {
+      onEntriesUpdate(updatedEntries);
+    }
+    
     setQuantity('');
     setSelectedMaterial('');
 

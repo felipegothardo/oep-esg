@@ -1,15 +1,7 @@
-import EcoHeader from '@/components/EcoHeader';
-import RecyclingCalculator from '@/components/RecyclingCalculator';
+import Dashboard from '@/components/Dashboard';
 
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-background">
-      <EcoHeader />
-      <main className="py-12 px-6">
-        <RecyclingCalculator />
-      </main>
-    </div>
-  );
+  return <Dashboard />;
 };
 
 export default Index;
