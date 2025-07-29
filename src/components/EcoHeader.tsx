@@ -26,7 +26,7 @@ export default function EcoHeader() {
         </div>
         
         <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
-          EcoCalc
+          OEP Sustentável
         </h1>
         <p className="text-xl md:text-2xl text-muted-foreground mb-2">
           Calculadora de Redução de CO2
