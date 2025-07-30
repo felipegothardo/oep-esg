@@ -1,5 +1,6 @@
 import { Leaf, Recycle, Wind } from 'lucide-react';
 import ecoHeroImage from '@/assets/eco-hero.jpg';
+import oepLogo from '@/assets/oep-logo.png';
 
 export default function EcoHeader() {
   return (
@@ -13,15 +14,22 @@ export default function EcoHeader() {
       
       {/* Content */}
       <div className="relative max-w-4xl mx-auto text-center">
-        <div className="flex justify-center gap-4 mb-6">
-          <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center animate-float">
-            <Leaf className="w-6 h-6 text-primary" />
-          </div>
-          <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center animate-float" style={{ animationDelay: '0.5s' }}>
-            <Recycle className="w-6 h-6 text-accent" />
-          </div>
-          <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center animate-float" style={{ animationDelay: '1s' }}>
-            <Wind className="w-6 h-6 text-primary" />
+        <div className="flex justify-center items-center gap-4 mb-6">
+          <img 
+            src={oepLogo} 
+            alt="OEP Sustentável Logo" 
+            className="w-24 h-24 animate-float"
+          />
+          <div className="flex gap-4">
+            <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center animate-float" style={{ animationDelay: '0.5s' }}>
+              <Leaf className="w-6 h-6 text-primary" />
+            </div>
+            <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center animate-float" style={{ animationDelay: '1s' }}>
+              <Recycle className="w-6 h-6 text-accent" />
+            </div>
+            <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center animate-float" style={{ animationDelay: '1.5s' }}>
+              <Wind className="w-6 h-6 text-primary" />
+            </div>
           </div>
         </div>
         

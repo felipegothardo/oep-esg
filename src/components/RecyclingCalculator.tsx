@@ -17,6 +17,7 @@ interface RecyclingEntry {
 
 interface RecyclingCalculatorProps {
   onEntriesUpdate?: (entries: RecyclingEntry[]) => void;
+  entries?: RecyclingEntry[];
 }
 
 // Fatores de conversão baseados em estudos ambientais (kg CO2 evitado por kg de material reciclado)
