@@ -1,6 +1,5 @@
 import { Leaf, Recycle, Wind } from 'lucide-react';
 import ecoHeroImage from '@/assets/eco-hero.jpg';
-import oepLogo from '@/assets/oep-logo.png';
 
 export default function EcoHeader() {
   return (
@@ -16,7 +15,7 @@ export default function EcoHeader() {
       <div className="relative max-w-4xl mx-auto text-center">
         <div className="flex flex-col items-center gap-6 mb-8">
           <img 
-            src={oepLogo} 
+            src="/lovable-uploads/05128137-494e-4ecd-be8b-60d7ad8ce4cc.png" 
             alt="OEP Sustentável Logo" 
             className="w-72 h-72 animate-float shadow-eco"
           />
