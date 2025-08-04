@@ -14,11 +14,11 @@ export default function EcoHeader() {
       
       {/* Content */}
       <div className="relative max-w-4xl mx-auto text-center">
-        <div className="flex justify-center items-center gap-4 mb-6">
+        <div className="flex flex-col items-center gap-6 mb-8">
           <img 
             src={oepLogo} 
             alt="OEP Sustentável Logo" 
-            className="w-24 h-24 animate-float"
+            className="w-72 h-72 animate-float shadow-eco"
           />
           <div className="flex gap-4">
             <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center animate-float" style={{ animationDelay: '0.5s' }}>

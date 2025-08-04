@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Leaf, Droplets, Zap, Recycle, RotateCcw } from 'lucide-react';
+import { Leaf, Droplets, Zap, Recycle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import EcoHeader from './EcoHeader';
 import RecyclingCalculator from './RecyclingCalculator';
 import WaterEnergyTracker from './WaterEnergyTracker';
 import RecyclingChart from './RecyclingChart';
 import ConsumptionChart from './ConsumptionChart';
+import DeleteRecordsDialog from './DeleteRecordsDialog';
 
 interface RecyclingEntry {
   id: string;
@@ -89,13 +90,32 @@ export default function Dashboard() {
     });
   };
 
-  const resetAllCalculations = () => {
-    setElviraData({ recyclingEntries: [], consumptionEntries: [], consumptionGoals: [] });
-    setOswaldData({ recyclingEntries: [], consumptionEntries: [], consumptionGoals: [] });
-    setPiagetData({ recyclingEntries: [], consumptionEntries: [], consumptionGoals: [] });
-    toast({
-      title: "Cálculos reiniciados",
-      description: "Todos os dados foram zerados para todas as escolas.",
+  const deleteAllRecords = () => {
+    const currentData = getCurrentSchoolData();
+    updateSchoolData({ 
+      recyclingEntries: [], 
+      consumptionEntries: [], 
+      consumptionGoals: currentData.consumptionGoals 
+    });
+  };
+
+  const deleteRecyclingByMonth = (month: string) => {
+    const currentData = getCurrentSchoolData();
+    const filteredEntries = currentData.recyclingEntries.filter(entry => entry.date !== month);
+    updateSchoolData({
+      ...currentData,
+      recyclingEntries: filteredEntries
+    });
+  };
+
+  const deleteConsumptionByMonth = (type: 'water' | 'energy', month: string) => {
+    const currentData = getCurrentSchoolData();
+    const filteredEntries = currentData.consumptionEntries.filter(
+      entry => !(entry.type === type && entry.month === month)
+    );
+    updateSchoolData({
+      ...currentData,
+      consumptionEntries: filteredEntries
     });
   };
 
@@ -110,14 +130,13 @@ export default function Dashboard() {
             <h2 className="text-2xl font-bold text-foreground">Controle por Escola</h2>
             <p className="text-muted-foreground">Selecione uma escola para visualizar seus dados</p>
           </div>
-          <Button 
-            onClick={resetAllCalculations}
-            variant="outline"
-            className="gap-2"
-          >
-            <RotateCcw className="w-4 h-4" />
-            Reiniciar Cálculo
-          </Button>
+          <DeleteRecordsDialog 
+            recyclingEntries={getCurrentSchoolData().recyclingEntries}
+            consumptionEntries={getCurrentSchoolData().consumptionEntries}
+            onDeleteAll={deleteAllRecords}
+            onDeleteRecyclingByMonth={deleteRecyclingByMonth}
+            onDeleteConsumptionByMonth={deleteConsumptionByMonth}
+          />
         </div>
 
         {/* School Tabs */}
