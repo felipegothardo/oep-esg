@@ -4,12 +4,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Leaf, Droplets, Zap, Recycle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 import EcoHeader from './EcoHeader';
 import RecyclingCalculator from './RecyclingCalculator';
 import WaterEnergyTracker from './WaterEnergyTracker';
 import RecyclingChart from './RecyclingChart';
 import ConsumptionChart from './ConsumptionChart';
 import DeleteRecordsDialog from './DeleteRecordsDialog';
+import ConsolidatedDashboard from './ConsolidatedDashboard';
+import GoalProgressCard from './GoalProgressCard';
+import ProjectionCard from './ProjectionCard';
+import ExportButton from './ExportButton';
 
 interface RecyclingEntry {
   id: string;
@@ -36,36 +41,40 @@ interface ConsumptionGoal {
 export default function Dashboard() {
   const { toast } = useToast();
   
-  // State for each school
-  const [elviraData, setElviraData] = useState({
+  
+  // State for each school with localStorage persistence
+  const [elviraData, setElviraData] = useLocalStorage('oep-elvira-data', {
     recyclingEntries: [] as RecyclingEntry[],
     consumptionEntries: [] as ConsumptionEntry[],
     consumptionGoals: [] as ConsumptionGoal[]
   });
   
-  const [oswaldData, setOswaldData] = useState({
+  const [oswaldData, setOswaldData] = useLocalStorage('oep-oswald-data', {
     recyclingEntries: [] as RecyclingEntry[],
     consumptionEntries: [] as ConsumptionEntry[],
     consumptionGoals: [] as ConsumptionGoal[]
   });
   
-  const [piagetData, setPiagetData] = useState({
+  const [piagetData, setPiagetData] = useLocalStorage('oep-piaget-data', {
     recyclingEntries: [] as RecyclingEntry[],
     consumptionEntries: [] as ConsumptionEntry[],
     consumptionGoals: [] as ConsumptionGoal[]
   });
 
-  const [activeSchool, setActiveSchool] = useState<'elvira' | 'oswald' | 'piaget'>('elvira');
+  const [activeSchool, setActiveSchool] = useLocalStorage<'elvira' | 'oswald' | 'piaget' | 'consolidated'>('oep-active-tab', 'consolidated');
 
   const getCurrentSchoolData = () => {
+    if (activeSchool === 'consolidated') return elviraData; // fallback
     switch (activeSchool) {
       case 'elvira': return elviraData;
       case 'oswald': return oswaldData;
       case 'piaget': return piagetData;
+      default: return elviraData;
     }
   };
 
   const updateSchoolData = (schoolData: any) => {
+    if (activeSchool === 'consolidated') return;
     switch (activeSchool) {
       case 'elvira': setElviraData(schoolData); break;
       case 'oswald': setOswaldData(schoolData); break;
@@ -141,11 +150,20 @@ export default function Dashboard() {
 
         {/* School Tabs */}
         <Tabs value={activeSchool} onValueChange={(value) => setActiveSchool(value as any)} className="mb-8">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="consolidated">Visão Geral</TabsTrigger>
             <TabsTrigger value="elvira">Elvira Brandão</TabsTrigger>
             <TabsTrigger value="oswald">Oswald</TabsTrigger>
             <TabsTrigger value="piaget">Piaget</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="consolidated">
+            <ConsolidatedDashboard 
+              elviraData={elviraData}
+              oswaldData={oswaldData}
+              piagetData={piagetData}
+            />
+          </TabsContent>
 
           <TabsContent value="elvira">
             <SchoolDashboard 
@@ -204,7 +222,14 @@ function SchoolDashboard({ schoolName, data, onRecyclingUpdate, onConsumptionUpd
 
   return (
     <div className="space-y-6">
-      <h3 className="text-xl font-semibold text-foreground">{schoolName}</h3>
+      <div className="flex justify-between items-center">
+        <h3 className="text-xl font-semibold text-foreground">{schoolName}</h3>
+        <ExportButton 
+          schoolName={schoolName}
+          recyclingEntries={data.recyclingEntries}
+          consumptionEntries={data.consumptionEntries}
+        />
+      </div>
       
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -256,9 +281,10 @@ function SchoolDashboard({ schoolName, data, onRecyclingUpdate, onConsumptionUpd
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="calculator" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="calculator">Calculadora</TabsTrigger>
           <TabsTrigger value="consumption">Consumo</TabsTrigger>
+          <TabsTrigger value="goals">Metas</TabsTrigger>
           <TabsTrigger value="recycling-charts">Gráfico Reciclagem</TabsTrigger>
           <TabsTrigger value="consumption-charts">Gráfico Consumo</TabsTrigger>
         </TabsList>
@@ -269,6 +295,22 @@ function SchoolDashboard({ schoolName, data, onRecyclingUpdate, onConsumptionUpd
 
         <TabsContent value="consumption">
           <WaterEnergyTracker onDataUpdate={onConsumptionUpdate} />
+        </TabsContent>
+
+        <TabsContent value="goals" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <GoalProgressCard 
+              entries={data.consumptionEntries} 
+              goals={data.consumptionGoals} 
+              type="water" 
+            />
+            <GoalProgressCard 
+              entries={data.consumptionEntries} 
+              goals={data.consumptionGoals} 
+              type="energy" 
+            />
+          </div>
+          <ProjectionCard entries={data.recyclingEntries} schoolName={schoolName} />
         </TabsContent>
 
         <TabsContent value="recycling-charts">
