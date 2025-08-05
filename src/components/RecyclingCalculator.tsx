@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Leaf, Calculator, Recycle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 interface RecyclingEntry {
   id: string;
@@ -50,7 +51,7 @@ const MATERIAL_LABELS: Record<string, string> = {
 export default function RecyclingCalculator({ onEntriesUpdate }: RecyclingCalculatorProps) {
   const [selectedMaterial, setSelectedMaterial] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
-  const [entries, setEntries] = useState<RecyclingEntry[]>([]);
+  const [entries, setEntries] = useLocalStorage<RecyclingEntry[]>('recycling-entries', []);
   const { toast } = useToast();
 
   const calculateCO2 = () => {
