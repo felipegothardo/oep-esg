@@ -18,7 +18,11 @@ export default function EcoHeader() {
           <img 
             src={oepLogo} 
             alt="OEP Sustentável Logo" 
-            className="w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64 object-contain animate-float shadow-eco"
+            className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 object-contain animate-float shadow-eco"
+            onError={(e) => {
+              console.log('Logo error:', e);
+              e.currentTarget.style.display = 'none';
+            }}
           />
           <div className="flex gap-4">
             <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center animate-float" style={{ animationDelay: '0.5s' }}>
