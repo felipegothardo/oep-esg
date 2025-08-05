@@ -15,6 +15,9 @@ import ConsolidatedDashboard from './ConsolidatedDashboard';
 import GoalProgressCard from './GoalProgressCard';
 import ProjectionCard from './ProjectionCard';
 import ExportButton from './ExportButton';
+import MobileMenu from './MobileMenu';
+import MobileStats from './MobileStats';
+import PWAInstallPrompt from './PWAInstallPrompt';
 
 interface RecyclingEntry {
   id: string;
@@ -132,12 +135,12 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/30">
       <EcoHeader />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-2 md:px-4 py-4 md:py-8">
         {/* Header with Reset Button */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 md:mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-foreground">Controle por Escola</h2>
-            <p className="text-muted-foreground">Selecione uma escola para visualizar seus dados</p>
+            <h2 className="text-xl md:text-2xl font-bold text-foreground">Controle por Escola</h2>
+            <p className="text-sm md:text-base text-muted-foreground">Selecione uma escola para visualizar seus dados</p>
           </div>
           <DeleteRecordsDialog 
             recyclingEntries={getCurrentSchoolData().recyclingEntries}
@@ -149,12 +152,12 @@ export default function Dashboard() {
         </div>
 
         {/* School Tabs */}
-        <Tabs value={activeSchool} onValueChange={(value) => setActiveSchool(value as any)} className="mb-8">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="consolidated">Visão Geral</TabsTrigger>
-            <TabsTrigger value="elvira">Elvira Brandão</TabsTrigger>
-            <TabsTrigger value="oswald">Oswald</TabsTrigger>
-            <TabsTrigger value="piaget">Piaget</TabsTrigger>
+        <Tabs value={activeSchool} onValueChange={(value) => setActiveSchool(value as any)} className="mb-4 md:mb-8">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto">
+            <TabsTrigger value="consolidated" className="text-xs md:text-sm p-2 md:p-3">Visão Geral</TabsTrigger>
+            <TabsTrigger value="elvira" className="text-xs md:text-sm p-2 md:p-3">Elvira Brandão</TabsTrigger>
+            <TabsTrigger value="oswald" className="text-xs md:text-sm p-2 md:p-3">Oswald</TabsTrigger>
+            <TabsTrigger value="piaget" className="text-xs md:text-sm p-2 md:p-3">Piaget</TabsTrigger>
           </TabsList>
 
           <TabsContent value="consolidated">
@@ -193,6 +196,9 @@ export default function Dashboard() {
           </TabsContent>
         </Tabs>
       </div>
+      
+      {/* PWA Install Prompt */}
+      <PWAInstallPrompt />
     </div>
   );
 }
@@ -209,6 +215,7 @@ interface SchoolDashboardProps {
 }
 
 function SchoolDashboard({ schoolName, data, onRecyclingUpdate, onConsumptionUpdate }: SchoolDashboardProps) {
+  const [currentMobileTab, setCurrentMobileTab] = useState('calculator');
   const totalCO2Saved = data.recyclingEntries.reduce((total, entry) => total + entry.co2Saved, 0);
   const totalRecycled = data.recyclingEntries.reduce((total, entry) => total + entry.quantity, 0);
   
@@ -222,8 +229,8 @@ function SchoolDashboard({ schoolName, data, onRecyclingUpdate, onConsumptionUpd
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h3 className="text-xl font-semibold text-foreground">{schoolName}</h3>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+        <h3 className="text-lg md:text-xl font-semibold text-foreground">{schoolName}</h3>
         <ExportButton 
           schoolName={schoolName}
           recyclingEntries={data.recyclingEntries}
@@ -232,61 +239,70 @@ function SchoolDashboard({ schoolName, data, onRecyclingUpdate, onConsumptionUpd
       </div>
       
       {/* Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
         <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-2xl font-bold">{totalCO2Saved.toFixed(1)}</p>
+          <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
+            <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
+              <div className="text-center md:text-left">
+                <p className="text-lg md:text-2xl font-bold">{totalCO2Saved.toFixed(1)}</p>
                 <p className="text-xs text-muted-foreground">kg CO2 evitado</p>
               </div>
-              <Leaf className="h-8 w-8 text-green-600" />
+              <Leaf className="h-6 w-6 md:h-8 md:w-8 text-green-600" />
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-2xl font-bold">{lastWaterConsumption.toLocaleString()}</p>
+          <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
+            <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
+              <div className="text-center md:text-left">
+                <p className="text-lg md:text-2xl font-bold">{lastWaterConsumption.toLocaleString()}</p>
                 <p className="text-xs text-muted-foreground">L água/mês</p>
               </div>
-              <Droplets className="h-8 w-8 text-blue-600" />
+              <Droplets className="h-6 w-6 md:h-8 md:w-8 text-blue-600" />
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-2xl font-bold">{lastEnergyConsumption}</p>
+          <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
+            <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
+              <div className="text-center md:text-left">
+                <p className="text-lg md:text-2xl font-bold">{lastEnergyConsumption}</p>
                 <p className="text-xs text-muted-foreground">kWh energia/mês</p>
               </div>
-              <Zap className="h-8 w-8 text-yellow-600" />
+              <Zap className="h-6 w-6 md:h-8 md:w-8 text-yellow-600" />
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-2xl font-bold">{totalRecycled.toFixed(1)}</p>
+          <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
+            <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
+              <div className="text-center md:text-left">
+                <p className="text-lg md:text-2xl font-bold">{totalRecycled.toFixed(1)}</p>
                 <p className="text-xs text-muted-foreground">kg reciclados</p>
               </div>
-              <Recycle className="h-8 w-8 text-purple-600" />
+              <Recycle className="h-6 w-6 md:h-8 md:w-8 text-purple-600" />
             </div>
           </CardContent>
         </Card>
       </div>
 
+      {/* Mobile Stats */}
+      <MobileStats
+        totalCO2={totalCO2Saved}
+        totalRecycled={totalRecycled}
+        waterConsumption={lastWaterConsumption}
+        energyConsumption={lastEnergyConsumption}
+        schoolName={schoolName}
+      />
+
       {/* Main Content Tabs */}
-      <Tabs defaultValue="calculator" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="calculator">Calculadora</TabsTrigger>
-          <TabsTrigger value="consumption">Consumo</TabsTrigger>
-          <TabsTrigger value="goals">Metas</TabsTrigger>
-          <TabsTrigger value="recycling-charts">Gráfico Reciclagem</TabsTrigger>
-          <TabsTrigger value="consumption-charts">Gráfico Consumo</TabsTrigger>
+      <Tabs value={currentMobileTab} onValueChange={setCurrentMobileTab} defaultValue="calculator" className="space-y-4 md:space-y-6 pb-20 md:pb-0">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto gap-1">
+          <TabsTrigger value="calculator" className="text-xs md:text-sm p-2 md:p-3">📱 Calculadora</TabsTrigger>
+          <TabsTrigger value="consumption" className="text-xs md:text-sm p-2 md:p-3">💧 Consumo</TabsTrigger>
+          <TabsTrigger value="goals" className="text-xs md:text-sm p-2 md:p-3">🎯 Metas</TabsTrigger>
+          <TabsTrigger value="recycling-charts" className="text-xs md:text-sm p-2 md:p-3">♻️ Reciclagem</TabsTrigger>
+          <TabsTrigger value="consumption-charts" className="text-xs md:text-sm p-2 md:p-3">⚡ Gráficos</TabsTrigger>
         </TabsList>
 
         <TabsContent value="calculator">
@@ -324,6 +340,16 @@ function SchoolDashboard({ schoolName, data, onRecyclingUpdate, onConsumptionUpd
           />
         </TabsContent>
       </Tabs>
+
+      {/* Mobile Navigation */}
+      <MobileMenu
+        currentTab={currentMobileTab}
+        onTabChange={setCurrentMobileTab}
+        onExport={() => {
+          // Trigger export functionality
+          console.log('Export triggered for', schoolName);
+        }}
+      />
     </div>
   );
 }

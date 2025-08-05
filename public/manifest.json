@@ -1,0 +1,23 @@
+{
+  "name": "OEP Sustentável",
+  "short_name": "OEP",
+  "description": "Calculadora de Redução de CO2 para Escolas",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#22c55e",
+  "icons": [
+    {
+      "src": "/lovable-uploads/05128137-494e-4ecd-be8b-60d7ad8ce4cc.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/lovable-uploads/05128137-494e-4ecd-be8b-60d7ad8ce4cc.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "orientation": "portrait",
+  "categories": ["education", "sustainability", "productivity"]
+}
