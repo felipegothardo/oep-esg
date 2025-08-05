@@ -48,20 +48,31 @@ export default function EcoHeader() {
           Calcule quantos quilos de CO2 você evitou de emitir na atmosfera.
         </p>
         
-        {/* Stats - fixos conforme especificação */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-8 md:mt-12 px-4">
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 md:p-6 shadow-soft">
-            <div className="text-xl md:text-3xl font-bold text-primary mb-1 md:mb-2">1.1 kg</div>
-            <div className="text-xs md:text-sm text-muted-foreground">CO2 evitado por kg de papel</div>
+        {/* Fatores de Conversão - Valores de Referência */}
+        <div className="mt-8 md:mt-12 px-4">
+          <h3 className="text-lg md:text-xl font-semibold text-foreground text-center mb-4 md:mb-6">
+            📊 Fatores de Conversão (Valores de Referência)
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 md:p-6 shadow-soft border-l-4 border-primary">
+              <div className="text-xl md:text-3xl font-bold text-primary mb-1 md:mb-2">1.1 kg</div>
+              <div className="text-xs md:text-sm text-muted-foreground">CO2 evitado por kg de papel</div>
+              <div className="text-xs text-primary/70 mt-1">📄 Valor fixo de referência</div>
+            </div>
+            <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 md:p-6 shadow-soft border-l-4 border-accent">
+              <div className="text-xl md:text-3xl font-bold text-accent mb-1 md:mb-2">8.0 kg</div>
+              <div className="text-xs md:text-sm text-muted-foreground">CO2 evitado por kg de alumínio</div>
+              <div className="text-xs text-accent/70 mt-1">🥤 Valor fixo de referência</div>
+            </div>
+            <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 md:p-6 shadow-soft border-l-4 border-success">
+              <div className="text-xl md:text-3xl font-bold text-success mb-1 md:mb-2">1.8 kg</div>
+              <div className="text-xs md:text-sm text-muted-foreground">CO2 evitado por kg de plástico PET</div>
+              <div className="text-xs text-success/70 mt-1">♻️ Valor fixo de referência</div>
+            </div>
           </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 md:p-6 shadow-soft">
-            <div className="text-xl md:text-3xl font-bold text-accent mb-1 md:mb-2">8.0 kg</div>
-            <div className="text-xs md:text-sm text-muted-foreground">CO2 evitado por kg de alumínio</div>
-          </div>
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 md:p-6 shadow-soft">
-            <div className="text-xl md:text-3xl font-bold text-success mb-1 md:mb-2">1.8 kg</div>
-            <div className="text-xs md:text-sm text-muted-foreground">CO2 evitado por kg de plástico PET</div>
-          </div>
+          <p className="text-xs md:text-sm text-muted-foreground text-center mt-4 italic">
+            * Estes são os fatores científicos usados nos cálculos. Seus dados pessoais aparecem no painel abaixo.
+          </p>
         </div>
       </div>
     </div>
