@@ -73,6 +73,37 @@ export default function EcoHeader() {
           <p className="text-xs md:text-sm text-muted-foreground text-center mt-4 italic">
             * Estes são os fatores científicos usados nos cálculos. Seus dados pessoais aparecem no painel abaixo.
           </p>
+          <div className="text-center mt-3">
+            <p className="text-xs text-muted-foreground mb-2">📚 Referências científicas:</p>
+            <div className="flex flex-wrap justify-center gap-2 text-xs">
+              <a 
+                href="https://www.epa.gov/system/files/documents/2025-01/ghg-emission-factors-hub-2025.pdf" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-primary hover:text-primary/80 underline transition-colors"
+              >
+                EPA GHG Factors
+              </a>
+              <span className="text-muted-foreground">•</span>
+              <a 
+                href="https://assets.publishing.service.gov.uk/media/6846b0870392ed9b784c0187/2025-GHG-CF-methodology-paper.pdf" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-primary hover:text-primary/80 underline transition-colors"
+              >
+                UK DEFRA Study
+              </a>
+              <span className="text-muted-foreground">•</span>
+              <a 
+                href="https://www.sciencedirect.com/science/article/pii/S0921344915301245" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-primary hover:text-primary/80 underline transition-colors"
+              >
+                Scientific Research
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
