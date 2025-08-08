@@ -53,6 +53,12 @@ export default {
 					DEFAULT: 'hsl(var(--purple))',
 					foreground: 'hsl(var(--purple-foreground))'
 				},
+				blue: {
+					DEFAULT: 'hsl(var(--blue))',
+					foreground: 'hsl(var(--blue-foreground))',
+					light: 'hsl(var(--blue-light))',
+					dark: 'hsl(var(--blue-dark))'
+				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
 					foreground: 'hsl(var(--popover-foreground))'
@@ -111,7 +117,9 @@ export default {
 			backgroundImage: {
 				'gradient-eco': 'var(--gradient-eco)',
 				'gradient-sky': 'var(--gradient-sky)',
-				'gradient-nature': 'var(--gradient-nature)'
+				'gradient-nature': 'var(--gradient-nature)',
+				'gradient-blue': 'var(--gradient-blue)',
+				'gradient-ocean': 'var(--gradient-ocean)'
 			},
 			boxShadow: {
 				'eco': 'var(--shadow-eco)',

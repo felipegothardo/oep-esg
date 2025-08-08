@@ -43,7 +43,7 @@ export default function ConsolidatedDashboard({ elviraData, oswaldData, piagetDa
     { name: 'Elvira Brandão', data: elviraData, color: 'bg-blue-500' },
     { name: 'Oswald', data: oswaldData, color: 'bg-green-500' },
     { name: 'Piaget', data: piagetData, color: 'bg-purple-500' },
-    { name: 'Santo Antônio', data: santoAntonioData, color: 'bg-orange-500' }
+    { name: 'Carandá', data: santoAntonioData, color: 'bg-orange-500' }
   ];
 
   const calculateSchoolStats = (data: SchoolData) => {

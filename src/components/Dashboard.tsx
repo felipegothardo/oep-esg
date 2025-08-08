@@ -178,8 +178,8 @@ export default function Dashboard() {
             onClick={() => setActiveSchool('elvira')}
             className={`h-12 md:h-14 text-xs md:text-sm font-medium transition-all ${
               activeSchool === 'elvira'
-                ? 'bg-accent text-accent-foreground shadow-soft hover:bg-accent/90'
-                : 'bg-card border-2 hover:bg-accent/10 hover:border-accent'
+                ? 'bg-gradient-blue text-blue-foreground shadow-soft hover:bg-blue/90'
+                : 'bg-card border-2 hover:bg-blue/10 hover:border-blue'
             }`}
           >
             🏫 Elvira Brandão
@@ -202,8 +202,8 @@ export default function Dashboard() {
             onClick={() => setActiveSchool('piaget')}
             className={`h-12 md:h-14 text-xs md:text-sm font-medium transition-all ${
               activeSchool === 'piaget'
-                ? 'bg-primary-glow text-primary-foreground shadow-soft hover:bg-primary-glow/90'
-                : 'bg-card border-2 hover:bg-primary-glow/10 hover:border-primary-glow'
+                ? 'bg-gradient-ocean text-blue-foreground shadow-soft hover:bg-blue-dark/90'
+                : 'bg-card border-2 hover:bg-blue-dark/10 hover:border-blue-dark'
             }`}
           >
             📚 Piaget
@@ -218,7 +218,7 @@ export default function Dashboard() {
                 : 'bg-card border-2 hover:bg-purple/10 hover:border-purple'
             }`}
           >
-            ⭐ Santo Antônio
+            ⭐ Carandá
           </Button>
         </div>
 
@@ -262,7 +262,7 @@ export default function Dashboard() {
 
           {activeSchool === 'santo-antonio' && (
             <SchoolDashboard 
-              schoolName="Santo Antônio"
+              schoolName="Carandá"
               data={santoAntonioData}
               onRecyclingUpdate={handleRecyclingUpdate}
               onConsumptionUpdate={handleConsumptionUpdate}
