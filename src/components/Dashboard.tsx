@@ -18,6 +18,7 @@ import ExportButton from './ExportButton';
 import MobileMenu from './MobileMenu';
 import MobileStats from './MobileStats';
 import PWAInstallPrompt from './PWAInstallPrompt';
+import ConversionReferences from './ConversionReferences';
 
 interface RecyclingEntry {
   id: string;
@@ -270,6 +271,8 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+      
+      <ConversionReferences />
       
       {/* PWA Install Prompt */}
       <PWAInstallPrompt />
