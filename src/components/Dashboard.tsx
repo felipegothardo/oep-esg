@@ -64,7 +64,13 @@ export default function Dashboard() {
     consumptionGoals: [] as ConsumptionGoal[]
   });
 
-  const [activeSchool, setActiveSchool] = useLocalStorage<'elvira' | 'oswald' | 'piaget' | 'consolidated'>('oep-active-tab', 'consolidated');
+  const [santoAntonioData, setSantoAntonioData] = useLocalStorage('oep-santo-antonio-data', {
+    recyclingEntries: [] as RecyclingEntry[],
+    consumptionEntries: [] as ConsumptionEntry[],
+    consumptionGoals: [] as ConsumptionGoal[]
+  });
+
+  const [activeSchool, setActiveSchool] = useLocalStorage<'elvira' | 'oswald' | 'piaget' | 'santo-antonio' | 'consolidated'>('oep-active-tab', 'consolidated');
 
   const getCurrentSchoolData = () => {
     if (activeSchool === 'consolidated') return elviraData; // fallback
@@ -72,6 +78,7 @@ export default function Dashboard() {
       case 'elvira': return elviraData;
       case 'oswald': return oswaldData;
       case 'piaget': return piagetData;
+      case 'santo-antonio': return santoAntonioData;
       default: return elviraData;
     }
   };
@@ -82,6 +89,7 @@ export default function Dashboard() {
       case 'elvira': setElviraData(schoolData); break;
       case 'oswald': setOswaldData(schoolData); break;
       case 'piaget': setPiagetData(schoolData); break;
+      case 'santo-antonio': setSantoAntonioData(schoolData); break;
     }
   };
 
@@ -151,50 +159,116 @@ export default function Dashboard() {
           />
         </div>
 
-        {/* School Tabs */}
-        <Tabs value={activeSchool} onValueChange={(value) => setActiveSchool(value as any)} className="mb-4 md:mb-8">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto">
-            <TabsTrigger value="consolidated" className="text-xs md:text-sm p-2 md:p-3">Visão Geral</TabsTrigger>
-            <TabsTrigger value="elvira" className="text-xs md:text-sm p-2 md:p-3">Elvira Brandão</TabsTrigger>
-            <TabsTrigger value="oswald" className="text-xs md:text-sm p-2 md:p-3">Oswald</TabsTrigger>
-            <TabsTrigger value="piaget" className="text-xs md:text-sm p-2 md:p-3">Piaget</TabsTrigger>
-          </TabsList>
+        {/* School Selection Buttons */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-4 mb-6 md:mb-8">
+          <Button
+            variant={activeSchool === 'consolidated' ? 'default' : 'outline'}
+            onClick={() => setActiveSchool('consolidated')}
+            className={`h-12 md:h-14 text-xs md:text-sm font-medium transition-all ${
+              activeSchool === 'consolidated'
+                ? 'bg-primary text-primary-foreground shadow-eco hover:bg-primary/90'
+                : 'bg-card border-2 hover:bg-primary/10 hover:border-primary'
+            }`}
+          >
+            📊 Visão Geral
+          </Button>
+          
+          <Button
+            variant={activeSchool === 'elvira' ? 'default' : 'outline'}
+            onClick={() => setActiveSchool('elvira')}
+            className={`h-12 md:h-14 text-xs md:text-sm font-medium transition-all ${
+              activeSchool === 'elvira'
+                ? 'bg-accent text-accent-foreground shadow-soft hover:bg-accent/90'
+                : 'bg-card border-2 hover:bg-accent/10 hover:border-accent'
+            }`}
+          >
+            🏫 Elvira Brandão
+          </Button>
+          
+          <Button
+            variant={activeSchool === 'oswald' ? 'default' : 'outline'}
+            onClick={() => setActiveSchool('oswald')}
+            className={`h-12 md:h-14 text-xs md:text-sm font-medium transition-all ${
+              activeSchool === 'oswald'
+                ? 'bg-success text-success-foreground shadow-eco hover:bg-success/90'
+                : 'bg-card border-2 hover:bg-success/10 hover:border-success'
+            }`}
+          >
+            🎓 Oswald
+          </Button>
+          
+          <Button
+            variant={activeSchool === 'piaget' ? 'default' : 'outline'}
+            onClick={() => setActiveSchool('piaget')}
+            className={`h-12 md:h-14 text-xs md:text-sm font-medium transition-all ${
+              activeSchool === 'piaget'
+                ? 'bg-primary-glow text-primary-foreground shadow-soft hover:bg-primary-glow/90'
+                : 'bg-card border-2 hover:bg-primary-glow/10 hover:border-primary-glow'
+            }`}
+          >
+            📚 Piaget
+          </Button>
+          
+          <Button
+            variant={activeSchool === 'santo-antonio' ? 'default' : 'outline'}
+            onClick={() => setActiveSchool('santo-antonio')}
+            className={`h-12 md:h-14 text-xs md:text-sm font-medium transition-all ${
+              activeSchool === 'santo-antonio'
+                ? 'bg-purple text-purple-foreground shadow-soft hover:bg-purple/90'
+                : 'bg-card border-2 hover:bg-purple/10 hover:border-purple'
+            }`}
+          >
+            ⭐ Santo Antônio
+          </Button>
+        </div>
 
-          <TabsContent value="consolidated">
+        {/* Content */}
+        <div className="space-y-6">
+          {activeSchool === 'consolidated' && (
             <ConsolidatedDashboard 
               elviraData={elviraData}
               oswaldData={oswaldData}
               piagetData={piagetData}
+              santoAntonioData={santoAntonioData}
             />
-          </TabsContent>
+          )}
 
-          <TabsContent value="elvira">
+          {activeSchool === 'elvira' && (
             <SchoolDashboard 
               schoolName="Elvira Brandão"
               data={elviraData}
               onRecyclingUpdate={handleRecyclingUpdate}
               onConsumptionUpdate={handleConsumptionUpdate}
             />
-          </TabsContent>
+          )}
 
-          <TabsContent value="oswald">
+          {activeSchool === 'oswald' && (
             <SchoolDashboard 
               schoolName="Oswald"
               data={oswaldData}
               onRecyclingUpdate={handleRecyclingUpdate}
               onConsumptionUpdate={handleConsumptionUpdate}
             />
-          </TabsContent>
+          )}
 
-          <TabsContent value="piaget">
+          {activeSchool === 'piaget' && (
             <SchoolDashboard 
               schoolName="Piaget"
               data={piagetData}
               onRecyclingUpdate={handleRecyclingUpdate}
               onConsumptionUpdate={handleConsumptionUpdate}
             />
-          </TabsContent>
-        </Tabs>
+          )}
+
+          {activeSchool === 'santo-antonio' && (
+            <SchoolDashboard 
+              schoolName="Santo Antônio"
+              data={santoAntonioData}
+              onRecyclingUpdate={handleRecyclingUpdate}
+              onConsumptionUpdate={handleConsumptionUpdate}
+            />
+          )}
+        </div>
       </div>
       
       {/* PWA Install Prompt */}
