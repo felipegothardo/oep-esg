@@ -183,15 +183,7 @@ export default function Dashboard() {
                 : 'bg-card border-2 hover:bg-blue/10 hover:border-blue'
             }`}
           >
-            <div className="flex items-center gap-2">
-              <img
-                src="/lovable-uploads/e58c527b-6688-463f-a34f-e8f2a75567b0.png"
-                alt="Logo do Colégio Elvira Brandão"
-                className="h-5 w-5 md:h-6 md:w-6 rounded-full"
-                loading="lazy"
-              />
-              <span>Elvira Brandão</span>
-            </div>
+            Elvira Brandão
           </Button>
           
           <Button
@@ -203,7 +195,15 @@ export default function Dashboard() {
                 : 'bg-card border-2 hover:bg-success/10 hover:border-success'
             }`}
           >
-            🎓 Oswald
+            <div className="flex items-center gap-2">
+              <img
+                src="/lovable-uploads/7c53e382-0889-4b2c-9f93-aeb9475b0f53.png"
+                alt="Logo do Colégio Oswald"
+                className="h-5 w-5 md:h-6 md:w-6 rounded-sm object-contain"
+                loading="lazy"
+              />
+              <span>Oswald</span>
+            </div>
           </Button>
           
           <Button
@@ -215,7 +215,15 @@ export default function Dashboard() {
                 : 'bg-card border-2 hover:bg-blue-dark/10 hover:border-blue-dark'
             }`}
           >
-            📚 Piaget
+            <div className="flex items-center gap-2">
+              <img
+                src="/lovable-uploads/5f155554-a003-48a8-873e-69c765fa77c1.png"
+                alt="Logo do Colégio Piaget"
+                className="h-5 w-5 md:h-6 md:w-6 rounded-sm object-contain"
+                loading="lazy"
+              />
+              <span>Piaget</span>
+            </div>
           </Button>
           
           <Button
@@ -227,7 +235,15 @@ export default function Dashboard() {
                 : 'bg-card border-2 hover:bg-purple/10 hover:border-purple'
             }`}
           >
-            ⭐ Carandá
+            <div className="flex items-center gap-2">
+              <img
+                src="/lovable-uploads/15780c7a-3c8b-4d43-a842-9bd423a699c8.png"
+                alt="Logo do Colégio Carandá"
+                className="h-5 w-5 md:h-6 md:w-6 rounded-sm object-contain"
+                loading="lazy"
+              />
+              <span>Carandá</span>
+            </div>
           </Button>
         </div>
 
