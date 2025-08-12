@@ -7,7 +7,17 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useToast } from '@/hooks/use-toast';
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 interface ChatMessage {
   id: string;
   name: string;
@@ -28,6 +38,8 @@ export default function ChatTab({ defaultSchool }: ChatTabProps) {
   const [name, setName] = useLocalStorage<string>('oep-chat-name', '');
   const [school, setSchool] = useState<string>(defaultSchool);
   const [text, setText] = useState<string>('');
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingText, setEditingText] = useState<string>('');
 
   const handleSend = () => {
     const trimmed = text.trim();
@@ -46,6 +58,36 @@ export default function ChatTab({ defaultSchool }: ChatTabProps) {
     setMessages(next);
     setText('');
     toast({ title: 'Mensagem enviada!', description: 'Sua mensagem foi publicada no chat.' });
+  };
+
+  const startEdit = (m: ChatMessage) => {
+    setEditingId(m.id);
+    setEditingText(m.text);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditingText('');
+  };
+
+  const saveEdit = () => {
+    if (!editingId) return;
+    const trimmed = editingText.trim();
+    if (!trimmed) {
+      toast({ title: 'Mensagem vazia.', variant: 'destructive' });
+      return;
+    }
+    const updated = messages.map((mm) => (mm.id === editingId ? { ...mm, text: trimmed } : mm));
+    setMessages(updated);
+    setEditingId(null);
+    setEditingText('');
+    toast({ title: 'Mensagem atualizada!' });
+  };
+
+  const deleteMessage = (id: string) => {
+    const updated = messages.filter((mm) => mm.id !== id);
+    setMessages(updated);
+    toast({ title: 'Mensagem apagada.' });
   };
 
   const sorted = [...messages].sort((a, b) => a.timestamp - b.timestamp);
@@ -105,7 +147,39 @@ export default function ChatTab({ defaultSchool }: ChatTabProps) {
                     <div className="text-sm font-medium">{m.name} • <span className="text-muted-foreground">{m.school}</span></div>
                     <time className="text-xs text-muted-foreground">{new Date(m.timestamp).toLocaleString()}</time>
                   </div>
-                  <p className="mt-1 text-sm">{m.text}</p>
+                  {editingId === m.id ? (
+                    <div className="mt-2 space-y-2">
+                      <Textarea value={editingText} onChange={(e) => setEditingText(e.target.value)} rows={3} />
+                      <div className="flex gap-2 justify-end">
+                        <Button size="sm" variant="secondary" onClick={cancelEdit}>Cancelar</Button>
+                        <Button size="sm" onClick={saveEdit}>Salvar</Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="mt-1 text-sm">{m.text}</p>
+                      <div className="mt-2 flex gap-2 justify-end">
+                        <Button size="sm" variant="outline" onClick={() => startEdit(m)}>Editar</Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button size="sm" variant="destructive">Apagar</Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Apagar mensagem?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Esta ação removerá a mensagem permanentemente deste dispositivo.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => deleteMessage(m.id)}>Apagar</AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    </>
+                  )}
                 </li>
               ))}
             </ul>

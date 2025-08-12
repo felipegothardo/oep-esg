@@ -207,7 +207,7 @@ export default function Dashboard() {
           >
             <div className="flex items-center gap-2">
               <img
-                src="/lovable-uploads/7c53e382-0889-4b2c-9f93-aeb9475b0f53.png"
+                src="/lovable-uploads/13e432d6-adcc-4d69-9735-56086059444c.png"
                 alt="Logo do Colégio Oswald"
                 className="h-5 w-5 md:h-6 md:w-6 rounded-sm object-contain"
                 loading="lazy"
