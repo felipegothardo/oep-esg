@@ -19,6 +19,8 @@ import MobileMenu from './MobileMenu';
 import MobileStats from './MobileStats';
 import PWAInstallPrompt from './PWAInstallPrompt';
 import ConversionReferences from './ConversionReferences';
+import ChatTab from './ChatTab';
+import ResourcesTab from './ResourcesTab';
 
 interface RecyclingEntry {
   id: string;
@@ -183,7 +185,15 @@ export default function Dashboard() {
                 : 'bg-card border-2 hover:bg-blue/10 hover:border-blue'
             }`}
           >
-            Elvira Brandão
+            <div className="flex items-center gap-2">
+              <img
+                src="/lovable-uploads/ac7dcf98-b3a9-4b47-965e-df5f24f90dda.png"
+                alt="Logo do Colégio Elvira Brandão"
+                className="h-5 w-5 md:h-6 md:w-6 rounded-sm object-contain"
+                loading="lazy"
+              />
+              <span>Elvira Brandão</span>
+            </div>
           </Button>
           
           <Button
@@ -398,12 +408,14 @@ function SchoolDashboard({ schoolName, data, onRecyclingUpdate, onConsumptionUpd
 
       {/* Main Content Tabs */}
       <Tabs value={currentMobileTab} onValueChange={setCurrentMobileTab} defaultValue="calculator" className="space-y-4 md:space-y-6 pb-20 md:pb-0">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto gap-1">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-7 h-auto gap-1">
           <TabsTrigger value="calculator" className="text-xs md:text-sm p-2 md:p-3">📱 Calculadora</TabsTrigger>
           <TabsTrigger value="consumption" className="text-xs md:text-sm p-2 md:p-3">💧 Consumo</TabsTrigger>
           <TabsTrigger value="goals" className="text-xs md:text-sm p-2 md:p-3">🎯 Metas</TabsTrigger>
           <TabsTrigger value="recycling-charts" className="text-xs md:text-sm p-2 md:p-3">♻️ Reciclagem</TabsTrigger>
           <TabsTrigger value="consumption-charts" className="text-xs md:text-sm p-2 md:p-3">⚡ Gráficos</TabsTrigger>
+          <TabsTrigger value="chat" className="text-xs md:text-sm p-2 md:p-3">💬 Chat</TabsTrigger>
+          <TabsTrigger value="resources" className="text-xs md:text-sm p-2 md:p-3">🔗 Links & Dicas</TabsTrigger>
         </TabsList>
 
         <TabsContent value="calculator">
@@ -439,6 +451,14 @@ function SchoolDashboard({ schoolName, data, onRecyclingUpdate, onConsumptionUpd
             entries={data.consumptionEntries} 
             goals={data.consumptionGoals} 
           />
+        </TabsContent>
+
+        <TabsContent value="chat">
+          <ChatTab defaultSchool={schoolName} />
+        </TabsContent>
+
+        <TabsContent value="resources">
+          <ResourcesTab />
         </TabsContent>
       </Tabs>
 
