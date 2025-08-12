@@ -183,7 +183,15 @@ export default function Dashboard() {
                 : 'bg-card border-2 hover:bg-blue/10 hover:border-blue'
             }`}
           >
-            🏫 Elvira Brandão
+            <div className="flex items-center gap-2">
+              <img
+                src="/lovable-uploads/e58c527b-6688-463f-a34f-e8f2a75567b0.png"
+                alt="Logo do Colégio Elvira Brandão"
+                className="h-5 w-5 md:h-6 md:w-6 rounded-full"
+                loading="lazy"
+              />
+              <span>Elvira Brandão</span>
+            </div>
           </Button>
           
           <Button
