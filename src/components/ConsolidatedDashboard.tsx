@@ -81,7 +81,7 @@ export default function ConsolidatedDashboard({ elviraData, oswaldData, piagetDa
 
       {/* Métricas Globais */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-gradient-nature text-white">
+        <Card className="bg-gradient-nature text-primary-foreground">
           <CardContent className="pt-6">
             <div className="text-center">
               <Leaf className="w-12 h-12 mx-auto mb-2" />
@@ -91,7 +91,7 @@ export default function ConsolidatedDashboard({ elviraData, oswaldData, piagetDa
           </CardContent>
         </Card>
         
-        <Card className="bg-blue-500 text-white">
+        <Card className="bg-gradient-blue text-blue-foreground">
           <CardContent className="pt-6">
             <div className="text-center">
               <TrendingUp className="w-12 h-12 mx-auto mb-2" />
@@ -101,7 +101,7 @@ export default function ConsolidatedDashboard({ elviraData, oswaldData, piagetDa
           </CardContent>
         </Card>
         
-        <Card className="bg-green-600 text-white">
+        <Card className="bg-gradient-eco text-primary-foreground">
           <CardContent className="pt-6">
             <div className="text-center">
               <Leaf className="w-12 h-12 mx-auto mb-2" />
@@ -111,7 +111,7 @@ export default function ConsolidatedDashboard({ elviraData, oswaldData, piagetDa
           </CardContent>
         </Card>
         
-        <Card className="bg-orange-500 text-white">
+        <Card className="bg-gradient-ocean text-blue-foreground">
           <CardContent className="pt-6">
             <div className="text-center">
               <Target className="w-12 h-12 mx-auto mb-2" />

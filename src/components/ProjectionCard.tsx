@@ -46,13 +46,13 @@ export default function ProjectionCard({ entries, schoolName }: ProjectionCardPr
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="text-center p-4 bg-white/60 rounded-lg border">
+          <div className="text-center p-4 bg-card/60 rounded-lg border">
             <TrendingUp className="w-8 h-8 mx-auto text-primary mb-2" />
             <p className="text-2xl font-bold text-primary">{annualProjectionCO2.toFixed(1)} kg</p>
             <p className="text-sm text-muted-foreground">CO2 evitado/ano</p>
           </div>
           
-          <div className="text-center p-4 bg-white/60 rounded-lg border">
+          <div className="text-center p-4 bg-card/60 rounded-lg border">
             <Target className="w-8 h-8 mx-auto text-accent mb-2" />
             <p className="text-2xl font-bold text-accent">{annualProjectionRecycling.toFixed(1)} kg</p>
             <p className="text-sm text-muted-foreground">Material reciclado/ano</p>

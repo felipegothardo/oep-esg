@@ -18,7 +18,10 @@ export default function EcoHeader() {
           <img 
             src={oepLogo} 
             alt="OEP Sustentável Logo" 
+            width="160"
+            height="160"
             className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 object-contain animate-float shadow-eco"
+            loading="eager"
             onError={(e) => {
               console.log('Logo error:', e);
               e.currentTarget.style.display = 'none';

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, X, Home, Calculator, TrendingUp, Target, Download } from 'lucide-react';
+import { Menu, X, Home, Calculator, TrendingUp, Target, Download, MessageCircle, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
@@ -17,6 +17,12 @@ export default function MobileMenu({ currentTab, onTabChange, onExport }: Mobile
     { id: 'consumption', label: 'Consumo', icon: TrendingUp },
     { id: 'goals', label: 'Metas', icon: Target },
     { id: 'recycling-charts', label: 'Gráficos', icon: Home },
+  ];
+
+  const extendedMenuItems = [
+    ...menuItems,
+    { id: 'chat', label: 'Chat', icon: MessageCircle },
+    { id: 'resources', label: 'Links & Dicas', icon: ExternalLink },
   ];
 
   const handleTabChange = (tab: string) => {
@@ -69,6 +75,23 @@ export default function MobileMenu({ currentTab, onTabChange, onExport }: Mobile
                 Exportar Dados
               </Button>
             )}
+            
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              {extendedMenuItems.slice(4).map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Button 
+                    key={item.id}
+                    variant="outline" 
+                    onClick={() => handleTabChange(item.id)}
+                    className="flex flex-col gap-1 h-16"
+                  >
+                    <Icon className="h-5 w-5" />
+                    <span className="text-xs">{item.label}</span>
+                  </Button>
+                );
+              })}
+            </div>
             
             <div className="grid grid-cols-2 gap-3">
               <Button 

@@ -98,10 +98,10 @@ export default function RecyclingCalculator({ onEntriesUpdate }: RecyclingCalcul
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6">
       {/* Calculadora */}
-      <Card className="border-0 shadow-eco bg-gradient-to-br from-white to-secondary/30">
+      <Card className="border-0 shadow-eco bg-gradient-to-br from-card to-secondary/30">
         <CardHeader className="text-center">
           <div className="w-16 h-16 mx-auto mb-4 bg-gradient-eco rounded-full flex items-center justify-center animate-float">
-            <Calculator className="w-8 h-8 text-white" />
+            <Calculator className="w-8 h-8 text-primary-foreground" />
           </div>
           <CardTitle className="text-2xl text-primary">Calculadora de CO2</CardTitle>
           <CardDescription className="text-muted-foreground">
@@ -157,15 +157,15 @@ export default function RecyclingCalculator({ onEntriesUpdate }: RecyclingCalcul
 
       {/* Resultado Total */}
       {totalCO2Saved > 0 && (
-        <Card className="border-0 shadow-soft bg-gradient-nature text-white">
+        <Card className="border-0 shadow-soft bg-gradient-nature text-primary-foreground">
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="w-20 h-20 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center">
+              <div className="w-20 h-20 mx-auto mb-4 bg-primary-foreground/20 rounded-full flex items-center justify-center">
                 <Leaf className="w-10 h-10" />
               </div>
               <h3 className="text-2xl font-bold mb-2">Total Acumulado</h3>
               <p className="text-4xl font-bold">{totalCO2Saved.toFixed(2)} kg</p>
-              <p className="text-white/90 mt-2">de CO2 evitado na atmosfera</p>
+              <p className="text-primary-foreground/90 mt-2">de CO2 evitado na atmosfera</p>
             </div>
           </CardContent>
         </Card>
