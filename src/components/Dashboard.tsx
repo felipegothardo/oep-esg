@@ -82,19 +82,12 @@ export default function Dashboard() {
       <EcoHeader />
       
       <div className="container mx-auto px-2 md:px-4 py-4 md:py-8">
-        {/* Header with Reset Button */}
+        {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 md:mb-6">
           <div>
             <h2 className="text-xl md:text-2xl font-bold text-foreground">Controle por Escola</h2>
             <p className="text-sm md:text-base text-muted-foreground">Selecione uma escola para visualizar seus dados</p>
           </div>
-          <DeleteRecordsDialog 
-            recyclingEntries={getCurrentSchoolData().recyclingEntries}
-            consumptionEntries={getCurrentSchoolData().consumptionEntries}
-            onDeleteAll={deleteAllRecords}
-            onDeleteRecyclingByMonth={deleteRecyclingByMonth}
-            onDeleteConsumptionByMonth={deleteConsumptionByMonth}
-          />
         </div>
 
         {/* School Selection */}
@@ -124,6 +117,9 @@ export default function Dashboard() {
               data={getCurrentSchoolData()}
               onRecyclingUpdate={handleRecyclingUpdate}
               onConsumptionUpdate={handleConsumptionUpdate}
+              onDeleteAll={deleteAllRecords}
+              onDeleteRecyclingByMonth={deleteRecyclingByMonth}
+              onDeleteConsumptionByMonth={deleteConsumptionByMonth}
             />
           )}
         </div>

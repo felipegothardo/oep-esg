@@ -6,6 +6,7 @@ import { SchoolData, RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@
 import ExportButton from './ExportButton';
 import MobileStats from './MobileStats';
 import LoadingSkeleton from './LoadingSkeleton';
+import DeleteRecordsDialog from './DeleteRecordsDialog';
 
 // Lazy load dos componentes pesados
 const RecyclingCalculator = lazy(() => import('./RecyclingCalculator'));
@@ -22,13 +23,19 @@ interface SchoolDashboardProps {
   data: SchoolData;
   onRecyclingUpdate: (entries: RecyclingEntry[]) => void;
   onConsumptionUpdate: (entries: ConsumptionEntry[], goals: ConsumptionGoal[]) => void;
+  onDeleteAll: () => void;
+  onDeleteRecyclingByMonth: (month: string) => void;
+  onDeleteConsumptionByMonth: (type: 'water' | 'energy', month: string) => void;
 }
 
 export default function SchoolDashboard({ 
   schoolName, 
   data, 
   onRecyclingUpdate, 
-  onConsumptionUpdate 
+  onConsumptionUpdate,
+  onDeleteAll,
+  onDeleteRecyclingByMonth,
+  onDeleteConsumptionByMonth
 }: SchoolDashboardProps) {
   const [currentMobileTab, setCurrentMobileTab] = useState('calculator');
   
@@ -51,11 +58,21 @@ export default function SchoolDashboard({
         <h3 className="text-lg md:text-xl font-semibold text-foreground">
           {schoolName}
         </h3>
-        <ExportButton 
-          schoolName={schoolName}
-          recyclingEntries={data.recyclingEntries}
-          consumptionEntries={data.consumptionEntries}
-        />
+        <div className="flex gap-2">
+          <DeleteRecordsDialog 
+            schoolName={schoolName}
+            recyclingEntries={data.recyclingEntries}
+            consumptionEntries={data.consumptionEntries}
+            onDeleteAll={onDeleteAll}
+            onDeleteRecyclingByMonth={onDeleteRecyclingByMonth}
+            onDeleteConsumptionByMonth={onDeleteConsumptionByMonth}
+          />
+          <ExportButton 
+            schoolName={schoolName}
+            recyclingEntries={data.recyclingEntries}
+            consumptionEntries={data.consumptionEntries}
+          />
+        </div>
       </div>
       
       {/* Overview Cards */}
