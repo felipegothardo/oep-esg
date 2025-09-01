@@ -48,10 +48,9 @@ const MATERIAL_LABELS: Record<string, string> = {
   madeira: 'Madeira'
 };
 
-export default function RecyclingCalculator({ onEntriesUpdate }: RecyclingCalculatorProps) {
+export default function RecyclingCalculator({ onEntriesUpdate, entries = [] }: RecyclingCalculatorProps) {
   const [selectedMaterial, setSelectedMaterial] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
-  const [entries, setEntries] = useLocalStorage<RecyclingEntry[]>('recycling-entries', []);
   const { toast } = useToast();
 
   const calculateCO2 = () => {
@@ -76,7 +75,6 @@ export default function RecyclingCalculator({ onEntriesUpdate }: RecyclingCalcul
     };
 
     const updatedEntries = [newEntry, ...entries];
-    setEntries(updatedEntries);
     
     // Notificar componente pai sobre mudança
     if (onEntriesUpdate) {
