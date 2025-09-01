@@ -4,7 +4,7 @@ export default function ResourcesTab() {
       {/* Destaque: Parceiros de Coleta */}
       <Card className="border-2">
         <CardHeader>
-          <CardTitle>Parceiros de Coleta – Contatos (Destaque)</CardTitle>
+          <CardTitle>Parceiros de Coleta – Contatos </CardTitle>
           <CardDescription>
             Insira aqui os contatos das empresas parceiras que apoiarão a coleta dos resíduos. Este bloco aparece em primeiro lugar com destaque.
           </CardDescription>
@@ -13,47 +13,47 @@ export default function ResourcesTab() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Card 1: Coopercaps */}
             <div className="p-4 rounded-md border bg-card">
-              <p className="font-medium">Coopercaps</p>
-              <p className="text-sm text-muted-foreground">Responsável: —</p>
-              <p className="text-sm text-muted-foreground">Telefone: —</p>
-              <p className="text-sm text-muted-foreground">E-mail: —</p>
-              <p className="text-sm text-muted-foreground">Área de atuação: —</p>
+              <p className="font-medium">Cooper Viva Bem (Recicláveis)</p>
+              <p className="text-sm text-muted-foreground">Responsável: Teresa ou Lukas</p>
+              <p className="text-sm text-muted-foreground">Telefone: (11) 3644-6867</p>
+              <p className="text-sm text-muted-foreground">E-mail: presidencia@coopervivabem.com</p>
+              <p className="text-sm text-muted-foreground">Área de atuação: Resíduos Resicláveis</p>
             </div>
             
             {/* Card 2 */}
             <div className="p-4 rounded-md border bg-card">
-              <p className="font-medium">EcoRecicla</p>
-              <p className="text-sm text-muted-foreground">Responsável: —</p>
-              <p className="text-sm text-muted-foreground">Telefone: —</p>
-              <p className="text-sm text-muted-foreground">E-mail: —</p>
-              <p className="text-sm text-muted-foreground">Área de atuação: —</p>
+              <p className="font-medium">Cápsulas de Café - Cooper Viva Bem</p>
+              <p className="text-sm text-muted-foreground">Responsável: Teresa ou Lukas</p>
+              <p className="text-sm text-muted-foreground">Telefone: (11) 3644-6867</p>
+              <p className="text-sm text-muted-foreground font-normal">E-mail: presidencia@coopervivabem.com</p>
+              <p className="text-sm text-muted-foreground">Área de atuação: Resíduos Resicláveis</p>
             </div>
             
             {/* Card 3 */}
             <div className="p-4 rounded-md border bg-card">
-              <p className="font-medium">Verde Futuro</p>
-              <p className="text-sm text-muted-foreground">Responsável: —</p>
-              <p className="text-sm text-muted-foreground">Telefone: —</p>
-              <p className="text-sm text-muted-foreground">E-mail: —</p>
-              <p className="text-sm text-muted-foreground">Área de atuação: —</p>
+              <p className="font-medium">Lacres - Cooper Viva Bem</p>
+              <p className="text-sm text-muted-foreground">Responsável: Teresa ou Lukas</p>
+              <p className="text-sm text-muted-foreground">Telefone:  (11) 3644-6867</p>
+              <p className="text-sm text-muted-foreground">E-mail: presidencia@coopervivabem.com</p>
+              <p className="text-sm text-muted-foreground">Área de atuação: Resíduos Resicláveis</p>
             </div>
             
             {/* Card 4 */}
             <div className="p-4 rounded-md border bg-card">
-              <p className="font-medium">Recicla Brasil</p>
-              <p className="text-sm text-muted-foreground">Responsável: —</p>
-              <p className="text-sm text-muted-foreground">Telefone: —</p>
-              <p className="text-sm text-muted-foreground">E-mail: —</p>
-              <p className="text-sm text-muted-foreground">Área de atuação: —</p>
+              <p className="font-medium">Resíduos de Escrita</p>
+              <p className="text-sm text-muted-foreground">Responsável: Felipe Gothardo</p>
+              <p className="text-sm text-muted-foreground">Telefone: (11) 968109944</p>
+              <p className="text-sm text-muted-foreground">E-mail: felipe.gothardo@elvirabrandao.com.br</p>
+              <p className="text-sm text-muted-foreground">Área de atuação: Coordenador de Sustentabilidade</p>
             </div>
             
             {/* Card 5 */}
             <div className="p-4 rounded-md border bg-card">
-              <p className="font-medium">Coleta Sustentável</p>
-              <p className="text-sm text-muted-foreground">Responsável: —</p>
-              <p className="text-sm text-muted-foreground">Telefone: —</p>
-              <p className="text-sm text-muted-foreground">E-mail: —</p>
-              <p className="text-sm text-muted-foreground">Área de atuação: —</p>
+              <p className="font-medium">Pilhas e Baterias - Green Eletron</p>
+              <p className="text-sm text-muted-foreground">Responsável: </p>
+              <p className="text-sm text-muted-foreground">Telefone: (11) 2175-0050 </p>
+              <p className="text-sm text-muted-foreground">E-mail: contato@greeneletron.org.br</p>
+              <p className="text-sm text-muted-foreground">Área de atuação: Pilhas e Baterias</p>
             </div>
           </div>
         </CardContent>
