@@ -10,8 +10,8 @@ export default function ResourcesTab() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Esqueleto de cards de parceiros */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Card 1: Coopercaps */}
             <div className="p-4 rounded-md border bg-card">
               <p className="font-medium">Coopercaps</p>
               <p className="text-sm text-muted-foreground">Responsável: —</p>
@@ -19,8 +19,37 @@ export default function ResourcesTab() {
               <p className="text-sm text-muted-foreground">E-mail: —</p>
               <p className="text-sm text-muted-foreground">Área de atuação: —</p>
             </div>
+            
+            {/* Card 2 */}
             <div className="p-4 rounded-md border bg-card">
-              <p className="font-medium">Nome da Empresa</p>
+              <p className="font-medium">EcoRecicla</p>
+              <p className="text-sm text-muted-foreground">Responsável: —</p>
+              <p className="text-sm text-muted-foreground">Telefone: —</p>
+              <p className="text-sm text-muted-foreground">E-mail: —</p>
+              <p className="text-sm text-muted-foreground">Área de atuação: —</p>
+            </div>
+            
+            {/* Card 3 */}
+            <div className="p-4 rounded-md border bg-card">
+              <p className="font-medium">Verde Futuro</p>
+              <p className="text-sm text-muted-foreground">Responsável: —</p>
+              <p className="text-sm text-muted-foreground">Telefone: —</p>
+              <p className="text-sm text-muted-foreground">E-mail: —</p>
+              <p className="text-sm text-muted-foreground">Área de atuação: —</p>
+            </div>
+            
+            {/* Card 4 */}
+            <div className="p-4 rounded-md border bg-card">
+              <p className="font-medium">Recicla Brasil</p>
+              <p className="text-sm text-muted-foreground">Responsável: —</p>
+              <p className="text-sm text-muted-foreground">Telefone: —</p>
+              <p className="text-sm text-muted-foreground">E-mail: —</p>
+              <p className="text-sm text-muted-foreground">Área de atuação: —</p>
+            </div>
+            
+            {/* Card 5 */}
+            <div className="p-4 rounded-md border bg-card">
+              <p className="font-medium">Coleta Sustentável</p>
               <p className="text-sm text-muted-foreground">Responsável: —</p>
               <p className="text-sm text-muted-foreground">Telefone: —</p>
               <p className="text-sm text-muted-foreground">E-mail: —</p>
