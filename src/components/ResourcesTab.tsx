@@ -4,7 +4,7 @@ export default function ResourcesTab() {
       {/* Destaque: Parceiros de Coleta */}
       <Card className="border-2">
         <CardHeader>
-          <CardTitle>Parceiros de Coleta – Contatos </CardTitle>
+          <CardTitle>Parceiros de Coleta – Contatos </CardTitle>
           <CardDescription>
             Insira aqui os contatos das empresas parceiras que apoiarão a coleta dos resíduos. Este bloco aparece em primeiro lugar com destaque.
           </CardDescription>
@@ -15,8 +15,8 @@ export default function ResourcesTab() {
             <div className="p-4 rounded-md border bg-card">
               <p className="font-medium">Cooper Viva Bem (Recicláveis)</p>
               <p className="text-sm text-muted-foreground">Responsável: Teresa ou Lukas</p>
-              <p className="text-sm text-muted-foreground">Telefone: (11) 3644-6867</p>
-              <p className="text-sm text-muted-foreground">E-mail: presidencia@coopervivabem.com</p>
+              <p className="text-sm text-muted-foreground">Telefone: (11) 3644-6867</p>
+              <p className="text-sm text-muted-foreground">E-mail: presidencia@coopervivabem.com</p>
               <p className="text-sm text-muted-foreground">Área de atuação: Resíduos Resicláveis</p>
             </div>
             
@@ -25,16 +25,16 @@ export default function ResourcesTab() {
               <p className="font-medium">Cápsulas de Café - Cooper Viva Bem</p>
               <p className="text-sm text-muted-foreground">Responsável: Teresa ou Lukas</p>
               <p className="text-sm text-muted-foreground">Telefone: (11) 3644-6867</p>
-              <p className="text-sm text-muted-foreground font-normal">E-mail: presidencia@coopervivabem.com</p>
+              <p className="text-sm text-muted-foreground font-normal">E-mail: presidencia@coopervivabem.com</p>
               <p className="text-sm text-muted-foreground">Área de atuação: Resíduos Resicláveis</p>
             </div>
             
             {/* Card 3 */}
             <div className="p-4 rounded-md border bg-card">
               <p className="font-medium">Lacres - Cooper Viva Bem</p>
-              <p className="text-sm text-muted-foreground">Responsável: Teresa ou Lukas</p>
-              <p className="text-sm text-muted-foreground">Telefone:  (11) 3644-6867</p>
-              <p className="text-sm text-muted-foreground">E-mail: presidencia@coopervivabem.com</p>
+              <p className="text-sm text-muted-foreground">Responsável: Teresa ou Lukas</p>
+              <p className="text-sm text-muted-foreground">Telefone:  (11) 3644-6867</p>
+              <p className="text-sm text-muted-foreground">E-mail: presidencia@coopervivabem.com</p>
               <p className="text-sm text-muted-foreground">Área de atuação: Resíduos Resicláveis</p>
             </div>
             
@@ -50,10 +50,19 @@ export default function ResourcesTab() {
             {/* Card 5 */}
             <div className="p-4 rounded-md border bg-card">
               <p className="font-medium">Pilhas e Baterias - Green Eletron</p>
-              <p className="text-sm text-muted-foreground">Responsável: </p>
-              <p className="text-sm text-muted-foreground">Telefone: (11) 2175-0050 </p>
-              <p className="text-sm text-muted-foreground">E-mail: contato@greeneletron.org.br</p>
+              <p className="text-sm text-muted-foreground">Responsável: </p>
+              <p className="text-sm text-muted-foreground">Telefone: (11) 2175-0050 </p>
+              <p className="text-sm text-muted-foreground">E-mail: contato@greeneletron.org.br</p>
               <p className="text-sm text-muted-foreground">Área de atuação: Pilhas e Baterias</p>
+            </div>
+            
+            {/* Card 6 */}
+            <div className="p-4 rounded-md border bg-card">
+              <p className="font-medium">Óleo de Cozinha - Óleo Sustentável</p>
+              <p className="text-sm text-muted-foreground">Responsável: [Nome do Responsável]</p>
+              <p className="text-sm text-muted-foreground">Telefone: [Telefone]</p>
+              <p className="text-sm text-muted-foreground">E-mail: [email@exemplo.com]</p>
+              <p className="text-sm text-muted-foreground">Área de atuação: Coleta de Óleo de Cozinha Usado</p>
             </div>
           </div>
         </CardContent>
