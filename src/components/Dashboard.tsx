@@ -4,6 +4,7 @@ import EcoHeader from './EcoHeader';
 import DeleteRecordsDialog from './DeleteRecordsDialog';
 import ConsolidatedDashboard from './ConsolidatedDashboard';
 import PWAInstallPrompt from './PWAInstallPrompt';
+import DesktopShortcutButton from './DesktopShortcutButton';
 import ConversionReferences from './ConversionReferences';
 import SchoolSelection from './SchoolSelection';
 import SchoolDashboard from './SchoolDashboard';
@@ -126,6 +127,9 @@ export default function Dashboard() {
       </div>
       
       <ConversionReferences />
+      
+      {/* Desktop Shortcut Button */}
+      <DesktopShortcutButton />
       
       {/* PWA Install Prompt */}
       <PWAInstallPrompt />
