@@ -67,7 +67,7 @@ export default function DesktopShortcutButton() {
         >
           <Download className="h-6 w-6 text-primary" />
           <span className="text-xs text-center max-w-[80px] leading-tight">
-            Crie um atalho na área de trabalho
+            Crie um atalho
           </span>
         </Button>
       </TooltipTrigger>
