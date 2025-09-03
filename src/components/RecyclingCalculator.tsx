@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Leaf, Calculator, Recycle } from 'lucide-react';
+import { Leaf, Calculator, Recycle, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 interface RecyclingEntry {
   id: string;
@@ -23,35 +24,160 @@ interface RecyclingCalculatorProps {
 
 // Fatores de conversão baseados em estudos ambientais (kg CO2 evitado por kg de material reciclado)
 const CO2_FACTORS: Record<string, number> = {
-  papel: 1.1, // 1.1 kg CO2 evitado por kg de papel reciclado
+  // Papéis
+  papel: 1.1,
   papelao: 1.0,
+  papel_jornal: 0.9,
+  papel_revista: 0.95,
+  papel_cartao: 1.05,
+  papel_sulfite: 1.15,
+  
+  // Plásticos
   plastico_pet: 1.8,
   plastico_polietileno: 1.5,
-  vidro: 0.3,
-  aluminio: 8.0, // Maior impacto devido à economia de energia na produção
+  plastico_pvc: 1.6,
+  plastico_polipropileno: 1.4,
+  plastico_poliestireno: 1.7,
+  plastico_acrilico: 1.65,
+  plastico_nylon: 1.9,
+  sacolas_plasticas: 1.3,
+  embalagens_plasticas: 1.5,
+  garrafas_plasticas: 1.75,
+  
+  // Metais
+  aluminio: 8.0,
   aco: 1.4,
+  ferro: 1.2,
+  cobre: 3.5,
+  bronze: 2.8,
+  latao: 2.5,
+  lata_aluminio: 7.5,
+  lata_aco: 1.3,
+  
+  // Vidros
+  vidro: 0.3,
+  vidro_temperado: 0.35,
+  garrafas_vidro: 0.32,
+  potes_vidro: 0.31,
+  
+  // Eletrônicos
   eletronicos: 2.5,
+  pilhas: 3.0,
+  baterias: 3.5,
+  computadores: 2.8,
+  celulares: 2.6,
+  lampadas_fluorescentes: 2.2,
+  lampadas_led: 2.0,
+  
+  // Orgânicos
   organico: 0.5,
-  madeira: 0.9
+  oleo_cozinha: 2.8,
+  compostagem: 0.4,
+  
+  // Têxteis
+  tecido_algodao: 1.8,
+  tecido_sintetico: 2.1,
+  roupas: 1.9,
+  calcados: 1.6,
+  
+  // Outros
+  madeira: 0.9,
+  borracha: 1.1,
+  pneus: 1.3,
+  isopor: 0.8,
+  tetra_pak: 1.2,
+  cd_dvd: 1.4,
+  radiografias: 1.5,
+  esponja: 0.7,
+  ceramica: 0.4,
+  gesso: 0.3
 };
 
 const MATERIAL_LABELS: Record<string, string> = {
+  // Papéis
   papel: 'Papel',
   papelao: 'Papelão',
+  papel_jornal: 'Papel Jornal',
+  papel_revista: 'Papel Revista',
+  papel_cartao: 'Papel Cartão',
+  papel_sulfite: 'Papel Sulfite',
+  
+  // Plásticos
   plastico_pet: 'Plástico PET',
   plastico_polietileno: 'Plástico Polietileno',
-  vidro: 'Vidro',
+  plastico_pvc: 'Plástico PVC',
+  plastico_polipropileno: 'Plástico Polipropileno',
+  plastico_poliestireno: 'Plástico Poliestireno (PS)',
+  plastico_acrilico: 'Plástico Acrílico',
+  plastico_nylon: 'Plástico Nylon',
+  sacolas_plasticas: 'Sacolas Plásticas',
+  embalagens_plasticas: 'Embalagens Plásticas',
+  garrafas_plasticas: 'Garrafas Plásticas',
+  
+  // Metais
   aluminio: 'Alumínio',
   aco: 'Aço',
+  ferro: 'Ferro',
+  cobre: 'Cobre',
+  bronze: 'Bronze',
+  latao: 'Latão',
+  lata_aluminio: 'Lata de Alumínio',
+  lata_aco: 'Lata de Aço',
+  
+  // Vidros
+  vidro: 'Vidro',
+  vidro_temperado: 'Vidro Temperado',
+  garrafas_vidro: 'Garrafas de Vidro',
+  potes_vidro: 'Potes de Vidro',
+  
+  // Eletrônicos
   eletronicos: 'Eletrônicos',
+  pilhas: 'Pilhas',
+  baterias: 'Baterias',
+  computadores: 'Computadores',
+  celulares: 'Celulares',
+  lampadas_fluorescentes: 'Lâmpadas Fluorescentes',
+  lampadas_led: 'Lâmpadas LED',
+  
+  // Orgânicos
   organico: 'Orgânico',
-  madeira: 'Madeira'
+  oleo_cozinha: 'Óleo de Cozinha',
+  compostagem: 'Compostagem',
+  
+  // Têxteis
+  tecido_algodao: 'Tecido de Algodão',
+  tecido_sintetico: 'Tecido Sintético',
+  roupas: 'Roupas',
+  calcados: 'Calçados',
+  
+  // Outros
+  madeira: 'Madeira',
+  borracha: 'Borracha',
+  pneus: 'Pneus',
+  isopor: 'Isopor',
+  tetra_pak: 'Tetra Pak',
+  cd_dvd: 'CD/DVD',
+  radiografias: 'Radiografias',
+  esponja: 'Esponja',
+  ceramica: 'Cerâmica',
+  gesso: 'Gesso'
 };
 
 export default function RecyclingCalculator({ onEntriesUpdate, entries = [] }: RecyclingCalculatorProps) {
   const [selectedMaterial, setSelectedMaterial] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
+  const [open, setOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
+
+  // Filtrar materiais baseado no termo de busca
+  const filteredMaterials = useMemo(() => {
+    if (!searchTerm) return Object.entries(MATERIAL_LABELS);
+    
+    return Object.entries(MATERIAL_LABELS).filter(([key, label]) =>
+      label.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm]);
 
   const calculateCO2 = () => {
     if (!selectedMaterial || !quantity || parseFloat(quantity) <= 0) {
@@ -110,21 +236,50 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [] }: R
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="material">Tipo de Material</Label>
-              <Select value={selectedMaterial} onValueChange={setSelectedMaterial}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o material" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(MATERIAL_LABELS).map(([key, label]) => (
-                    <SelectItem key={key} value={key}>
-                      <div className="flex items-center gap-2">
-                        <Recycle className="w-4 h-4 text-primary" />
-                        {label}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-full justify-between font-normal"
+                  >
+                    {selectedMaterial
+                      ? MATERIAL_LABELS[selectedMaterial]
+                      : "Buscar material..."}
+                    <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0" align="start">
+                  <Command>
+                    <CommandInput 
+                      placeholder="Buscar material reciclável..." 
+                      value={searchTerm}
+                      onValueChange={setSearchTerm}
+                    />
+                    <CommandEmpty>Nenhum material encontrado.</CommandEmpty>
+                    <CommandGroup className="max-h-[300px] overflow-auto">
+                      {filteredMaterials.map(([key, label]) => (
+                        <CommandItem
+                          key={key}
+                          value={key}
+                          onSelect={(currentValue) => {
+                            setSelectedMaterial(currentValue === selectedMaterial ? "" : currentValue);
+                            setOpen(false);
+                            setSearchTerm('');
+                          }}
+                        >
+                          <Recycle className="mr-2 h-4 w-4 text-primary" />
+                          {label}
+                          <span className="ml-auto text-xs text-muted-foreground">
+                            {CO2_FACTORS[key]} kg CO2/kg
+                          </span>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
             
             <div className="space-y-2">
