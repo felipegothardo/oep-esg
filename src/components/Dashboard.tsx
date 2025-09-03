@@ -8,6 +8,7 @@ import DesktopShortcutButton from './DesktopShortcutButton';
 import ConversionReferences from './ConversionReferences';
 import SchoolSelection from './SchoolSelection';
 import SchoolDashboard from './SchoolDashboard';
+import OnboardingTutorial from './OnboardingTutorial';
 
 export default function Dashboard() {
   const { toast } = useToast();
