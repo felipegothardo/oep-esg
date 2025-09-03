@@ -133,6 +133,9 @@ export default function Dashboard() {
       
       {/* PWA Install Prompt */}
       <PWAInstallPrompt />
+      
+      {/* Tutorial Interativo */}
+      <OnboardingTutorial />
     </div>
   );
 }

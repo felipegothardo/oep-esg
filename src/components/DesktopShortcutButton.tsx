@@ -63,7 +63,7 @@ export default function DesktopShortcutButton() {
         <Button
           onClick={handleInstall}
           variant="outline"
-          className="fixed top-4 right-4 z-50 flex flex-col items-center gap-1 h-auto py-2 px-3 bg-background/95 backdrop-blur-sm border-primary/20 hover:border-primary/40 shadow-lg"
+          className="desktop-shortcut-btn animate-fade-in fixed top-4 right-4 z-50 flex flex-col items-center gap-1 h-auto py-2 px-3 bg-background/95 backdrop-blur-sm border-primary/20 hover:border-primary/40 shadow-lg"
         >
           <Download className="h-6 w-6 text-primary" />
           <span className="text-xs text-center max-w-[80px] leading-tight">

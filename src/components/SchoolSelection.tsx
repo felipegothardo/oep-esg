@@ -49,7 +49,7 @@ const schools = [
 
 export default function SchoolSelection({ activeSchool, onSchoolChange }: SchoolSelectionProps) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-4 mb-6 md:mb-8">
+    <div className="school-selection grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-4 mb-6 md:mb-8">
       {schools.map((school) => (
         <Button
           key={school.key}

@@ -198,15 +198,19 @@ export default function SchoolDashboard({
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="calculator">
+        <TabsContent value="calculator" className="animate-fade-in">
           <Suspense fallback={<LoadingSkeleton type="form" />}>
-            <RecyclingCalculator onEntriesUpdate={onRecyclingUpdate} />
+            <div className="recycling-section">
+              <RecyclingCalculator onEntriesUpdate={onRecyclingUpdate} />
+            </div>
           </Suspense>
         </TabsContent>
 
-        <TabsContent value="consumption">
+        <TabsContent value="consumption" className="animate-fade-in">
           <Suspense fallback={<LoadingSkeleton type="form" />}>
-            <WaterEnergyTracker onDataUpdate={onConsumptionUpdate} />
+            <div className="consumption-section">
+              <WaterEnergyTracker onDataUpdate={onConsumptionUpdate} />
+            </div>
           </Suspense>
         </TabsContent>
 
