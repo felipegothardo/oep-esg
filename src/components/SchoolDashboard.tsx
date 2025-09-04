@@ -214,7 +214,7 @@ export default function SchoolDashboard({
           </Suspense>
         </TabsContent>
 
-        <TabsContent value="goals" className="space-y-6">
+        <TabsContent value="goals" className="space-y-6 animate-fade-in">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Suspense fallback={<LoadingSkeleton type="chart" />}>
               <GoalProgressCard 
@@ -236,13 +236,13 @@ export default function SchoolDashboard({
           </Suspense>
         </TabsContent>
 
-        <TabsContent value="recycling-charts">
+        <TabsContent value="recycling-charts" className="animate-fade-in">
           <Suspense fallback={<LoadingSkeleton type="chart" />}>
             <RecyclingChart entries={data.recyclingEntries} />
           </Suspense>
         </TabsContent>
 
-        <TabsContent value="consumption-charts">
+        <TabsContent value="consumption-charts" className="animate-fade-in">
           <Suspense fallback={<LoadingSkeleton type="chart" />}>
             <ConsumptionChart 
               entries={data.consumptionEntries} 
@@ -251,13 +251,13 @@ export default function SchoolDashboard({
           </Suspense>
         </TabsContent>
 
-        <TabsContent value="chat">
+        <TabsContent value="chat" className="animate-fade-in">
           <Suspense fallback={<LoadingSkeleton type="form" />}>
             <ChatTab defaultSchool={schoolName} />
           </Suspense>
         </TabsContent>
 
-        <TabsContent value="resources">
+        <TabsContent value="resources" className="animate-fade-in">
           <Suspense fallback={<LoadingSkeleton type="list" />}>
             <ResourcesTab />
           </Suspense>
