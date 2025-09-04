@@ -20,6 +20,7 @@ const ResourcesTab = lazy(() => import('./ResourcesTab'));
 
 interface SchoolDashboardProps {
   schoolName: string;
+  schoolType?: string;
   data: SchoolData;
   onRecyclingUpdate: (entries: RecyclingEntry[]) => void;
   onConsumptionUpdate: (entries: ConsumptionEntry[], goals: ConsumptionGoal[]) => void;
@@ -30,6 +31,7 @@ interface SchoolDashboardProps {
 
 export default function SchoolDashboard({ 
   schoolName, 
+  schoolType = 'default',
   data, 
   onRecyclingUpdate, 
   onConsumptionUpdate,
@@ -201,7 +203,10 @@ export default function SchoolDashboard({
         <TabsContent value="calculator" className="animate-fade-in">
           <Suspense fallback={<LoadingSkeleton type="form" />}>
             <div className="recycling-section">
-              <RecyclingCalculator onEntriesUpdate={onRecyclingUpdate} />
+              <RecyclingCalculator 
+                onEntriesUpdate={onRecyclingUpdate} 
+                schoolType={schoolType}
+              />
             </div>
           </Suspense>
         </TabsContent>

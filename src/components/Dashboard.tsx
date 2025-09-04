@@ -116,6 +116,7 @@ export default function Dashboard() {
                 activeSchool === 'oswald' ? 'Oswald' :
                 activeSchool === 'piaget' ? 'Piaget' : 'Carandá'
               }
+              schoolType={activeSchool}
               data={getCurrentSchoolData()}
               onRecyclingUpdate={handleRecyclingUpdate}
               onConsumptionUpdate={handleConsumptionUpdate}
