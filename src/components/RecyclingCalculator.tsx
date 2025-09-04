@@ -3,11 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Leaf, Calculator, Recycle, Search } from 'lucide-react';
+import { Leaf, Calculator, Recycle, ChevronDown, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface RecyclingEntry {
   id: string;
@@ -236,50 +236,65 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [] }: R
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="material">Tipo de Material</Label>
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="w-full justify-between font-normal"
-                  >
-                    {selectedMaterial
-                      ? MATERIAL_LABELS[selectedMaterial]
-                      : "Buscar material..."}
-                    <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-full p-0" align="start">
-                  <Command>
-                    <CommandInput 
-                      placeholder="Buscar material reciclável..." 
+              <Button
+                variant="outline"
+                onClick={() => setOpen(true)}
+                className="w-full justify-between font-normal"
+              >
+                {selectedMaterial
+                  ? MATERIAL_LABELS[selectedMaterial]
+                  : "Selecionar material..."}
+                <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+              
+              {/* Dialog para seleção de material */}
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent className="max-w-lg">
+                  <DialogHeader>
+                    <DialogTitle>Selecione o Material Reciclável</DialogTitle>
+                  </DialogHeader>
+                  
+                  {/* Campo de busca */}
+                  <div className="relative mb-4">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Buscar material..."
                       value={searchTerm}
-                      onValueChange={setSearchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-9"
                     />
-                    <CommandEmpty>Nenhum material encontrado.</CommandEmpty>
-                    <CommandGroup className="max-h-[300px] overflow-auto">
+                  </div>
+                  
+                  {/* Lista de materiais */}
+                  <ScrollArea className="h-[400px] pr-4">
+                    <div className="space-y-2">
                       {filteredMaterials.map(([key, label]) => (
-                        <CommandItem
+                        <Button
                           key={key}
-                          value={key}
-                          onSelect={(currentValue) => {
-                            setSelectedMaterial(currentValue === selectedMaterial ? "" : currentValue);
+                          variant="ghost"
+                          className="w-full justify-start hover:bg-secondary"
+                          onClick={() => {
+                            setSelectedMaterial(key);
                             setOpen(false);
                             setSearchTerm('');
                           }}
                         >
                           <Recycle className="mr-2 h-4 w-4 text-primary" />
-                          {label}
-                          <span className="ml-auto text-xs text-muted-foreground">
+                          <span className="flex-1 text-left">{label}</span>
+                          <span className="text-xs text-muted-foreground">
                             {CO2_FACTORS[key]} kg CO2/kg
                           </span>
-                        </CommandItem>
+                        </Button>
                       ))}
-                    </CommandGroup>
-                  </Command>
-                </PopoverContent>
-              </Popover>
+                      {filteredMaterials.length === 0 && (
+                        <p className="text-center text-muted-foreground py-4">
+                          Nenhum material encontrado
+                        </p>
+                      )}
+                    </div>
+                  </ScrollArea>
+                </DialogContent>
+              </Dialog>
             </div>
             
             <div className="space-y-2">
