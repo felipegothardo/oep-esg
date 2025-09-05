@@ -1,6 +1,13 @@
 import { Button } from '@/components/ui/button';
-import { Download } from 'lucide-react';
+import { Download, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { exportToPDF } from '@/utils/pdfExport';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface RecyclingEntry {
   id: string;
@@ -70,10 +77,32 @@ export default function ExportButton({ schoolName, recyclingEntries, consumption
     });
   };
 
+  const handlePDFExport = async () => {
+    await exportToPDF(schoolName, recyclingEntries, consumptionEntries);
+    toast({
+      title: "PDF exportado!",
+      description: `Relatório de ${schoolName} exportado com sucesso.`,
+    });
+  };
+
   return (
-    <Button onClick={exportToCSV} variant="outline" size="sm" className="gap-2">
-      <Download className="w-4 h-4" />
-      Exportar CSV
-    </Button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm" className="gap-2">
+          <Download className="w-4 h-4" />
+          Exportar
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem onClick={exportToCSV}>
+          <Download className="w-4 h-4 mr-2" />
+          Exportar CSV
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handlePDFExport}>
+          <FileText className="w-4 h-4 mr-2" />
+          Exportar PDF
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

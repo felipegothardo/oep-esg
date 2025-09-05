@@ -1,0 +1,192 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Lightbulb, TrendingDown, TrendingUp, AlertCircle } from 'lucide-react';
+import { ConsumptionEntry, ConsumptionGoal } from '@/components/WaterEnergyTracker';
+
+interface SmartGoalSuggestionProps {
+  consumptionEntries: ConsumptionEntry[];
+  currentGoals: ConsumptionGoal[];
+  onAcceptSuggestion: (type: 'water' | 'energy', percentage: number) => void;
+}
+
+export default function SmartGoalSuggestion({ 
+  consumptionEntries, 
+  currentGoals,
+  onAcceptSuggestion 
+}: SmartGoalSuggestionProps) {
+  
+  const calculateSuggestion = (type: 'water' | 'energy') => {
+    const typeEntries = consumptionEntries
+      .filter(entry => entry.type === type)
+      .sort((a, b) => new Date(b.month).getTime() - new Date(a.month).getTime());
+    
+    if (typeEntries.length < 2) return null;
+    
+    // Calcular média dos últimos 3 meses
+    const recentEntries = typeEntries.slice(0, 3);
+    const avgConsumption = recentEntries.reduce((sum, entry) => sum + entry.consumption, 0) / recentEntries.length;
+    
+    // Calcular tendência
+    const trend = typeEntries.length >= 3 
+      ? (typeEntries[0].consumption - typeEntries[2].consumption) / typeEntries[2].consumption * 100
+      : 0;
+    
+    // Sugestão baseada na tendência
+    let suggestedReduction: number;
+    let confidence: 'alta' | 'média' | 'baixa';
+    let reason: string;
+    
+    if (trend < -5) {
+      // Já está reduzindo
+      suggestedReduction = Math.min(Math.abs(trend) + 5, 25);
+      confidence = 'alta';
+      reason = `Você já reduziu ${Math.abs(trend).toFixed(1)}% nos últimos meses. Continue assim!`;
+    } else if (trend > 5) {
+      // Consumo aumentando
+      suggestedReduction = 10;
+      confidence = 'média';
+      reason = `Seu consumo aumentou ${trend.toFixed(1)}%. Hora de reverter essa tendência!`;
+    } else {
+      // Estável
+      suggestedReduction = 15;
+      confidence = 'média';
+      reason = 'Seu consumo está estável. Que tal um desafio de redução?';
+    }
+    
+    return {
+      percentage: suggestedReduction,
+      avgConsumption,
+      trend,
+      confidence,
+      reason,
+      lastMonths: recentEntries.length
+    };
+  };
+  
+  const waterSuggestion = calculateSuggestion('water');
+  const energySuggestion = calculateSuggestion('energy');
+  
+  if (!waterSuggestion && !energySuggestion) {
+    return (
+      <Card className="border-dashed">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Lightbulb className="w-5 h-5 text-primary" />
+            Metas Inteligentes
+          </CardTitle>
+          <CardDescription>
+            Adicione pelo menos 2 meses de dados para receber sugestões de metas personalizadas
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+  
+  return (
+    <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Lightbulb className="w-5 h-5 text-primary animate-pulse" />
+          Sugestões de Metas Inteligentes
+        </CardTitle>
+        <CardDescription>
+          Baseado no seu histórico de consumo dos últimos meses
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {waterSuggestion && (
+          <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <h4 className="font-semibold text-blue-900 dark:text-blue-100">Água</h4>
+                <Badge variant={waterSuggestion.confidence === 'alta' ? 'default' : 'secondary'}>
+                  Confiança {waterSuggestion.confidence}
+                </Badge>
+                {waterSuggestion.trend < 0 ? (
+                  <TrendingDown className="w-4 h-4 text-green-600" />
+                ) : waterSuggestion.trend > 0 ? (
+                  <TrendingUp className="w-4 h-4 text-red-600" />
+                ) : null}
+              </div>
+            </div>
+            
+            <p className="text-sm text-muted-foreground mb-3">
+              {waterSuggestion.reason}
+            </p>
+            
+            <div className="flex items-center justify-between">
+              <div className="text-sm">
+                <span className="font-medium">Meta sugerida: </span>
+                <span className="text-lg font-bold text-primary">
+                  {waterSuggestion.percentage.toFixed(0)}% de redução
+                </span>
+              </div>
+              <Button 
+                size="sm" 
+                variant="default"
+                onClick={() => onAcceptSuggestion('water', waterSuggestion.percentage)}
+              >
+                Aplicar Meta
+              </Button>
+            </div>
+            
+            <div className="mt-2 text-xs text-muted-foreground">
+              Média atual: {waterSuggestion.avgConsumption.toFixed(0)}L/mês
+            </div>
+          </div>
+        )}
+        
+        {energySuggestion && (
+          <div className="p-4 rounded-lg bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <h4 className="font-semibold text-yellow-900 dark:text-yellow-100">Energia</h4>
+                <Badge variant={energySuggestion.confidence === 'alta' ? 'default' : 'secondary'}>
+                  Confiança {energySuggestion.confidence}
+                </Badge>
+                {energySuggestion.trend < 0 ? (
+                  <TrendingDown className="w-4 h-4 text-green-600" />
+                ) : energySuggestion.trend > 0 ? (
+                  <TrendingUp className="w-4 h-4 text-red-600" />
+                ) : null}
+              </div>
+            </div>
+            
+            <p className="text-sm text-muted-foreground mb-3">
+              {energySuggestion.reason}
+            </p>
+            
+            <div className="flex items-center justify-between">
+              <div className="text-sm">
+                <span className="font-medium">Meta sugerida: </span>
+                <span className="text-lg font-bold text-primary">
+                  {energySuggestion.percentage.toFixed(0)}% de redução
+                </span>
+              </div>
+              <Button 
+                size="sm" 
+                variant="default"
+                onClick={() => onAcceptSuggestion('energy', energySuggestion.percentage)}
+              >
+                Aplicar Meta
+              </Button>
+            </div>
+            
+            <div className="mt-2 text-xs text-muted-foreground">
+              Média atual: {energySuggestion.avgConsumption.toFixed(0)}kWh/mês
+            </div>
+          </div>
+        )}
+        
+        <div className="flex items-start gap-2 p-3 bg-muted/50 rounded-lg">
+          <AlertCircle className="w-4 h-4 text-muted-foreground mt-0.5" />
+          <p className="text-xs text-muted-foreground">
+            As sugestões são baseadas no seu histórico e tendências de consumo. 
+            Ajuste as metas conforme a realidade da sua escola.
+          </p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
