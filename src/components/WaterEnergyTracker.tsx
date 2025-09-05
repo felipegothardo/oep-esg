@@ -23,26 +23,36 @@ interface ConsumptionGoal {
 
 interface WaterEnergyTrackerProps {
   onDataUpdate: (entries: ConsumptionEntry[], goals: ConsumptionGoal[]) => void;
+  existingEntries?: ConsumptionEntry[];
+  existingGoals?: ConsumptionGoal[];
 }
 
-export default function WaterEnergyTracker({ onDataUpdate }: WaterEnergyTrackerProps) {
-  const [entries, setEntries] = useState<ConsumptionEntry[]>([]);
-  const [goals, setGoals] = useState<ConsumptionGoal[]>([
+export default function WaterEnergyTracker({ 
+  onDataUpdate, 
+  existingEntries = [], 
+  existingGoals = [
     { type: 'water', reductionPercentage: 0 },
     { type: 'energy', reductionPercentage: 0 }
-  ]);
+  ] 
+}: WaterEnergyTrackerProps) {
+  const [entries, setEntries] = useState<ConsumptionEntry[]>(existingEntries);
+  const [goals, setGoals] = useState<ConsumptionGoal[]>(existingGoals);
   
   // Formulário de água
   const [waterCost, setWaterCost] = useState('');
   const [waterConsumption, setWaterConsumption] = useState('');
   const [waterMonth, setWaterMonth] = useState('');
-  const [waterReduction, setWaterReduction] = useState('');
+  const [waterReduction, setWaterReduction] = useState(
+    goals.find(g => g.type === 'water')?.reductionPercentage.toString() || ''
+  );
   
   // Formulário de energia
   const [energyCost, setEnergyCost] = useState('');
   const [energyConsumption, setEnergyConsumption] = useState('');
   const [energyMonth, setEnergyMonth] = useState('');
-  const [energyReduction, setEnergyReduction] = useState('');
+  const [energyReduction, setEnergyReduction] = useState(
+    goals.find(g => g.type === 'energy')?.reductionPercentage.toString() || ''
+  );
   
   const { toast } = useToast();
 

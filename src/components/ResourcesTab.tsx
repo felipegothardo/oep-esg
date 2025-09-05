@@ -1,6 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
 export default function ResourcesTab() {
-  return <section aria-label="Links, telefones e dicas úteis" className="space-y-6">
+  return (
+    <section aria-label="Links, telefones e dicas úteis" className="space-y-6">
       {/* Destaque: Parceiros de Coleta */}
       <Card className="border-2">
         <CardHeader>
@@ -130,5 +132,6 @@ export default function ResourcesTab() {
           </ul>
         </CardContent>
       </Card>
-    </section>;
+    </section>
+  );
 }

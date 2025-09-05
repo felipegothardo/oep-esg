@@ -214,7 +214,11 @@ export default function SchoolDashboard({
         <TabsContent value="consumption" className="animate-fade-in">
           <Suspense fallback={<LoadingSkeleton type="form" />}>
             <div className="consumption-section">
-              <WaterEnergyTracker onDataUpdate={onConsumptionUpdate} />
+              <WaterEnergyTracker 
+                onDataUpdate={onConsumptionUpdate}
+                existingEntries={data.consumptionEntries}
+                existingGoals={data.consumptionGoals}
+              />
             </div>
           </Suspense>
         </TabsContent>
