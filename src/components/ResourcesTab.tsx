@@ -94,8 +94,13 @@ export default function ResourcesTab() {
               </a>
             </li>
             <li>
-              <a className="story-link" href="https://www.consciousplanet.org/pt/co2-calculator" target="_blank" rel="noopener noreferrer">
-                Calculadora de CO2 (exemplo)
+              <a className="story-link" href="https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator" target="_blank" rel="noopener noreferrer">
+                Calculadora de CO2 - EPA (Inglês)
+              </a>
+            </li>
+            <li>
+              <a className="story-link" href="https://www.sosma.org.br/calculadora/" target="_blank" rel="noopener noreferrer">
+                Calculadora Carbono - Fundação SOS Mata Atlântica
               </a>
             </li>
           </ul>
