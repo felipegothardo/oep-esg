@@ -23,11 +23,10 @@ interface Tip {
 interface ContextualTipsProps {
   recyclingTotal: number;
   co2Total: number;
-  waterConsumption: number[];
-  energyConsumption: number[];
-  waterGoal: number;
-  energyGoal: number;
-  lastRecyclingDate?: string;
+  waterConsumption: number;
+  energyConsumption: number;
+  hasRecyclingData: boolean;
+  hasConsumptionData: boolean;
   schoolName: string;
 }
 
@@ -36,9 +35,8 @@ export default function ContextualTips({
   co2Total,
   waterConsumption,
   energyConsumption,
-  waterGoal,
-  energyGoal,
-  lastRecyclingDate,
+  hasRecyclingData,
+  hasConsumptionData,
   schoolName
 }: ContextualTipsProps) {
   const [tips, setTips] = useState<Tip[]>([]);
@@ -55,88 +53,71 @@ export default function ContextualTips({
   useEffect(() => {
     const generatedTips: Tip[] = [];
     
-    // Análise de tendências de água
-    if (waterConsumption.length >= 2) {
-      const lastMonth = waterConsumption[waterConsumption.length - 1];
-      const previousMonth = waterConsumption[waterConsumption.length - 2];
-      const trend = ((lastMonth - previousMonth) / previousMonth) * 100;
-      
-      if (trend > 10) {
+    // Dicas baseadas no total de reciclagem
+    if (recyclingTotal > 0) {
+      if (recyclingTotal < 50) {
         generatedTips.push({
-          id: 'water-increase',
-          title: 'Consumo de água aumentando',
-          description: `Seu consumo aumentou ${trend.toFixed(1)}% este mês. Verifique possíveis vazamentos e revise as práticas de uso.`,
-          type: 'warning',
-          icon: <TrendingUp className="w-5 h-5 text-orange-500" />,
-          priority: 1,
-          action: {
-            label: 'Ver dicas de economia',
-            onClick: () => window.open('https://www.sabesp.com.br/site/interna/Default.aspx?secaoId=140', '_blank')
-          }
+          id: 'low-recycling',
+          title: 'Aumente a reciclagem',
+          description: 'Você está no caminho certo! Continue registrando seus materiais reciclados para alcançar 50kg.',
+          type: 'suggestion',
+          icon: <Recycle className="w-5 h-5 text-blue-500" />,
+          priority: 2
         });
-      } else if (trend < -5) {
+      } else if (recyclingTotal > 500) {
         generatedTips.push({
-          id: 'water-decrease',
-          title: 'Excelente economia de água!',
-          description: `Parabéns! Você reduziu ${Math.abs(trend).toFixed(1)}% no consumo. Continue assim!`,
+          id: 'high-recycling',
+          title: 'Excelente desempenho!',
+          description: `Incrível! Você já reciclou ${recyclingTotal.toFixed(1)}kg e evitou ${co2Total.toFixed(1)}kg de CO₂!`,
           type: 'success',
-          icon: <TrendingDown className="w-5 h-5 text-green-500" />,
+          icon: <TrendingUp className="w-5 h-5 text-green-500" />,
           priority: 3
         });
       }
     }
     
-    // Análise de tendências de energia
-    if (energyConsumption.length >= 2) {
-      const lastMonth = energyConsumption[energyConsumption.length - 1];
-      const previousMonth = energyConsumption[energyConsumption.length - 2];
-      const trend = ((lastMonth - previousMonth) / previousMonth) * 100;
-      
-      if (trend > 10) {
+    // Dicas sobre consumo de água
+    if (waterConsumption > 0) {
+      if (waterConsumption > 10000) {
         generatedTips.push({
-          id: 'energy-increase',
-          title: 'Consumo de energia em alta',
-          description: `Aumento de ${trend.toFixed(1)}% detectado. Considere trocar lâmpadas por LED e desligar equipamentos em standby.`,
+          id: 'high-water',
+          title: 'Consumo de água elevado',
+          description: 'Considere implementar medidas de economia como captação de água da chuva e torneiras econômicas.',
           type: 'warning',
-          icon: <TrendingUp className="w-5 h-5 text-orange-500" />,
+          icon: <Droplet className="w-5 h-5 text-blue-500" />,
           priority: 1
         });
       }
     }
     
-    // Dicas sobre reciclagem
-    if (lastRecyclingDate) {
-      const daysSinceLastRecycling = Math.floor(
-        (new Date().getTime() - new Date(lastRecyclingDate).getTime()) / (1000 * 60 * 60 * 24)
-      );
-      
-      if (daysSinceLastRecycling > 7) {
+    // Dicas sobre consumo de energia  
+    if (energyConsumption > 0) {
+      if (energyConsumption > 500) {
         generatedTips.push({
-          id: 'recycling-reminder',
-          title: 'Hora de registrar reciclagem',
-          description: `Faz ${daysSinceLastRecycling} dias desde o último registro. Mantenha os dados atualizados!`,
-          type: 'info',
-          icon: <Recycle className="w-5 h-5 text-blue-500" />,
-          priority: 2
+          id: 'high-energy',
+          title: 'Consumo de energia alto',
+          description: 'Troque lâmpadas por LED e desligue equipamentos em standby para economizar.',
+          type: 'warning',
+          icon: <Zap className="w-5 h-5 text-yellow-500" />,
+          priority: 1
         });
       }
     }
     
-    // Dicas sobre metas
-    if (waterGoal > 0 && waterConsumption.length > 0) {
-      const avgConsumption = waterConsumption.reduce((a, b) => a + b, 0) / waterConsumption.length;
-      const projectedReduction = ((waterConsumption[0] - avgConsumption) / waterConsumption[0]) * 100;
-      
-      if (projectedReduction < waterGoal * 0.5) {
-        generatedTips.push({
-          id: 'water-goal-risk',
-          title: 'Meta de água em risco',
-          description: `Você está abaixo do esperado para atingir sua meta de ${waterGoal}% de redução. Intensifique as ações!`,
-          type: 'warning',
-          icon: <Target className="w-5 h-5 text-yellow-500" />,
-          priority: 2
-        });
-      }
+    // Dicas iniciais
+    if (!hasRecyclingData && !hasConsumptionData) {
+      generatedTips.push({
+        id: 'get-started',
+        title: 'Bem-vindo ao OEP Sustentável!',
+        description: 'Comece registrando seus primeiros dados de reciclagem ou consumo para acompanhar seu progresso.',
+        type: 'info',
+        icon: <Info className="w-5 h-5 text-blue-500" />,
+        priority: 1,
+        action: {
+          label: 'Começar agora',
+          onClick: () => {}
+        }
+      });
     }
     
     // Dicas sazonais
@@ -190,9 +171,8 @@ export default function ContextualTips({
     co2Total, 
     waterConsumption, 
     energyConsumption, 
-    waterGoal, 
-    energyGoal, 
-    lastRecyclingDate, 
+    hasRecyclingData,
+    hasConsumptionData,
     dismissedTips,
     schoolName
   ]);

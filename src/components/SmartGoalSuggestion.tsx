@@ -5,16 +5,20 @@ import { Lightbulb, TrendingDown, TrendingUp, AlertCircle } from 'lucide-react';
 import { ConsumptionEntry, ConsumptionGoal } from '@/components/WaterEnergyTracker';
 
 interface SmartGoalSuggestionProps {
+  recyclingEntries: any[];
   consumptionEntries: ConsumptionEntry[];
   currentGoals: ConsumptionGoal[];
-  onAcceptSuggestion: (type: 'water' | 'energy', percentage: number) => void;
 }
 
 export default function SmartGoalSuggestion({ 
+  recyclingEntries,
   consumptionEntries, 
-  currentGoals,
-  onAcceptSuggestion 
+  currentGoals
 }: SmartGoalSuggestionProps) {
+  
+  const onAcceptSuggestion = (type: 'water' | 'energy', percentage: number) => {
+    console.log(`Sugestão aceita: Reduzir ${type} em ${percentage}%`);
+  };
   
   const calculateSuggestion = (type: 'water' | 'energy') => {
     const typeEntries = consumptionEntries

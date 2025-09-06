@@ -7,6 +7,8 @@ import ExportButton from './ExportButton';
 import MobileStats from './MobileStats';
 import LoadingSkeleton from './LoadingSkeleton';
 import DeleteRecordsDialog from './DeleteRecordsDialog';
+import { useActionHistory } from '@/hooks/useActionHistory';
+import { useAutoBackup } from '@/hooks/useAutoBackup';
 
 // Lazy load dos componentes pesados
 const RecyclingCalculator = lazy(() => import('./RecyclingCalculator'));
@@ -17,6 +19,10 @@ const GoalProgressCard = lazy(() => import('./GoalProgressCard'));
 const ProjectionCard = lazy(() => import('./ProjectionCard'));
 const ChatTab = lazy(() => import('./ChatTab'));
 const ResourcesTab = lazy(() => import('./ResourcesTab'));
+const SmartGoalSuggestion = lazy(() => import('./SmartGoalSuggestion'));
+const AchievementSystem = lazy(() => import('./AchievementSystem'));
+const ContextualTips = lazy(() => import('./ContextualTips'));
+const ActionHistory = lazy(() => import('./ActionHistory'));
 
 interface SchoolDashboardProps {
   schoolName: string;
@@ -40,6 +46,41 @@ export default function SchoolDashboard({
   onDeleteConsumptionByMonth
 }: SchoolDashboardProps) {
   const [currentMobileTab, setCurrentMobileTab] = useState('calculator');
+  
+  // Hook de histórico de ações
+  const { history, addToHistory, clearHistory, undoLastAction, hasHistory } = useActionHistory();
+  
+  // Hook de backup automático
+  const { listBackups } = useAutoBackup(schoolName, data);
+  
+  // Wrapper para adicionar ações ao histórico
+  const handleRecyclingUpdate = (entries: RecyclingEntry[]) => {
+    const lastEntry = entries[entries.length - 1];
+    if (lastEntry) {
+      addToHistory({
+        type: 'add',
+        category: 'recycling',
+        description: `Reciclou ${lastEntry.quantity}kg de ${lastEntry.material}`,
+        data: lastEntry,
+        schoolName
+      });
+    }
+    onRecyclingUpdate(entries);
+  };
+  
+  const handleConsumptionUpdate = (entries: ConsumptionEntry[], goals: ConsumptionGoal[]) => {
+    const lastEntry = entries[entries.length - 1];
+    if (lastEntry) {
+      addToHistory({
+        type: 'add',
+        category: 'consumption',
+        description: `Registrou consumo de ${lastEntry.type === 'water' ? 'água' : 'energia'}: R$ ${lastEntry.cost}`,
+        data: lastEntry,
+        schoolName
+      });
+    }
+    onConsumptionUpdate(entries, goals);
+  };
   
   // Calculando estatísticas
   const totalCO2Saved = data.recyclingEntries.reduce((total, entry) => total + entry.co2Saved, 0);
@@ -145,7 +186,7 @@ export default function SchoolDashboard({
         className="space-y-4 md:space-y-6 pb-20 md:pb-0"
       >
         <TabsList 
-          className="grid w-full grid-cols-2 md:grid-cols-7 h-auto gap-1"
+          className="grid w-full grid-cols-2 md:grid-cols-9 h-auto gap-1"
           role="tablist"
           aria-label="Seções do dashboard"
         >
@@ -185,6 +226,20 @@ export default function SchoolDashboard({
             ⚡ Gráficos
           </TabsTrigger>
           <TabsTrigger 
+            value="achievements" 
+            className="text-xs md:text-sm p-2 md:p-3"
+            aria-label="Conquistas"
+          >
+            🏆 Conquistas
+          </TabsTrigger>
+          <TabsTrigger 
+            value="history" 
+            className="text-xs md:text-sm p-2 md:p-3"
+            aria-label="Histórico"
+          >
+            📊 Histórico
+          </TabsTrigger>
+          <TabsTrigger 
             value="chat" 
             className="text-xs md:text-sm p-2 md:p-3"
             aria-label="Chat da comunidade"
@@ -202,9 +257,20 @@ export default function SchoolDashboard({
 
         <TabsContent value="calculator" className="animate-fade-in">
           <Suspense fallback={<LoadingSkeleton type="form" />}>
-            <div className="recycling-section">
-              <RecyclingCalculator 
-                onEntriesUpdate={onRecyclingUpdate} 
+            <div className="recycling-section space-y-4">
+              <Suspense fallback={null}>
+                <ContextualTips 
+                  recyclingTotal={totalRecycled}
+                  co2Total={totalCO2Saved}
+                  waterConsumption={lastWaterConsumption}
+                  energyConsumption={lastEnergyConsumption}
+                  hasRecyclingData={data.recyclingEntries.length > 0}
+                  hasConsumptionData={data.consumptionEntries.length > 0}
+                  schoolName={schoolName}
+                />
+              </Suspense>
+              <RecyclingCalculator
+                onEntriesUpdate={handleRecyclingUpdate} 
                 schoolType={schoolType}
               />
             </div>
@@ -213,9 +279,20 @@ export default function SchoolDashboard({
 
         <TabsContent value="consumption" className="animate-fade-in">
           <Suspense fallback={<LoadingSkeleton type="form" />}>
-            <div className="consumption-section">
-              <WaterEnergyTracker 
-                onDataUpdate={onConsumptionUpdate}
+            <div className="consumption-section space-y-4">
+              <Suspense fallback={null}>
+                <ContextualTips 
+                  recyclingTotal={totalRecycled}
+                  co2Total={totalCO2Saved}
+                  waterConsumption={lastWaterConsumption}
+                  energyConsumption={lastEnergyConsumption}
+                  hasRecyclingData={data.recyclingEntries.length > 0}
+                  hasConsumptionData={data.consumptionEntries.length > 0}
+                  schoolName={schoolName}
+                />
+              </Suspense>
+              <WaterEnergyTracker
+                onDataUpdate={handleConsumptionUpdate}
                 existingEntries={data.consumptionEntries}
                 existingGoals={data.consumptionGoals}
               />
@@ -224,6 +301,13 @@ export default function SchoolDashboard({
         </TabsContent>
 
         <TabsContent value="goals" className="space-y-6 animate-fade-in">
+          <Suspense fallback={<LoadingSkeleton type="form" />}>
+            <SmartGoalSuggestion 
+              recyclingEntries={data.recyclingEntries}
+              consumptionEntries={data.consumptionEntries}
+              currentGoals={data.consumptionGoals}
+            />
+          </Suspense>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Suspense fallback={<LoadingSkeleton type="chart" />}>
               <GoalProgressCard 

@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Droplets, Zap, Target, TrendingDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-interface ConsumptionEntry {
+export interface ConsumptionEntry {
   id: string;
   type: 'water' | 'energy';
   month: string;
@@ -16,7 +16,7 @@ interface ConsumptionEntry {
   date: string;
 }
 
-interface ConsumptionGoal {
+export interface ConsumptionGoal {
   type: 'water' | 'energy';
   reductionPercentage: number;
 }
