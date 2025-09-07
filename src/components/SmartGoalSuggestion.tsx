@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Lightbulb, TrendingDown, TrendingUp, AlertCircle } from 'lucide-react';
-import { ConsumptionEntry, ConsumptionGoal } from '@/components/WaterEnergyTracker';
+import { ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSchoolData';
 
 interface SmartGoalSuggestionProps {
   recyclingEntries: any[];
