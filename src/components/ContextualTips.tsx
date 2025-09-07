@@ -37,8 +37,9 @@ export default function ContextualTips({
   energyConsumption,
   hasRecyclingData,
   hasConsumptionData,
-  schoolName
-}: ContextualTipsProps) {
+  schoolName,
+  onTabChange
+}: ContextualTipsProps & { onTabChange?: (tab: string) => void }) {
   const [tips, setTips] = useState<Tip[]>([]);
   const [dismissedTips, setDismissedTips] = useState<string[]>([]);
   const [currentTipIndex, setCurrentTipIndex] = useState(0);
@@ -115,7 +116,13 @@ export default function ContextualTips({
         priority: 1,
         action: {
           label: 'Começar agora',
-          onClick: () => {}
+          onClick: () => {
+            if (onTabChange) {
+              onTabChange('calculator');
+            }
+            // Scroll para o topo da página para garantir visibilidade
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
         }
       });
     }

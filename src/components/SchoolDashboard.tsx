@@ -267,6 +267,7 @@ export default function SchoolDashboard({
                   hasRecyclingData={data.recyclingEntries.length > 0}
                   hasConsumptionData={data.consumptionEntries.length > 0}
                   schoolName={schoolName}
+                  onTabChange={setCurrentMobileTab}
                 />
               </Suspense>
               <RecyclingCalculator
@@ -289,6 +290,7 @@ export default function SchoolDashboard({
                   hasRecyclingData={data.recyclingEntries.length > 0}
                   hasConsumptionData={data.consumptionEntries.length > 0}
                   schoolName={schoolName}
+                  onTabChange={setCurrentMobileTab}
                 />
               </Suspense>
               <WaterEnergyTracker
