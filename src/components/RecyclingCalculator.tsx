@@ -186,7 +186,7 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
             Calcule quantos kg de CO2 você evitou de emitir na atmosfera através da reciclagem
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="recycling-calculator-form space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="material">Tipo de Material</Label>

@@ -117,11 +117,22 @@ export default function ContextualTips({
         action: {
           label: 'Começar agora',
           onClick: () => {
+            // Muda para a aba da calculadora se necessário
             if (onTabChange) {
               onTabChange('calculator');
             }
-            // Scroll para o topo da página para garantir visibilidade
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Aguarda um momento para a aba carregar e então foca no formulário
+            setTimeout(() => {
+              const calculatorForm = document.querySelector('.recycling-calculator-form');
+              if (calculatorForm) {
+                calculatorForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Tenta focar no primeiro input do formulário
+                const firstInput = calculatorForm.querySelector('select, input');
+                if (firstInput instanceof HTMLElement) {
+                  firstInput.focus();
+                }
+              }
+            }, 100);
           }
         }
       });
@@ -209,83 +220,71 @@ export default function ContextualTips({
   const currentTip = tips[currentTipIndex];
 
   return (
-    <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center justify-between text-lg">
-          <span className="flex items-center gap-2">
-            <Lightbulb className="w-5 h-5 text-primary animate-pulse" />
-            Dicas Personalizadas
-          </span>
-          {tips.length > 1 && (
-            <span className="text-xs text-muted-foreground">
-              {currentTipIndex + 1} de {tips.length}
-            </span>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Alert className={`border-${currentTip.type === 'warning' ? 'orange' : currentTip.type === 'success' ? 'green' : 'blue'}-200`}>
-          <div className="flex items-start gap-3">
-            {currentTip.icon}
-            <div className="flex-1">
-              <AlertDescription>
-                <strong className="block mb-1">{currentTip.title}</strong>
-                {currentTip.description}
-              </AlertDescription>
-              
-              {currentTip.action && (
-                <Button
-                  size="sm"
-                  variant="link"
-                  className="mt-2 p-0 h-auto"
-                  onClick={currentTip.action.onClick}
-                >
-                  {currentTip.action.label}
-                  <ChevronRight className="w-4 h-4 ml-1" />
-                </Button>
-              )}
+    <div className="mb-3">
+      <Card className="border-0 shadow-sm bg-gradient-to-r from-primary/5 to-transparent">
+        <CardContent className="p-3">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex items-start gap-2 flex-1">
+              {currentTip.icon}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-foreground">
+                  {currentTip.title}
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                  {currentTip.description}
+                </p>
+                {currentTip.action && (
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="h-auto p-0 mt-1 text-xs text-primary hover:text-primary/80"
+                    onClick={currentTip.action.onClick}
+                  >
+                    {currentTip.action.label} →
+                  </Button>
+                )}
+              </div>
             </div>
             
-            <div className="flex gap-1">
+            <div className="flex items-center gap-0.5">
               {tips.length > 1 && (
                 <Button
                   size="icon"
                   variant="ghost"
                   className="h-6 w-6"
                   onClick={nextTip}
-                  title="Próxima dica"
+                  aria-label="Próxima dica"
                 >
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-3 h-3" />
                 </Button>
               )}
               <Button
                 size="icon"
                 variant="ghost"
-                className="h-6 w-6"
+                className="h-6 w-6 opacity-50 hover:opacity-100"
                 onClick={() => dismissTip(currentTip.id)}
-                title="Dispensar dica"
+                aria-label="Fechar"
               >
-                <X className="w-4 h-4" />
+                <X className="w-3 h-3" />
               </Button>
             </div>
           </div>
-        </Alert>
-
-        {/* Indicadores de navegação */}
-        {tips.length > 1 && (
-          <div className="flex justify-center gap-1 mt-3">
-            {tips.map((_, index) => (
-              <button
-                key={index}
-                className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                  index === currentTipIndex ? 'bg-primary' : 'bg-muted-foreground/30'
-                }`}
-                onClick={() => setCurrentTipIndex(index)}
-              />
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+          
+          {/* Subtle dots indicator */}
+          {tips.length > 1 && (
+            <div className="flex justify-center gap-1 mt-2">
+              {tips.map((_, index) => (
+                <div
+                  key={index}
+                  className={`h-1 rounded-full transition-all ${
+                    index === currentTipIndex ? 'w-3 bg-primary/60' : 'w-1 bg-muted-foreground/20'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 }
