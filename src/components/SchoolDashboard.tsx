@@ -308,6 +308,14 @@ export default function SchoolDashboard({
               recyclingEntries={data.recyclingEntries}
               consumptionEntries={data.consumptionEntries}
               currentGoals={data.consumptionGoals}
+              onUpdateGoal={(type, percentage) => {
+                const updatedGoals = data.consumptionGoals.map(goal => 
+                  goal.type === type 
+                    ? { ...goal, reductionPercentage: percentage }
+                    : goal
+                );
+                handleConsumptionUpdate(data.consumptionEntries, updatedGoals);
+              }}
             />
           </Suspense>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -342,6 +350,30 @@ export default function SchoolDashboard({
             <ConsumptionChart 
               entries={data.consumptionEntries} 
               goals={data.consumptionGoals} 
+            />
+          </Suspense>
+        </TabsContent>
+
+        <TabsContent value="achievements" className="animate-fade-in">
+          <Suspense fallback={<LoadingSkeleton type="chart" />}>
+            <AchievementSystem 
+              recyclingTotal={totalRecycled}
+              co2Total={totalCO2Saved}
+              waterReduction={data.consumptionGoals.find(g => g.type === 'water')?.reductionPercentage || 0}
+              energyReduction={data.consumptionGoals.find(g => g.type === 'energy')?.reductionPercentage || 0}
+              monthsActive={Math.max(data.recyclingEntries.length, data.consumptionEntries.length) > 0 ? 1 : 0}
+              schoolName={schoolName}
+            />
+          </Suspense>
+        </TabsContent>
+
+        <TabsContent value="history" className="animate-fade-in">
+          <Suspense fallback={<LoadingSkeleton type="list" />}>
+            <ActionHistory 
+              history={history}
+              onUndo={undoLastAction}
+              onClear={clearHistory}
+              hasHistory={hasHistory}
             />
           </Suspense>
         </TabsContent>

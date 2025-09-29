@@ -8,16 +8,20 @@ interface SmartGoalSuggestionProps {
   recyclingEntries: any[];
   consumptionEntries: ConsumptionEntry[];
   currentGoals: ConsumptionGoal[];
+  onUpdateGoal?: (type: 'water' | 'energy', percentage: number) => void;
 }
 
 export default function SmartGoalSuggestion({ 
   recyclingEntries,
   consumptionEntries, 
-  currentGoals
+  currentGoals,
+  onUpdateGoal
 }: SmartGoalSuggestionProps) {
   
   const onAcceptSuggestion = (type: 'water' | 'energy', percentage: number) => {
-    console.log(`Sugestão aceita: Reduzir ${type} em ${percentage}%`);
+    if (onUpdateGoal) {
+      onUpdateGoal(type, percentage);
+    }
   };
   
   const calculateSuggestion = (type: 'water' | 'energy') => {
