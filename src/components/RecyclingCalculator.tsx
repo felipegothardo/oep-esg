@@ -134,6 +134,8 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
   };
 
   const calculateCO2 = () => {
+    console.log('calculateCO2 called - Material:', selectedMaterial, 'Quantity:', quantity);
+    
     if (!selectedMaterial || !quantity || parseFloat(quantity) <= 0) {
       toast({
         title: "Erro",
@@ -161,6 +163,7 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
       onEntriesUpdate(updatedEntries);
     }
     
+    // Limpar campos após sucesso
     setQuantity('');
     setSelectedMaterial('');
 
@@ -203,7 +206,7 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
               
               {/* Dialog para seleção de material */}
               <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent className="max-w-lg">
+                <DialogContent className="max-w-lg z-50">
                   <DialogHeader>
                     <DialogTitle>Selecione o Material Reciclável</DialogTitle>
                   </DialogHeader>
@@ -216,6 +219,7 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="pl-9"
+                      onClick={(e) => e.stopPropagation()}
                     />
                   </div>
                   
@@ -223,22 +227,25 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
                   <ScrollArea className="h-[400px] pr-4">
                     <div className="space-y-2">
                       {filteredMaterials.map(([key, label]) => (
-                        <Button
+                        <button
                           key={key}
-                          variant="ghost"
-                          className="w-full justify-start hover:bg-secondary"
-                          onClick={() => {
+                          type="button"
+                          className="w-full flex items-center justify-start gap-2 p-2 rounded-md hover:bg-secondary transition-colors text-left"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log('Material selecionado:', key, label);
                             setSelectedMaterial(key);
-                            setOpen(false);
                             setSearchTerm('');
+                            setOpen(false);
                           }}
                         >
-                          <Recycle className="mr-2 h-4 w-4 text-primary" />
-                          <span className="flex-1 text-left">{label}</span>
+                          <Recycle className="h-4 w-4 text-primary shrink-0" />
+                          <span className="flex-1">{label}</span>
                           <span className="text-xs text-muted-foreground">
                             {allCO2Factors[key]} kg CO2/kg
                           </span>
-                        </Button>
+                        </button>
                       ))}
                       {filteredMaterials.length === 0 && (
                         <p className="text-center text-muted-foreground py-4">
@@ -247,18 +254,20 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
                       )}
                       
                       {/* Opção "Outro" */}
-                      <Button
-                        variant="outline"
-                        className="w-full justify-start border-dashed"
-                        onClick={() => {
+                      <button
+                        type="button"
+                        className="w-full flex items-center justify-start gap-2 p-2 rounded-md border border-dashed hover:bg-secondary transition-colors text-left"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
                           setOpen(false);
                           setSearchTerm('');
                           setShowAddMaterialDialog(true);
                         }}
                       >
-                        <Plus className="mr-2 h-4 w-4 text-primary" />
-                        <span className="flex-1 text-left">Outro (adicionar novo material)</span>
-                      </Button>
+                        <Plus className="h-4 w-4 text-primary shrink-0" />
+                        <span className="flex-1">Outro (adicionar novo material)</span>
+                      </button>
                     </div>
                   </ScrollArea>
                 </DialogContent>
