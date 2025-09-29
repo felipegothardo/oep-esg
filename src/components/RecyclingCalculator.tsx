@@ -163,9 +163,8 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
       onEntriesUpdate(updatedEntries);
     }
     
-    // Limpar campos após sucesso
+    // Limpar apenas a quantidade, mantendo o material selecionado
     setQuantity('');
-    setSelectedMaterial('');
 
     toast({
       title: "Cálculo realizado!",
