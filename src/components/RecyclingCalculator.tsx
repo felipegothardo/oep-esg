@@ -14,6 +14,7 @@ interface RecyclingEntry {
   quantity: number;
   co2Saved: number;
   date: string;
+  month?: string;
 }
 
 interface RecyclingCalculatorProps {
@@ -60,11 +61,12 @@ const BASE_MATERIAL_LABELS: Record<string, string> = {
 export default function RecyclingCalculator({ onEntriesUpdate, entries = [], schoolType = 'default' }: RecyclingCalculatorProps) {
   const [selectedMaterial, setSelectedMaterial] = useState<string>('');
   const [quantity, setQuantity] = useState<string>('');
+  const [selectedMonth, setSelectedMonth] = useState<string>(new Date().toISOString().slice(0, 7));
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddMaterialDialog, setShowAddMaterialDialog] = useState(false);
   const [newMaterialName, setNewMaterialName] = useState('');
-  const [newMaterialCO2, setNewMaterialCO2] = useState('');
+  const [newMaterialCO2, setNewMaterialCO2] = useState(''); 
   const { toast } = useToast();
 
   // Carregar materiais customizados do localStorage
@@ -153,7 +155,8 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
       material: allMaterials[selectedMaterial],
       quantity: parseFloat(quantity),
       co2Saved,
-      date: new Date().toLocaleDateString('pt-BR')
+      date: new Date().toLocaleDateString('pt-BR'),
+      month: selectedMonth
     };
 
     const updatedEntries = [newEntry, ...entries];
@@ -346,6 +349,17 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
             </div>
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="month">Mês de Registro</Label>
+            <Input
+              id="month"
+              type="month"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              className="transition-smooth focus:shadow-soft"
+            />
+          </div>
+
           <Button 
             onClick={calculateCO2} 
             className="w-full bg-gradient-eco hover:shadow-eco transition-smooth"
@@ -386,7 +400,9 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
                 <div key={entry.id} className="flex items-center justify-between p-4 bg-secondary/50 rounded-lg border-l-4 border-primary">
                   <div>
                     <p className="font-medium text-foreground">{entry.material}</p>
-                    <p className="text-sm text-muted-foreground">{entry.quantity} kg • {entry.date}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {entry.quantity} kg • {entry.month ? new Date(entry.month + '-01').toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) : entry.date}
+                    </p>
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-success">{entry.co2Saved.toFixed(2)} kg CO2</p>
