@@ -214,15 +214,19 @@ export default function Auth() {
                 <div className="space-y-2">
                   <Label htmlFor="school">Escola</Label>
                   <Select value={schoolId} onValueChange={setSchoolId} disabled={loading}>
-                    <SelectTrigger id="school">
+                    <SelectTrigger id="school" className="w-full">
                       <SelectValue placeholder="Selecione sua escola" />
                     </SelectTrigger>
-                    <SelectContent className="z-50 bg-card">
-                      {schools.map((school) => (
-                        <SelectItem key={school.id} value={school.id}>
-                          {school.name}
-                        </SelectItem>
-                      ))}
+                    <SelectContent className="z-[9999] bg-white dark:bg-gray-800 border shadow-lg max-h-[200px] overflow-y-auto">
+                      {schools.length > 0 ? (
+                        schools.map((school) => (
+                          <SelectItem key={school.id} value={school.id} className="cursor-pointer">
+                            {school.name}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <div className="p-2 text-center text-gray-500">Carregando escolas...</div>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
