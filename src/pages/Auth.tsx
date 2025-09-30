@@ -35,18 +35,34 @@ export default function Auth() {
   };
 
   const loadSchools = async () => {
-    const { data, error } = await supabase
-      .from("schools")
-      .select("id, name, code")
-      .order("name");
-    
-    if (!error && data) {
-      setSchools(data);
+    try {
+      console.log("Carregando escolas...");
+      const { data, error } = await supabase
+        .from("schools")
+        .select("id, name, code")
+        .order("name");
+      
+      if (error) {
+        console.error("Erro ao carregar escolas:", error);
+        toast({
+          title: "Erro ao carregar escolas",
+          description: "Por favor, recarregue a página",
+          variant: "destructive"
+        });
+      } else if (data) {
+        console.log("Escolas carregadas:", data);
+        setSchools(data);
+      }
+    } catch (err) {
+      console.error("Erro inesperado:", err);
     }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    
+    console.log("Iniciando cadastro...", { fullName, email, schoolId });
     
     if (!schoolId) {
       toast({
@@ -93,9 +109,10 @@ export default function Auth() {
           description: "Você está sendo redirecionado...",
         });
         
-        navigate("/");
+        window.location.href = "/";
       }
     } catch (error: any) {
+      console.error("Erro no cadastro:", error);
       toast({
         title: "Erro ao criar conta",
         description: error.message || "Ocorreu um erro ao criar sua conta",
@@ -108,6 +125,7 @@ export default function Auth() {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setLoading(true);
 
     try {
@@ -123,7 +141,7 @@ export default function Auth() {
         description: "Bem-vindo de volta!",
       });
 
-      navigate("/");
+      window.location.href = "/";
     } catch (error: any) {
       toast({
         title: "Erro ao fazer login",
@@ -215,17 +233,25 @@ export default function Auth() {
                   <select
                     id="school"
                     value={schoolId}
-                    onChange={(e) => setSchoolId(e.target.value)}
+                    onChange={(e) => {
+                      console.log("Escola selecionada:", e.target.value);
+                      setSchoolId(e.target.value);
+                    }}
                     disabled={loading}
                     required
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    style={{ backgroundColor: 'white', color: 'black' }}
                   >
-                    <option value="">Selecione sua escola</option>
-                    {schools.map((school) => (
-                      <option key={school.id} value={school.id}>
-                        {school.name}
-                      </option>
-                    ))}
+                    <option value="" disabled>Selecione sua escola</option>
+                    {schools.length > 0 ? (
+                      schools.map((school) => (
+                        <option key={school.id} value={school.id} style={{ backgroundColor: 'white', color: 'black' }}>
+                          {school.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option disabled>Carregando escolas...</option>
+                    )}
                   </select>
                 </div>
                 <div className="space-y-2">
