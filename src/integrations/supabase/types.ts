@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      alert_settings: {
+        Row: {
+          consumption_threshold: number | null
+          created_at: string
+          email_notifications: boolean | null
+          id: string
+          push_notifications: boolean | null
+          recycling_goal: number | null
+          school_id: string
+          updated_at: string
+        }
+        Insert: {
+          consumption_threshold?: number | null
+          created_at?: string
+          email_notifications?: boolean | null
+          id?: string
+          push_notifications?: boolean | null
+          recycling_goal?: number | null
+          school_id: string
+          updated_at?: string
+        }
+        Update: {
+          consumption_threshold?: number | null
+          created_at?: string
+          email_notifications?: boolean | null
+          id?: string
+          push_notifications?: boolean | null
+          recycling_goal?: number | null
+          school_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       chat_messages: {
         Row: {
           created_at: string
@@ -134,6 +167,66 @@ export type Database = {
           },
         ]
       }
+      external_data: {
+        Row: {
+          data: Json
+          data_type: string
+          fetched_at: string
+          id: string
+          school_id: string
+        }
+        Insert: {
+          data: Json
+          data_type: string
+          fetched_at?: string
+          id?: string
+          school_id: string
+        }
+        Update: {
+          data?: Json
+          data_type?: string
+          fetched_at?: string
+          id?: string
+          school_id?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          read: boolean | null
+          school_id: string
+          title: string
+          type: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          read?: boolean | null
+          school_id: string
+          title: string
+          type: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          read?: boolean | null
+          school_id?: string
+          title?: string
+          type?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -218,23 +311,32 @@ export type Database = {
       }
       schools: {
         Row: {
+          city: string | null
           code: string
           created_at: string
           id: string
+          latitude: number | null
+          longitude: number | null
           name: string
           updated_at: string
         }
         Insert: {
+          city?: string | null
           code: string
           created_at?: string
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           name: string
           updated_at?: string
         }
         Update: {
+          city?: string | null
           code?: string
           created_at?: string
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           name?: string
           updated_at?: string
         }
