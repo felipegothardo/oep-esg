@@ -1,7 +1,16 @@
 import Dashboard from '@/components/Dashboard';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import AuthHeader from '@/components/AuthHeader';
 
 const Index = () => {
-  return <Dashboard />;
+  return (
+    <ProtectedRoute>
+      <div className="relative">
+        <AuthHeader />
+        <Dashboard />
+      </div>
+    </ProtectedRoute>
+  );
 };
 
 export default Index;
