@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Leaf, Loader2 } from "lucide-react";
 import oepLogo from "@/assets/oep-logo.png";
@@ -213,22 +212,21 @@ export default function Auth() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="school">Escola</Label>
-                  <Select value={schoolId} onValueChange={setSchoolId} disabled={loading}>
-                    <SelectTrigger id="school" className="w-full">
-                      <SelectValue placeholder="Selecione sua escola" />
-                    </SelectTrigger>
-                    <SelectContent className="z-[9999] bg-white dark:bg-gray-800 border shadow-lg max-h-[200px] overflow-y-auto">
-                      {schools.length > 0 ? (
-                        schools.map((school) => (
-                          <SelectItem key={school.id} value={school.id} className="cursor-pointer">
-                            {school.name}
-                          </SelectItem>
-                        ))
-                      ) : (
-                        <div className="p-2 text-center text-gray-500">Carregando escolas...</div>
-                      )}
-                    </SelectContent>
-                  </Select>
+                  <select
+                    id="school"
+                    value={schoolId}
+                    onChange={(e) => setSchoolId(e.target.value)}
+                    disabled={loading}
+                    required
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <option value="">Selecione sua escola</option>
+                    {schools.map((school) => (
+                      <option key={school.id} value={school.id}>
+                        {school.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email-signup">Email</Label>
