@@ -195,11 +195,13 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
               <Button
                 variant="outline"
                 onClick={() => setOpen(true)}
-                className="w-full justify-between font-normal"
+                className="w-full justify-between font-normal text-foreground"
               >
-                {selectedMaterial
-                  ? allMaterials[selectedMaterial]
-                  : "Selecionar material..."}
+                <span className={selectedMaterial ? "text-foreground font-medium" : "text-muted-foreground"}>
+                  {selectedMaterial
+                    ? allMaterials[selectedMaterial]
+                    : "Selecionar material..."}
+                </span>
                 <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
               
