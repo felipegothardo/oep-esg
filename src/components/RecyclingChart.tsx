@@ -8,6 +8,7 @@ interface RecyclingEntry {
   quantity: number;
   co2Saved: number;
   date: string;
+  month?: string;
 }
 
 interface RecyclingChartProps {
@@ -28,6 +29,16 @@ const COLORS = {
 };
 
 export default function RecyclingChart({ entries }: RecyclingChartProps) {
+  // Agrupar dados por mês
+  const monthlyData = entries.reduce((acc, entry) => {
+    const monthKey = entry.month || entry.date;
+    if (!acc[monthKey]) {
+      acc[monthKey] = [];
+    }
+    acc[monthKey].push(entry);
+    return acc;
+  }, {} as Record<string, RecyclingEntry[]>);
+
   // Agregar dados por material
   const materialData = entries.reduce((acc, entry) => {
     const existing = acc.find(item => item.material === entry.material);
@@ -105,6 +116,51 @@ export default function RecyclingChart({ entries }: RecyclingChartProps) {
           </CardContent>
         </Card>
       </div>
+
+      {/* Gráfico de evolução mensal */}
+      <Card className="border-0 shadow-soft">
+        <CardHeader>
+          <CardTitle className="text-primary">Evolução Mensal da Reciclagem</CardTitle>
+          <CardDescription>Quantidade reciclada por mês</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart 
+                data={Object.entries(monthlyData).map(([month, entries]) => ({
+                  month: entries[0].month ? 
+                    new Date(entries[0].month + '-01').toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }) : 
+                    month,
+                  total: entries.reduce((sum, e) => sum + e.quantity, 0),
+                  co2: entries.reduce((sum, e) => sum + e.co2Saved, 0)
+                })).sort((a, b) => a.month.localeCompare(b.month))}
+                margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                <XAxis 
+                  dataKey="month" 
+                  tick={{ fontSize: 12 }}
+                  angle={-45}
+                  textAnchor="end"
+                />
+                <YAxis tick={{ fontSize: 12 }} />
+                <Tooltip 
+                  formatter={(value: number, name: string) => [
+                    name === 'total' ? `${value.toFixed(1)} kg` : `${value.toFixed(2)} kg CO2`,
+                    name === 'total' ? 'Quantidade' : 'CO2 Evitado'
+                  ]}
+                />
+                <Bar 
+                  dataKey="total" 
+                  fill="#22c55e"
+                  radius={[4, 4, 0, 0]}
+                  name="total"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Gráfico de pizza - Distribuição por material */}
       <Card className="border-0 shadow-soft">
