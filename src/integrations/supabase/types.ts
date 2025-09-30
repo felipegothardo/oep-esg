@@ -14,7 +14,232 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      chat_messages: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          school_id: string
+          updated_at: string
+          user_id: string | null
+          user_name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          school_id: string
+          updated_at?: string
+          user_id?: string | null
+          user_name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          school_id?: string
+          updated_at?: string
+          user_id?: string | null
+          user_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consumption_entries: {
+        Row: {
+          consumption: number
+          cost: number
+          created_at: string
+          entry_date: string
+          id: string
+          month: string
+          school_id: string
+          type: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          consumption: number
+          cost: number
+          created_at?: string
+          entry_date?: string
+          id?: string
+          month: string
+          school_id: string
+          type: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          consumption?: number
+          cost?: number
+          created_at?: string
+          entry_date?: string
+          id?: string
+          month?: string
+          school_id?: string
+          type?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consumption_entries_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consumption_goals: {
+        Row: {
+          created_at: string
+          id: string
+          reduction_percentage: number
+          school_id: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          reduction_percentage: number
+          school_id: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          reduction_percentage?: number
+          school_id?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consumption_goals_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string | null
+          id: string
+          role: string | null
+          school_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          role?: string | null
+          school_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          role?: string | null
+          school_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recycling_entries: {
+        Row: {
+          co2_saved: number
+          created_at: string
+          entry_date: string
+          id: string
+          material: string
+          quantity: number
+          school_id: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          co2_saved: number
+          created_at?: string
+          entry_date?: string
+          id?: string
+          material: string
+          quantity: number
+          school_id: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          co2_saved?: number
+          created_at?: string
+          entry_date?: string
+          id?: string
+          material?: string
+          quantity?: number
+          school_id?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recycling_entries_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schools: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
