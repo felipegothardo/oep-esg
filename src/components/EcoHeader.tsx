@@ -12,7 +12,7 @@ export default function EcoHeader() {
       {/* Content */}
       <div className="relative max-w-4xl mx-auto text-center">
         <div className="flex flex-col items-center gap-4 md:gap-6 mb-6 md:mb-8">
-          <img src={oepLogo} alt="OEP Sustentável Logo" width="280" height="280" className="w-40 h-40 md:w-56 md:h-56 lg:w-72 lg:h-72 object-contain animate-float shadow-eco" loading="eager" onError={e => {
+          <img src={oepLogo} alt="OEP Sustentável Logo" width="320" height="320" className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 object-contain animate-float" loading="eager" onError={e => {
           console.log('Logo error:', e);
           e.currentTarget.style.display = 'none';
         }} />
