@@ -217,7 +217,7 @@ export default function Auth() {
                     <SelectTrigger id="school">
                       <SelectValue placeholder="Selecione sua escola" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-50 bg-card">
                       {schools.map((school) => (
                         <SelectItem key={school.id} value={school.id}>
                           {school.name}
