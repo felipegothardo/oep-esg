@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useCloudData } from '@/hooks/useCloudData';
 import { supabase } from '@/integrations/supabase/client';
+import { cn } from '@/lib/utils';
 import EcoHeader from './EcoHeader';
 import DeleteRecordsDialog from './DeleteRecordsDialog';
 import ConsolidatedDashboard from './ConsolidatedDashboard';
@@ -12,14 +13,17 @@ import SchoolSelection from './SchoolSelection';
 import SchoolDashboard from './SchoolDashboard';
 import OnboardingTutorial from './OnboardingTutorial';
 import AdvancedReports from './AdvancedReports';
+import CoordinatorDashboard from './CoordinatorDashboard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BarChart3, Home, FileText } from 'lucide-react';
+import { BarChart3, Home, FileText, Building2 } from 'lucide-react';
 import { RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSchoolData';
 
 export default function Dashboard() {
   const { toast } = useToast();
   const [currentSchoolName, setCurrentSchoolName] = useState<string>('');
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [isCoordinator, setIsCoordinator] = useState(false);
+  const [userSchoolCode, setUserSchoolCode] = useState<string>('');
   
   const {
     recyclingEntries,
@@ -56,6 +60,11 @@ export default function Dashboard() {
       
       if (profile?.schools) {
         setCurrentSchoolName(profile.schools.name);
+        setUserSchoolCode(profile.schools.code);
+        // Verificar se é coordenador (escola OEP)
+        if (profile.schools.code === 'OEP') {
+          setIsCoordinator(true);
+        }
       }
     }
   };
@@ -114,11 +123,20 @@ export default function Dashboard() {
       
       <div className="container mx-auto px-2 md:px-4 py-4 md:py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6">
+          <TabsList className={cn(
+            "grid w-full mb-6",
+            isCoordinator ? "grid-cols-3" : "grid-cols-2"
+          )}>
             <TabsTrigger value="dashboard" className="gap-2">
               <Home className="h-4 w-4" />
               Minha Escola
             </TabsTrigger>
+            {isCoordinator && (
+              <TabsTrigger value="coordinator" className="gap-2">
+                <Building2 className="h-4 w-4" />
+                Todas as Escolas
+              </TabsTrigger>
+            )}
             <TabsTrigger value="reports" className="gap-2">
               <BarChart3 className="h-4 w-4" />
               Relatórios
@@ -141,6 +159,12 @@ export default function Dashboard() {
               onDeleteConsumptionByMonth={deleteConsumptionByMonth}
             />
           </TabsContent>
+
+          {isCoordinator && (
+            <TabsContent value="coordinator">
+              <CoordinatorDashboard />
+            </TabsContent>
+          )}
 
           <TabsContent value="reports">
             <AdvancedReports />

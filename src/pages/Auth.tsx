@@ -91,6 +91,9 @@ export default function Auth() {
       if (error) throw error;
 
       if (data?.user) {
+        // Aguardar um pouco para evitar tela branca
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
         // Update the user's profile with the school
         const { error: profileError } = await supabase
           .from("profiles")
@@ -109,7 +112,10 @@ export default function Auth() {
           description: "Você está sendo redirecionado...",
         });
         
-        window.location.href = "/";
+        // Aguardar o toast aparecer
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1000);
       }
     } catch (error: any) {
       console.error("Erro no cadastro:", error);
