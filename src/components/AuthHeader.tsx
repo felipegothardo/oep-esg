@@ -32,7 +32,7 @@ export default function AuthHeader() {
           )
         `)
         .eq("user_id", session.user.id)
-        .single();
+        .maybeSingle();
       
       if (profile) {
         setUserName(profile.full_name);
