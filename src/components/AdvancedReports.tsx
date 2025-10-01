@@ -64,10 +64,11 @@ export default function AdvancedReports() {
         startDate.setFullYear(startDate.getFullYear() - 1);
       }
 
-      // Load schools
+      // Load schools (excluding OEP)
       const { data: schoolsData } = await supabase
         .from("schools")
         .select("*")
+        .neq('code', 'OEP')
         .order("name");
 
       if (!schoolsData) return;
