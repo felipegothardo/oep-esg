@@ -3,9 +3,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { BarChart3, Recycle, Droplet, Zap, TrendingUp, Award } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { BarChart3, Recycle, Droplet, Zap, TrendingUp, Award, FileText, Download, Eye } from 'lucide-react';
 import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { cn } from '@/lib/utils';
+import { exportToPDF } from '@/utils/pdfExport';
+import { useToast } from '@/hooks/use-toast';
+import SchoolDashboard from './SchoolDashboard';
 
 interface SchoolData {
   id: string;
@@ -16,12 +21,17 @@ interface SchoolData {
   waterConsumption: number;
   energyConsumption: number;
   monthlyData: any[];
+  recyclingEntries?: any[];
+  consumptionEntries?: any[];
 }
 
 export default function CoordinatorDashboard() {
   const [schools, setSchools] = useState<SchoolData[]>([]);
   const [selectedSchool, setSelectedSchool] = useState<string>('all');
+  const [viewMode, setViewMode] = useState<'overview' | 'individual'>('overview');
+  const [selectedSchoolData, setSelectedSchoolData] = useState<SchoolData | null>(null);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
     loadAllSchoolsData();
@@ -30,11 +40,11 @@ export default function CoordinatorDashboard() {
   const loadAllSchoolsData = async () => {
     setLoading(true);
     try {
-      // Carregar todas as escolas
+      // Carregar todas as escolas (exceto OEP)
       const { data: schoolsList } = await supabase
         .from('schools')
         .select('*')
-        .neq('code', 'OEP'); // Excluir a escola OEP da lista
+        .neq('code', 'OEP');
 
       if (!schoolsList) return;
 
@@ -44,14 +54,16 @@ export default function CoordinatorDashboard() {
           // Dados de reciclagem
           const { data: recyclingData } = await supabase
             .from('recycling_entries')
-            .select('quantity, co2_saved, entry_date')
-            .eq('school_id', school.id);
+            .select('*')
+            .eq('school_id', school.id)
+            .order('entry_date', { ascending: false });
 
           // Dados de consumo
           const { data: consumptionData } = await supabase
             .from('consumption_entries')
-            .select('type, consumption, cost, month')
-            .eq('school_id', school.id);
+            .select('*')
+            .eq('school_id', school.id)
+            .order('entry_date', { ascending: false });
 
           const totalRecycling = recyclingData?.reduce((sum, entry) => sum + entry.quantity, 0) || 0;
           const totalCO2Saved = recyclingData?.reduce((sum, entry) => sum + entry.co2_saved, 0) || 0;
@@ -83,7 +95,9 @@ export default function CoordinatorDashboard() {
             totalCO2Saved,
             waterConsumption,
             energyConsumption,
-            monthlyData: Object.values(monthlyRecycling || {})
+            monthlyData: Object.values(monthlyRecycling || {}),
+            recyclingEntries: recyclingData || [],
+            consumptionEntries: consumptionData || []
           };
         })
       );
@@ -91,6 +105,11 @@ export default function CoordinatorDashboard() {
       setSchools(schoolsWithData);
     } catch (error) {
       console.error('Erro ao carregar dados das escolas:', error);
+      toast({
+        title: "Erro ao carregar dados",
+        description: "Não foi possível carregar os dados das escolas.",
+        variant: "destructive"
+      });
     } finally {
       setLoading(false);
     }
@@ -110,9 +129,60 @@ export default function CoordinatorDashboard() {
     };
   };
 
-  const metrics = getTotalMetrics();
+  const handleExportGlobalReport = async () => {
+    try {
+      // Combinar dados de todas as escolas
+      const allRecyclingEntries = schools.flatMap(s => s.recyclingEntries || []);
+      const allConsumptionEntries = schools.flatMap(s => s.consumptionEntries || []);
+      
+      await exportToPDF(
+        "Relatório Global - Todas as Escolas",
+        allRecyclingEntries,
+        allConsumptionEntries
+      );
+      
+      toast({
+        title: "Relatório exportado!",
+        description: "O relatório global foi gerado com sucesso.",
+      });
+    } catch (error) {
+      console.error('Erro ao exportar relatório:', error);
+      toast({
+        title: "Erro ao exportar",
+        description: "Não foi possível gerar o relatório.",
+        variant: "destructive"
+      });
+    }
+  };
 
-  // Determinar escola com melhor desempenho
+  const handleExportSchoolReport = async (school: SchoolData) => {
+    try {
+      await exportToPDF(
+        school.name,
+        school.recyclingEntries || [],
+        school.consumptionEntries || []
+      );
+      
+      toast({
+        title: "Relatório exportado!",
+        description: `Relatório de ${school.name} gerado com sucesso.`,
+      });
+    } catch (error) {
+      console.error('Erro ao exportar relatório:', error);
+      toast({
+        title: "Erro ao exportar",
+        description: "Não foi possível gerar o relatório.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleViewSchoolDetails = (school: SchoolData) => {
+    setSelectedSchoolData(school);
+    setViewMode('individual');
+  };
+
+  const metrics = getTotalMetrics();
   const topSchool = schools.reduce((prev, current) => 
     (current.totalCO2Saved > prev.totalCO2Saved) ? current : prev, 
     schools[0] || { name: '', totalCO2Saved: 0 }
@@ -129,24 +199,82 @@ export default function CoordinatorDashboard() {
     );
   }
 
+  // Vista individual de escola
+  if (viewMode === 'individual' && selectedSchoolData) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Dados de {selectedSchoolData.name}</h2>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => handleExportSchoolReport(selectedSchoolData)}
+              variant="outline"
+              size="sm"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Exportar PDF
+            </Button>
+            <Button
+              onClick={() => setViewMode('overview')}
+              variant="outline"
+              size="sm"
+            >
+              Voltar ao Resumo
+            </Button>
+          </div>
+        </div>
+
+        <SchoolDashboard
+          schoolName={selectedSchoolData.name}
+          schoolType="view-only"
+          data={{
+            recyclingEntries: selectedSchoolData.recyclingEntries || [],
+            consumptionEntries: selectedSchoolData.consumptionEntries || [],
+            consumptionGoals: []
+          }}
+          onRecyclingUpdate={() => {}}
+          onConsumptionUpdate={() => {}}
+          onDeleteAll={() => {}}
+          onDeleteRecyclingByMonth={() => {}}
+          onDeleteConsumptionByMonth={() => {}}
+        />
+      </div>
+    );
+  }
+
+  // Vista geral
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Visão Geral - Coordenação OEP</h2>
+          <h2 className="text-2xl font-bold">Coordenação OEP - Visão Geral</h2>
           <p className="text-muted-foreground">Acompanhe o desempenho ambiental de todas as unidades</p>
         </div>
         
-        <select
-          value={selectedSchool}
-          onChange={(e) => setSelectedSchool(e.target.value)}
-          className="px-4 py-2 rounded-md border border-input bg-background"
-        >
-          <option value="all">Todas as Escolas</option>
-          {schools.map(school => (
-            <option key={school.id} value={school.id}>{school.name}</option>
-          ))}
-        </select>
+        <div className="flex gap-2">
+          <Select value={selectedSchool} onValueChange={setSelectedSchool}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Filtrar escola" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas as Escolas</SelectItem>
+              {schools.map(school => (
+                <SelectItem key={school.id} value={school.id}>
+                  {school.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          <Button
+            onClick={handleExportGlobalReport}
+            variant="outline"
+            size="default"
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            Relatório Global
+          </Button>
+        </div>
       </div>
 
       {/* Métricas Gerais */}
@@ -258,6 +386,23 @@ export default function CoordinatorDashboard() {
                         <span>Reciclagem: {school.totalRecycling.toFixed(1)} kg</span>
                         <span>CO₂: {school.totalCO2Saved.toFixed(1)} kg</span>
                       </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        onClick={() => handleViewSchoolDetails(school)}
+                        variant="ghost"
+                        size="sm"
+                      >
+                        <Eye className="h-4 w-4 mr-1" />
+                        Ver Detalhes
+                      </Button>
+                      <Button
+                        onClick={() => handleExportSchoolReport(school)}
+                        variant="ghost"
+                        size="sm"
+                      >
+                        <Download className="h-4 w-4" />
+                      </Button>
                     </div>
                     <Progress 
                       value={(school.totalCO2Saved / (topSchool?.totalCO2Saved || 1)) * 100} 
