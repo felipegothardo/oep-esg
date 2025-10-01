@@ -1,234 +1,79 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
-import { Trash2, Droplets, Zap, Recycle, AlertTriangle } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-
-interface RecyclingEntry {
-  id: string;
-  material: string;
-  quantity: number;
-  co2Saved: number;
-  date: string;
-}
-
-interface ConsumptionEntry {
-  id: string;
-  type: 'water' | 'energy';
-  month: string;
-  cost: number;
-  consumption: number;
-  date: string;
-}
-
-interface ConsumptionGoal {
-  type: 'water' | 'energy';
-  reductionPercentage: number;
-}
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import { useState } from "react";
 
 interface DeleteRecordsDialogProps {
-  schoolName: string;
-  recyclingEntries: RecyclingEntry[];
-  consumptionEntries: ConsumptionEntry[];
-  onDeleteAll: () => void;
-  onDeleteRecyclingByMonth: (month: string) => void;
-  onDeleteConsumptionByMonth: (type: 'water' | 'energy', month: string) => void;
+  onConfirm: () => Promise<void>;
+  title: string;
+  description: string;
+  buttonText?: string;
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  size?: "default" | "sm" | "lg" | "icon";
 }
 
-export default function DeleteRecordsDialog({
-  schoolName,
-  recyclingEntries,
-  consumptionEntries,
-  onDeleteAll,
-  onDeleteRecyclingByMonth,
-  onDeleteConsumptionByMonth
+export function DeleteRecordsDialog({
+  onConfirm,
+  title,
+  description,
+  buttonText = "Apagar",
+  variant = "destructive",
+  size = "sm"
 }: DeleteRecordsDialogProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [pendingAction, setPendingAction] = useState<() => void>(() => {});
-  const [deleteType, setDeleteType] = useState<'all' | 'selected'>('all');
-  const [selectedSession, setSelectedSession] = useState<'water' | 'energy' | 'waste'>('water');
-  const [selectedMonth, setSelectedMonth] = useState('');
-  const { toast } = useToast();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  const waterEntries = consumptionEntries.filter(e => e.type === 'water');
-  const energyEntries = consumptionEntries.filter(e => e.type === 'energy');
-
-  const getAvailableMonths = (session: 'water' | 'energy' | 'waste') => {
-    if (session === 'waste') {
-      return [...new Set(recyclingEntries.map(e => e.date))];
-    } else {
-      const entries = session === 'water' ? waterEntries : energyEntries;
-      return [...new Set(entries.map(e => e.month))];
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await onConfirm();
+      setOpen(false);
+    } catch (error) {
+      console.error("Erro ao apagar registros:", error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
-  const handleDelete = () => {
-    const action = () => {
-      if (deleteType === 'all') {
-        onDeleteAll();
-        toast({
-          title: `Registros de ${schoolName} apagados`,
-          description: "Todos os dados desta escola foram removidos com sucesso.",
-        });
-      } else {
-        if (!selectedSession || !selectedMonth) {
-          toast({
-            title: "Erro",
-            description: "Selecione uma sessão e um mês para apagar.",
-            variant: "destructive"
-          });
-          return;
-        }
-
-        if (selectedSession === 'waste') {
-          onDeleteRecyclingByMonth(selectedMonth);
-          toast({
-            title: `Resíduos de ${schoolName} apagados`,
-            description: `Registros de ${selectedMonth} foram removidos.`,
-          });
-        } else {
-          onDeleteConsumptionByMonth(selectedSession, selectedMonth);
-          toast({
-            title: `${selectedSession === 'water' ? 'Água' : 'Energia'} de ${schoolName} apagado`,
-            description: `Registros de ${selectedMonth} foram removidos.`,
-          });
-        }
-      }
-      
-      setIsOpen(false);
-      setDeleteType('all');
-      setSelectedSession('water');
-      setSelectedMonth('');
-    };
-
-    setPendingAction(() => action);
-    setConfirmOpen(true);
-  };
-
   return (
-    <>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>
-          <Button variant="outline" size="sm" className="gap-2">
-            <Trash2 className="w-4 h-4" />
-            Apagar Registros
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Apagar Registros - {schoolName}</DialogTitle>
-            <DialogDescription>
-              Escolha quais registros deseja apagar desta escola. Esta ação não pode ser desfeita.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Tipo de exclusão</Label>
-              <Select value={deleteType} onValueChange={(value: 'all' | 'selected') => setDeleteType(value)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Apagar Todos os Registros da Escola</SelectItem>
-                  <SelectItem value="selected">Apagar Registros Selecionados</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {deleteType === 'selected' && (
-              <>
-                <div className="space-y-2">
-                  <Label>Sessão</Label>
-                  <Select value={selectedSession} onValueChange={(value: 'water' | 'energy' | 'waste') => setSelectedSession(value)}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="water">
-                        <div className="flex items-center gap-2">
-                          <Droplets className="w-4 h-4 text-blue-500" />
-                          Água
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="energy">
-                        <div className="flex items-center gap-2">
-                          <Zap className="w-4 h-4 text-yellow-500" />
-                          Energia
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="waste">
-                        <div className="flex items-center gap-2">
-                          <Recycle className="w-4 h-4 text-green-500" />
-                          Resíduos
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Mês para apagar</Label>
-                  <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione um mês" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {getAvailableMonths(selectedSession).map((month) => (
-                        <SelectItem key={month} value={month}>
-                          {month}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </>
-            )}
-
-            <div className="flex gap-2 pt-4">
-              <Button
-                variant="outline"
-                onClick={() => setIsOpen(false)}
-                className="flex-1"
-              >
-                Cancelar
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={handleDelete}
-                className="flex-1"
-              >
-                <Trash2 className="w-4 h-4 mr-2" />
-                Apagar
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-destructive" />
-              Você tem certeza disso?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Os registros selecionados da escola {schoolName} serão permanentemente apagados.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={pendingAction} className="bg-destructive hover:bg-destructive/90">
-              Sim, apagar registros
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
+        <Button variant={variant} size={size}>
+          <Trash2 className="h-4 w-4 mr-2" />
+          {buttonText}
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription className="space-y-2">
+            <p>{description}</p>
+            <p className="font-semibold text-destructive">
+              Esta ação não pode ser desfeita!
+            </p>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
+            {isDeleting ? "Apagando..." : "Confirmar Exclusão"}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

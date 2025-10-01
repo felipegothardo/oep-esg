@@ -6,7 +6,7 @@ import { SchoolData, RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@
 import ExportButton from './ExportButton';
 import MobileStats from './MobileStats';
 import LoadingSkeleton from './LoadingSkeleton';
-import DeleteRecordsDialog from './DeleteRecordsDialog';
+import { DeleteRecordsDialog } from './DeleteRecordsDialog';
 import { useActionHistory } from '@/hooks/useActionHistory';
 import { useAutoBackup } from '@/hooks/useAutoBackup';
 
@@ -102,14 +102,6 @@ export default function SchoolDashboard({
           {schoolName}
         </h3>
         <div className="flex gap-2">
-          <DeleteRecordsDialog 
-            schoolName={schoolName}
-            recyclingEntries={data.recyclingEntries}
-            consumptionEntries={data.consumptionEntries}
-            onDeleteAll={onDeleteAll}
-            onDeleteRecyclingByMonth={onDeleteRecyclingByMonth}
-            onDeleteConsumptionByMonth={onDeleteConsumptionByMonth}
-          />
           <ExportButton 
             schoolName={schoolName}
             recyclingEntries={data.recyclingEntries}

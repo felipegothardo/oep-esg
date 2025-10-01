@@ -6,6 +6,8 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Droplets, Zap, Target, TrendingDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { DeleteRecordsDialog } from '@/components/DeleteRecordsDialog';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface ConsumptionEntry {
   id: string;
@@ -168,6 +170,68 @@ export default function WaterEnergyTracker({
   const waterGoal = goals.find(g => g.type === 'water');
   const energyGoal = goals.find(g => g.type === 'energy');
 
+  const handleDeleteWaterRecords = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { error } = await supabase
+          .from('consumption_entries')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('type', 'water');
+        
+        if (error) throw error;
+      }
+      
+      const updatedEntries = entries.filter(e => e.type !== 'water');
+      setEntries(updatedEntries);
+      onDataUpdate(updatedEntries, goals);
+      
+      toast({
+        title: "Registros de água apagados!",
+        description: "Todos os registros de consumo de água foram removidos.",
+      });
+    } catch (error) {
+      console.error("Erro ao apagar registros:", error);
+      toast({
+        title: "Erro ao apagar registros",
+        description: "Não foi possível apagar os registros. Tente novamente.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDeleteEnergyRecords = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { error } = await supabase
+          .from('consumption_entries')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('type', 'energy');
+        
+        if (error) throw error;
+      }
+      
+      const updatedEntries = entries.filter(e => e.type !== 'energy');
+      setEntries(updatedEntries);
+      onDataUpdate(updatedEntries, goals);
+      
+      toast({
+        title: "Registros de energia apagados!",
+        description: "Todos os registros de consumo de energia foram removidos.",
+      });
+    } catch (error) {
+      console.error("Erro ao apagar registros:", error);
+      toast({
+        title: "Erro ao apagar registros",
+        description: "Não foi possível apagar os registros. Tente novamente.",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6">
       <Card className="border-0 shadow-eco">
@@ -259,6 +323,17 @@ export default function WaterEnergyTracker({
                   </div>
                 </div>
               )}
+
+              {waterEntries.length > 0 && (
+                <div className="flex justify-end">
+                  <DeleteRecordsDialog
+                    title="Apagar todos os registros de água?"
+                    description="Todos os registros de consumo de água serão permanentemente removidos."
+                    buttonText="Apagar Registros de Água"
+                    onConfirm={handleDeleteWaterRecords}
+                  />
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="energy" className="space-y-4">
@@ -321,6 +396,17 @@ export default function WaterEnergyTracker({
                     <Target className="w-5 h-5 text-yellow-500" />
                     <span className="font-medium">Meta Atual: {energyGoal.reductionPercentage}% de redução</span>
                   </div>
+                </div>
+              )}
+
+              {energyEntries.length > 0 && (
+                <div className="flex justify-end">
+                  <DeleteRecordsDialog
+                    title="Apagar todos os registros de energia?"
+                    description="Todos os registros de consumo de energia serão permanentemente removidos."
+                    buttonText="Apagar Registros de Energia"
+                    onConfirm={handleDeleteEnergyRecords}
+                  />
                 </div>
               )}
             </TabsContent>

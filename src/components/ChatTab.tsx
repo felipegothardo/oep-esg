@@ -18,6 +18,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { DeleteRecordsDialog } from '@/components/DeleteRecordsDialog';
+import { supabase } from '@/integrations/supabase/client';
 interface ChatMessage {
   id: string;
   name: string;
@@ -92,6 +94,34 @@ export default function ChatTab({ defaultSchool }: ChatTabProps) {
 
   const sorted = [...messages].sort((a, b) => a.timestamp - b.timestamp);
 
+  const handleDeleteAllMessages = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { error } = await supabase
+          .from('chat_messages')
+          .delete()
+          .eq('user_id', user.id);
+        
+        if (error) throw error;
+      }
+      
+      setMessages([]);
+      
+      toast({
+        title: "Mensagens apagadas!",
+        description: "Todas as mensagens foram removidas.",
+      });
+    } catch (error) {
+      console.error("Erro ao apagar mensagens:", error);
+      toast({
+        title: "Erro ao apagar mensagens",
+        description: "Não foi possível apagar as mensagens. Tente novamente.",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <section aria-label="Chat da comunidade" className="space-y-4">
       <Card>
@@ -133,8 +163,20 @@ export default function ChatTab({ defaultSchool }: ChatTabProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Mensagens</CardTitle>
-          <CardDescription>As mensagens são salvas apenas neste dispositivo por enquanto.</CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Mensagens</CardTitle>
+              <CardDescription>As mensagens são salvas apenas neste dispositivo por enquanto.</CardDescription>
+            </div>
+            {sorted.length > 0 && (
+              <DeleteRecordsDialog
+                title="Apagar todas as mensagens?"
+                description="Todas as mensagens do chat serão permanentemente removidas."
+                buttonText="Apagar Todas"
+                onConfirm={handleDeleteAllMessages}
+              />
+            )}
+          </div>
         </CardHeader>
         <CardContent className="space-y-3">
           {sorted.length === 0 ? (
