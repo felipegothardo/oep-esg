@@ -133,8 +133,8 @@ export default function CoordinatorDashboard() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Visão Geral - Todas as Escolas</h2>
-          <p className="text-muted-foreground">Acompanhe o desempenho ambiental de todas as escolas do OEP</p>
+          <h2 className="text-2xl font-bold">Visão Geral - Coordenação OEP</h2>
+          <p className="text-muted-foreground">Acompanhe o desempenho ambiental de todas as unidades</p>
         </div>
         
         <select
