@@ -176,7 +176,11 @@ export default function AdvancedReports() {
       }
 
       setSchools(schoolsWithData);
-      processReportData(schoolsWithData);
+      if (schoolsWithData.length > 0) {
+        processReportData(schoolsWithData);
+      } else {
+        setReportData(null);
+      }
     } catch (error) {
       console.error("Error loading report data:", error);
       toast({
@@ -184,6 +188,7 @@ export default function AdvancedReports() {
         description: "Não foi possível carregar os dados dos relatórios",
         variant: "destructive"
       });
+      setReportData(null);
     } finally {
       setLoading(false);
     }
@@ -260,6 +265,15 @@ export default function AdvancedReports() {
   };
 
   const exportPDF = async () => {
+    if (!reportData) {
+      toast({
+        title: "Sem dados",
+        description: "Não há dados para exportar",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     try {
       const reportElement = document.getElementById("advanced-report");
       if (!reportElement) return;
@@ -298,6 +312,15 @@ export default function AdvancedReports() {
   };
 
   const exportCSV = () => {
+    if (!reportData) {
+      toast({
+        title: "Sem dados",
+        description: "Não há dados para exportar",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     try {
       if (!reportData) return;
 
@@ -349,6 +372,20 @@ export default function AdvancedReports() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">Carregando relatórios...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!reportData || schools.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-[600px]">
+        <div className="text-center">
+          <School className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2">Nenhum dado disponível</h3>
+          <p className="text-muted-foreground">
+            Não há dados de escolas para gerar relatórios no período selecionado.
+          </p>
         </div>
       </div>
     );
