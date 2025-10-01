@@ -64,6 +64,8 @@ export default function Dashboard() {
         // Verificar se é coordenador (escola OEP)
         if (profile.schools.code === 'OEP') {
           setIsCoordinator(true);
+          // Se for coordenador, definir aba inicial como coordinator
+          setActiveTab('coordinator');
         }
       }
     }
@@ -125,12 +127,14 @@ export default function Dashboard() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className={cn(
             "grid w-full mb-6",
-            isCoordinator ? "grid-cols-3" : "grid-cols-2"
+            isCoordinator ? "grid-cols-2" : "grid-cols-2"
           )}>
-            <TabsTrigger value="dashboard" className="gap-2">
-              <Home className="h-4 w-4" />
-              Minha Escola
-            </TabsTrigger>
+            {!isCoordinator && (
+              <TabsTrigger value="dashboard" className="gap-2">
+                <Home className="h-4 w-4" />
+                Minha Escola
+              </TabsTrigger>
+            )}
             {isCoordinator && (
               <TabsTrigger value="coordinator" className="gap-2">
                 <Building2 className="h-4 w-4" />
@@ -143,22 +147,24 @@ export default function Dashboard() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="dashboard" className="space-y-6">
-            <SchoolDashboard
-              schoolName={currentSchoolName}
-              schoolType="current"
-              data={{
-                recyclingEntries,
-                consumptionEntries,
-                consumptionGoals
-              }}
-              onRecyclingUpdate={handleRecyclingUpdate}
-              onConsumptionUpdate={handleConsumptionUpdate}
-              onDeleteAll={deleteAllRecords}
-              onDeleteRecyclingByMonth={deleteRecyclingByMonth}
-              onDeleteConsumptionByMonth={deleteConsumptionByMonth}
-            />
-          </TabsContent>
+          {!isCoordinator && (
+            <TabsContent value="dashboard" className="space-y-6">
+              <SchoolDashboard
+                schoolName={currentSchoolName}
+                schoolType="current"
+                data={{
+                  recyclingEntries,
+                  consumptionEntries,
+                  consumptionGoals
+                }}
+                onRecyclingUpdate={handleRecyclingUpdate}
+                onConsumptionUpdate={handleConsumptionUpdate}
+                onDeleteAll={deleteAllRecords}
+                onDeleteRecyclingByMonth={deleteRecyclingByMonth}
+                onDeleteConsumptionByMonth={deleteConsumptionByMonth}
+              />
+            </TabsContent>
+          )}
 
           {isCoordinator && (
             <TabsContent value="coordinator">
