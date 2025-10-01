@@ -33,6 +33,7 @@ interface SchoolDashboardProps {
   onDeleteAll: () => void;
   onDeleteRecyclingByMonth: (month: string) => void;
   onDeleteConsumptionByMonth: (type: 'water' | 'energy', month: string) => void;
+  viewOnly?: boolean;
 }
 
 export default function SchoolDashboard({ 
@@ -43,15 +44,20 @@ export default function SchoolDashboard({
   onConsumptionUpdate,
   onDeleteAll,
   onDeleteRecyclingByMonth,
-  onDeleteConsumptionByMonth
+  onDeleteConsumptionByMonth,
+  viewOnly = false
 }: SchoolDashboardProps) {
   const [currentMobileTab, setCurrentMobileTab] = useState('calculator');
   
-  // Hook de histórico de ações
-  const { history, addToHistory, clearHistory, undoLastAction, hasHistory } = useActionHistory();
+  // Hook de histórico de ações - apenas se não for viewOnly
+  const { history, addToHistory, clearHistory, undoLastAction, hasHistory } = viewOnly 
+    ? { history: [], addToHistory: () => {}, clearHistory: () => {}, undoLastAction: () => {}, hasHistory: false }
+    : useActionHistory();
   
-  // Hook de backup automático
-  const { listBackups } = useAutoBackup(schoolName, data);
+  // Hook de backup automático - apenas se não for viewOnly
+  const { listBackups } = viewOnly
+    ? { listBackups: [] }
+    : useAutoBackup(schoolName, data);
   
   // Wrapper para adicionar ações ao histórico
   const handleRecyclingUpdate = (entries: RecyclingEntry[]) => {
@@ -250,22 +256,30 @@ export default function SchoolDashboard({
         <TabsContent value="calculator" className="animate-fade-in">
           <Suspense fallback={<LoadingSkeleton type="form" />}>
             <div className="recycling-section space-y-4">
-              <Suspense fallback={null}>
-                <ContextualTips 
-                  recyclingTotal={totalRecycled}
-                  co2Total={totalCO2Saved}
-                  waterConsumption={lastWaterConsumption}
-                  energyConsumption={lastEnergyConsumption}
-                  hasRecyclingData={data.recyclingEntries.length > 0}
-                  hasConsumptionData={data.consumptionEntries.length > 0}
-                  schoolName={schoolName}
-                  onTabChange={setCurrentMobileTab}
+              {!viewOnly && (
+                <Suspense fallback={null}>
+                  <ContextualTips 
+                    recyclingTotal={totalRecycled}
+                    co2Total={totalCO2Saved}
+                    waterConsumption={lastWaterConsumption}
+                    energyConsumption={lastEnergyConsumption}
+                    hasRecyclingData={data.recyclingEntries.length > 0}
+                    hasConsumptionData={data.consumptionEntries.length > 0}
+                    schoolName={schoolName}
+                    onTabChange={setCurrentMobileTab}
+                  />
+                </Suspense>
+              )}
+              {viewOnly ? (
+                <RecyclingChart 
+                  entries={data.recyclingEntries}
                 />
-              </Suspense>
-              <RecyclingCalculator
-                onEntriesUpdate={handleRecyclingUpdate} 
-                schoolType={schoolType}
-              />
+              ) : (
+                <RecyclingCalculator
+                  onEntriesUpdate={handleRecyclingUpdate} 
+                  schoolType={schoolType}
+                />
+              )}
             </div>
           </Suspense>
         </TabsContent>
@@ -273,23 +287,32 @@ export default function SchoolDashboard({
         <TabsContent value="consumption" className="animate-fade-in">
           <Suspense fallback={<LoadingSkeleton type="form" />}>
             <div className="consumption-section space-y-4">
-              <Suspense fallback={null}>
-                <ContextualTips 
-                  recyclingTotal={totalRecycled}
-                  co2Total={totalCO2Saved}
-                  waterConsumption={lastWaterConsumption}
-                  energyConsumption={lastEnergyConsumption}
-                  hasRecyclingData={data.recyclingEntries.length > 0}
-                  hasConsumptionData={data.consumptionEntries.length > 0}
-                  schoolName={schoolName}
-                  onTabChange={setCurrentMobileTab}
+              {!viewOnly && (
+                <Suspense fallback={null}>
+                  <ContextualTips 
+                    recyclingTotal={totalRecycled}
+                    co2Total={totalCO2Saved}
+                    waterConsumption={lastWaterConsumption}
+                    energyConsumption={lastEnergyConsumption}
+                    hasRecyclingData={data.recyclingEntries.length > 0}
+                    hasConsumptionData={data.consumptionEntries.length > 0}
+                    schoolName={schoolName}
+                    onTabChange={setCurrentMobileTab}
+                  />
+                </Suspense>
+              )}
+              {viewOnly ? (
+                <ConsumptionChart 
+                  entries={data.consumptionEntries}
+                  goals={data.consumptionGoals}
                 />
-              </Suspense>
-              <WaterEnergyTracker
-                onDataUpdate={handleConsumptionUpdate}
-                existingEntries={data.consumptionEntries}
-                existingGoals={data.consumptionGoals}
-              />
+              ) : (
+                <WaterEnergyTracker
+                  onDataUpdate={handleConsumptionUpdate}
+                  existingEntries={data.consumptionEntries}
+                  existingGoals={data.consumptionGoals}
+                />
+              )}
             </div>
           </Suspense>
         </TabsContent>

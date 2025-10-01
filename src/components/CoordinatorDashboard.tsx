@@ -237,6 +237,7 @@ export default function CoordinatorDashboard() {
           onDeleteAll={() => {}}
           onDeleteRecyclingByMonth={() => {}}
           onDeleteConsumptionByMonth={() => {}}
+          viewOnly={true}
         />
       </div>
     );
