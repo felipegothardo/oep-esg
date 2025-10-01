@@ -21,9 +21,10 @@ import { RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSc
 export default function Dashboard() {
   const { toast } = useToast();
   const [currentSchoolName, setCurrentSchoolName] = useState<string>('');
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('');
   const [isCoordinator, setIsCoordinator] = useState(false);
   const [userSchoolCode, setUserSchoolCode] = useState<string>('');
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
   
   const {
     recyclingEntries,
@@ -44,6 +45,7 @@ export default function Dashboard() {
   }, []);
 
   const loadUserSchool = async () => {
+    setIsLoadingUser(true);
     const { data: { session } } = await supabase.auth.getSession();
     
     if (session?.user) {
@@ -66,9 +68,13 @@ export default function Dashboard() {
           setIsCoordinator(true);
           // Se for coordenador, definir aba inicial como coordinator
           setActiveTab('coordinator');
+        } else {
+          // Se não for coordenador, definir aba inicial como dashboard
+          setActiveTab('dashboard');
         }
       }
     }
+    setIsLoadingUser(false);
   };
 
   const handleRecyclingUpdate = async (entries: RecyclingEntry[]) => {
