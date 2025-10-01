@@ -7,6 +7,8 @@ import { Leaf, Calculator, Recycle, ChevronDown, Search, Plus } from 'lucide-rea
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { DeleteRecordsDialog } from '@/components/DeleteRecordsDialog';
+import { supabase } from '@/integrations/supabase/client';
 
 interface RecyclingEntry {
   id: string;
@@ -177,6 +179,38 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
   };
 
   const totalCO2Saved = entries.reduce((sum, entry) => sum + entry.co2Saved, 0);
+
+  const handleDeleteAllRecycling = async () => {
+    try {
+      // Se os dados vierem do Supabase, deletar do banco
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { error } = await supabase
+          .from('recycling_entries')
+          .delete()
+          .eq('user_id', user.id);
+        
+        if (error) throw error;
+      }
+      
+      // Limpar dados locais
+      if (onEntriesUpdate) {
+        onEntriesUpdate([]);
+      }
+      
+      toast({
+        title: "Registros apagados!",
+        description: "Todos os registros de reciclagem foram removidos.",
+      });
+    } catch (error) {
+      console.error("Erro ao apagar registros:", error);
+      toast({
+        title: "Erro ao apagar registros",
+        description: "Não foi possível apagar os registros. Tente novamente.",
+        variant: "destructive"
+      });
+    }
+  };
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6">
@@ -391,8 +425,18 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
       {entries.length > 0 && (
         <Card className="border-0 shadow-soft">
           <CardHeader>
-            <CardTitle className="text-primary">Histórico de Reciclagem</CardTitle>
-            <CardDescription>Suas contribuições para o meio ambiente</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-primary">Histórico de Reciclagem</CardTitle>
+                <CardDescription>Suas contribuições para o meio ambiente</CardDescription>
+              </div>
+              <DeleteRecordsDialog
+                title="Apagar todos os registros de reciclagem?"
+                description="Todos os seus registros de materiais reciclados serão permanentemente removidos."
+                buttonText="Apagar Tudo"
+                onConfirm={handleDeleteAllRecycling}
+              />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">

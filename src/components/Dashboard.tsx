@@ -4,7 +4,7 @@ import { useCloudData } from '@/hooks/useCloudData';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 import EcoHeader from './EcoHeader';
-import DeleteRecordsDialog from './DeleteRecordsDialog';
+import { DeleteRecordsDialog } from './DeleteRecordsDialog';
 import ConsolidatedDashboard from './ConsolidatedDashboard';
 import PWAInstallPrompt from './PWAInstallPrompt';
 import DesktopShortcutButton from './DesktopShortcutButton';
