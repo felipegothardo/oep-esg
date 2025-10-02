@@ -110,17 +110,19 @@ export function useAutoBackup(schoolName: string, data: any) {
   useEffect(() => {
     let isMounted = true;
     
-    if (isMounted) {
+    if (isMounted && schoolName) {
       createBackup();
     }
     
     return () => {
       isMounted = false;
     };
-  }, [createBackup]);
+  }, [schoolName]); // Apenas quando schoolName mudar, não createBackup
 
   // Configurar backup automático periódico
   useEffect(() => {
+    if (!schoolName) return;
+    
     let isMounted = true;
     
     const intervalId = setInterval(() => {
@@ -141,10 +143,12 @@ export function useAutoBackup(schoolName: string, data: any) {
       clearInterval(intervalId);
       clearInterval(cleanupIntervalId);
     };
-  }, [createBackup, clearOldBackups]);
+  }, [schoolName]); // Apenas quando schoolName mudar
 
   // Salvar backup quando a página for fechada
   useEffect(() => {
+    if (!schoolName) return;
+    
     let isMounted = true;
     
     const handleBeforeUnload = () => {
@@ -158,7 +162,7 @@ export function useAutoBackup(schoolName: string, data: any) {
       isMounted = false;
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [createBackup]);
+  }, [schoolName]); // Apenas quando schoolName mudar
 
   return {
     createBackup,

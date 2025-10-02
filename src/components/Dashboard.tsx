@@ -21,7 +21,7 @@ import { RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSc
 export default function Dashboard() {
   const { toast } = useToast();
   const [currentSchoolName, setCurrentSchoolName] = useState<string>('');
-  const [activeTab, setActiveTab] = useState('');
+  const [activeTab, setActiveTab] = useState('dashboard'); // Valor padrão para evitar tab vazia
   const [isCoordinator, setIsCoordinator] = useState(false);
   const [userSchoolCode, setUserSchoolCode] = useState<string>('');
   const [isLoadingUser, setIsLoadingUser] = useState(true);
