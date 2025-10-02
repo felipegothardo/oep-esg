@@ -108,21 +108,36 @@ export function useAutoBackup(schoolName: string, data: any) {
 
   // Criar backup inicial ao montar o componente
   useEffect(() => {
-    createBackup();
-  }, []);
+    let isMounted = true;
+    
+    if (isMounted) {
+      createBackup();
+    }
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [createBackup]);
 
   // Configurar backup automático periódico
   useEffect(() => {
+    let isMounted = true;
+    
     const intervalId = setInterval(() => {
-      createBackup();
+      if (isMounted) {
+        createBackup();
+      }
     }, BACKUP_INTERVAL);
 
     // Limpar backups antigos uma vez por dia
     const cleanupIntervalId = setInterval(() => {
-      clearOldBackups();
+      if (isMounted) {
+        clearOldBackups();
+      }
     }, 24 * 60 * 60 * 1000);
 
     return () => {
+      isMounted = false;
       clearInterval(intervalId);
       clearInterval(cleanupIntervalId);
     };
@@ -130,12 +145,17 @@ export function useAutoBackup(schoolName: string, data: any) {
 
   // Salvar backup quando a página for fechada
   useEffect(() => {
+    let isMounted = true;
+    
     const handleBeforeUnload = () => {
-      createBackup();
+      if (isMounted) {
+        createBackup();
+      }
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
+      isMounted = false;
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [createBackup]);
