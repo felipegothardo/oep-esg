@@ -49,15 +49,14 @@ export default function SchoolDashboard({
 }: SchoolDashboardProps) {
   const [currentMobileTab, setCurrentMobileTab] = useState('calculator');
   
-  // Hook de histórico de ações - apenas se não for viewOnly
+  // Sempre chamar os hooks (regra do React - hooks não podem ser condicionais)
+  const actionHistory = useActionHistory();
+  const autoBackup = useAutoBackup(schoolName, data);
+  
+  // Usar valores do hook ou valores vazios baseado em viewOnly
   const { history, addToHistory, clearHistory, undoLastAction, hasHistory } = viewOnly 
     ? { history: [], addToHistory: () => {}, clearHistory: () => {}, undoLastAction: () => {}, hasHistory: false }
-    : useActionHistory();
-  
-  // Hook de backup automático - apenas se não for viewOnly
-  const { listBackups } = viewOnly
-    ? { listBackups: [] }
-    : useAutoBackup(schoolName, data);
+    : actionHistory;
   
   // Wrapper para adicionar ações ao histórico
   const handleRecyclingUpdate = (entries: RecyclingEntry[]) => {
