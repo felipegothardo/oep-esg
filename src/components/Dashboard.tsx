@@ -41,7 +41,18 @@ export default function Dashboard() {
   } = useCloudData();
 
   useEffect(() => {
-    loadUserSchool();
+    let isMounted = true;
+    
+    const loadUser = async () => {
+      if (!isMounted) return;
+      await loadUserSchool();
+    };
+    
+    loadUser();
+    
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const loadUserSchool = async () => {

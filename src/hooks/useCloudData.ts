@@ -12,7 +12,18 @@ export function useCloudData() {
   const { toast } = useToast();
 
   useEffect(() => {
-    loadData();
+    let isMounted = true;
+    
+    const initData = async () => {
+      if (!isMounted) return;
+      await loadData();
+    };
+    
+    initData();
+    
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const loadData = async () => {
