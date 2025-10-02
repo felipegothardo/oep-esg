@@ -28,7 +28,7 @@ interface ChatMessage {
   timestamp: number;
 }
 
-const SCHOOLS = ['Elvira Brandão', 'Oswald', 'Piaget', 'Carandá'];
+const SCHOOLS = ['Elvira Brandão', 'Oswald', 'Piaget', 'Carandá', 'OEP'];
 
 interface ChatTabProps {
   defaultSchool: string;
