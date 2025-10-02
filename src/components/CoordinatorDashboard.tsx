@@ -34,7 +34,18 @@ export default function CoordinatorDashboard() {
   const { toast } = useToast();
 
   useEffect(() => {
-    loadAllSchoolsData();
+    let isMounted = true;
+    
+    const loadData = async () => {
+      if (!isMounted) return;
+      await loadAllSchoolsData();
+    };
+    
+    loadData();
+    
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const loadAllSchoolsData = async () => {

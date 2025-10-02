@@ -44,12 +44,24 @@ export default function AdvancedReports() {
   const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
 
   useEffect(() => {
-    loadReportData();
+    let isMounted = true;
+    
+    const loadData = async () => {
+      if (!isMounted) return;
+      await loadReportData();
+    };
+    
+    loadData();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [selectedPeriod, selectedSchool]);
 
   const loadReportData = async () => {
     try {
       setLoading(true);
+      setReportData(null);
 
       // Get date range based on selected period
       const endDate = new Date();
