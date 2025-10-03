@@ -14,6 +14,7 @@ import SchoolDashboard from './SchoolDashboard';
 import OnboardingTutorial from './OnboardingTutorial';
 import AdvancedReports from './AdvancedReports';
 import CoordinatorDashboard from './CoordinatorDashboard';
+import InitialSchoolSelection from './InitialSchoolSelection';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BarChart3, Home, FileText, Building2 } from 'lucide-react';
 import { RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSchoolData';
@@ -25,6 +26,7 @@ export default function Dashboard() {
   const [isCoordinator, setIsCoordinator] = useState(false);
   const [userSchoolCode, setUserSchoolCode] = useState<string>('');
   const [isLoadingUser, setIsLoadingUser] = useState(true);
+  const [hasProfile, setHasProfile] = useState(true);
   
   const {
     recyclingEntries,
@@ -60,7 +62,7 @@ export default function Dashboard() {
     const { data: { session } } = await supabase.auth.getSession();
     
     if (session?.user) {
-      const { data: profile } = await supabase
+      const { data: profile, error } = await supabase
         .from("profiles")
         .select(`
           schools (
@@ -69,9 +71,17 @@ export default function Dashboard() {
           )
         `)
         .eq("user_id", session.user.id)
-        .single();
+        .maybeSingle();
       
-      if (profile?.schools) {
+      if (error) {
+        console.error("Error loading profile:", error);
+      }
+      
+      if (!profile) {
+        // Usuário não tem perfil, precisa selecionar escola
+        setHasProfile(false);
+      } else if (profile.schools) {
+        setHasProfile(true);
         setCurrentSchoolName(profile.schools.name);
         setUserSchoolCode(profile.schools.code);
         // Verificar se é coordenador (escola OEP)
@@ -124,6 +134,25 @@ export default function Dashboard() {
       }
     }
   };
+
+  if (isLoadingUser) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background to-muted/30 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Carregando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!hasProfile) {
+    return <InitialSchoolSelection onSchoolSelected={() => {
+      setHasProfile(true);
+      loadUserSchool();
+      refresh();
+    }} />;
+  }
 
   if (loading) {
     return (
