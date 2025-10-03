@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { DeleteRecordsDialog } from '@/components/DeleteRecordsDialog';
 import { supabase } from '@/integrations/supabase/client';
+import { MonthYearPicker } from '@/components/MonthYearPicker';
 
 interface RecyclingEntry {
   id: string;
@@ -385,11 +386,9 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
 
           <div className="space-y-2">
             <Label htmlFor="month">Mês de Registro</Label>
-            <Input
-              id="month"
-              type="month"
+            <MonthYearPicker
               value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
+              onChange={setSelectedMonth}
               className="transition-smooth focus:shadow-soft"
             />
           </div>
