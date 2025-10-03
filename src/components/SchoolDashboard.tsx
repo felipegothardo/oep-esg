@@ -8,7 +8,6 @@ import MobileStats from './MobileStats';
 import LoadingSkeleton from './LoadingSkeleton';
 import { DeleteRecordsDialog } from './DeleteRecordsDialog';
 import { useActionHistory } from '@/hooks/useActionHistory';
-import { useAutoBackup } from '@/hooks/useAutoBackup';
 
 // Lazy load dos componentes pesados
 const RecyclingCalculator = lazy(() => import('./RecyclingCalculator'));
@@ -51,7 +50,6 @@ export default function SchoolDashboard({
   
   // Sempre chamar os hooks (regra do React - hooks não podem ser condicionais)
   const actionHistory = useActionHistory();
-  const autoBackup = useAutoBackup(schoolName, data);
   
   // Usar valores do hook ou valores vazios baseado em viewOnly
   const { history, addToHistory, clearHistory, undoLastAction, hasHistory } = viewOnly 
