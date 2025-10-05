@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from "@/hooks/useSchoolData";
+import { recyclingEntrySchema, consumptionEntrySchema, consumptionGoalSchema, validateData, sanitizeString, sanitizeNumber } from "@/lib/validations";
 
 export class DataSyncService {
   private userId: string | null = null;
@@ -28,15 +29,31 @@ export class DataSyncService {
       throw new Error("User not authenticated or school not set");
     }
 
+    // Validate data
+    const validation = validateData(recyclingEntrySchema, entry);
+    if (!validation.success) {
+      const errorMessage = validation.error;
+      throw new Error(`Validation error: ${errorMessage}`);
+    }
+
+    // Sanitize inputs - validation.success === true so data exists
+    const validatedData = validation.data;
+    const sanitizedEntry = {
+      material: sanitizeString(validatedData.material!),
+      quantity: sanitizeNumber(validatedData.quantity!, 100000),
+      co2Saved: sanitizeNumber(validatedData.co2Saved!, 1000000),
+      date: validatedData.date!
+    };
+
     const { data, error } = await supabase
       .from("recycling_entries")
       .insert({
         school_id: this.schoolId,
         user_id: this.userId,
-        material: entry.material,
-        quantity: entry.quantity,
-        co2_saved: entry.co2Saved,
-        entry_date: entry.date
+        material: sanitizedEntry.material,
+        quantity: sanitizedEntry.quantity,
+        co2_saved: sanitizedEntry.co2Saved,
+        entry_date: sanitizedEntry.date
       })
       .select()
       .single();
@@ -72,16 +89,33 @@ export class DataSyncService {
       throw new Error("User not authenticated or school not set");
     }
 
+    // Validate data
+    const validation = validateData(consumptionEntrySchema, entry);
+    if (!validation.success) {
+      const errorMessage = validation.error;
+      throw new Error(`Validation error: ${errorMessage}`);
+    }
+
+    // Sanitize inputs - validation.success === true so data exists
+    const validatedData = validation.data;
+    const sanitizedEntry = {
+      type: validatedData.type!,
+      month: sanitizeString(validatedData.month!),
+      cost: sanitizeNumber(validatedData.cost!, 1000000),
+      consumption: sanitizeNumber(validatedData.consumption!, 10000000),
+      date: validatedData.date!
+    };
+
     const { data, error } = await supabase
       .from("consumption_entries")
       .insert({
         school_id: this.schoolId,
         user_id: this.userId,
-        type: entry.type,
-        month: entry.month,
-        cost: entry.cost,
-        consumption: entry.consumption,
-        entry_date: entry.date
+        type: sanitizedEntry.type,
+        month: sanitizedEntry.month,
+        cost: sanitizedEntry.cost,
+        consumption: sanitizedEntry.consumption,
+        entry_date: sanitizedEntry.date
       })
       .select()
       .single();
@@ -118,12 +152,26 @@ export class DataSyncService {
       throw new Error("School not set");
     }
 
+    // Validate data
+    const validation = validateData(consumptionGoalSchema, goal);
+    if (!validation.success) {
+      const errorMessage = validation.error;
+      throw new Error(`Validation error: ${errorMessage}`);
+    }
+
+    // Sanitize inputs - validation.success === true so data exists
+    const validatedData = validation.data;
+    const sanitizedGoal = {
+      type: validatedData.type!,
+      reductionPercentage: sanitizeNumber(validatedData.reductionPercentage!, 100)
+    };
+
     const { error } = await supabase
       .from("consumption_goals")
       .upsert({
         school_id: this.schoolId,
-        type: goal.type,
-        reduction_percentage: goal.reductionPercentage
+        type: sanitizedGoal.type,
+        reduction_percentage: sanitizedGoal.reductionPercentage
       }, {
         onConflict: "school_id,type"
       });
