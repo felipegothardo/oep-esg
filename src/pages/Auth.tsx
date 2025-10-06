@@ -164,7 +164,7 @@ export default function Auth() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <img src={oepLogo} alt="OEP Logo" className="w-24 h-24" />
+            <img src={oepLogo} alt="OEP Logo" className="w-40 h-auto object-contain" />
           </div>
           <CardTitle className="text-2xl font-bold">OEP Sustentável</CardTitle>
           <CardDescription>
