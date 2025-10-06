@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BarChart3, Recycle, Droplet, Zap, TrendingUp, Award, FileText, Download, Eye } from 'lucide-react';
+import { BarChart3, Recycle, Droplet, Zap, TrendingUp, Award, FileText, Download, Eye, Building2 } from 'lucide-react';
 import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { cn } from '@/lib/utils';
 import { exportToPDF } from '@/utils/pdfExport';
@@ -194,10 +194,11 @@ export default function CoordinatorDashboard() {
   };
 
   const metrics = getTotalMetrics();
-  const topSchool = schools.reduce((prev, current) => 
-    (current.totalCO2Saved > prev.totalCO2Saved) ? current : prev, 
-    schools[0] || { name: '', totalCO2Saved: 0 }
-  );
+  const topSchool = schools.length > 0 
+    ? schools.reduce((prev, current) => 
+        (current.totalCO2Saved > prev.totalCO2Saved) ? current : prev
+      )
+    : null;
 
   if (loading) {
     return (
@@ -348,7 +349,7 @@ export default function CoordinatorDashboard() {
       </div>
 
       {/* Escola Destaque */}
-      {topSchool && (
+      {topSchool && topSchool.totalCO2Saved > 0 && (
         <Card className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20">
           <CardHeader>
             <div className="flex items-center gap-2">
@@ -362,6 +363,18 @@ export default function CoordinatorDashboard() {
               Maior economia de CO₂: {topSchool.totalCO2Saved.toFixed(1)} kg
             </p>
           </CardContent>
+        </Card>
+      )}
+
+      {schools.length === 0 && (
+        <Card className="p-8">
+          <div className="text-center space-y-4">
+            <Building2 className="h-12 w-12 text-muted-foreground mx-auto" />
+            <div>
+              <h3 className="text-lg font-semibold">Nenhuma escola encontrada</h3>
+              <p className="text-muted-foreground">Não há escolas cadastradas no sistema ainda.</p>
+            </div>
+          </div>
         </Card>
       )}
 
@@ -379,9 +392,14 @@ export default function CoordinatorDashboard() {
               <CardTitle>Ranking de Escolas por CO₂ Poupado</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {schools
-                .sort((a, b) => b.totalCO2Saved - a.totalCO2Saved)
-                .map((school, index) => (
+              {schools.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  Nenhuma escola com dados ainda
+                </div>
+              ) : (
+                schools
+                  .sort((a, b) => b.totalCO2Saved - a.totalCO2Saved)
+                  .map((school, index) => (
                   <div key={school.id} className="flex items-center gap-4">
                     <div className={cn(
                       "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm",
@@ -417,11 +435,12 @@ export default function CoordinatorDashboard() {
                       </Button>
                     </div>
                     <Progress 
-                      value={(school.totalCO2Saved / (topSchool?.totalCO2Saved || 1)) * 100} 
+                      value={topSchool ? (school.totalCO2Saved / topSchool.totalCO2Saved) * 100 : 0} 
                       className="w-32"
                     />
                   </div>
-                ))}
+                ))
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -432,27 +451,33 @@ export default function CoordinatorDashboard() {
               <CardTitle>Evolução Mensal - Reciclagem</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={schools[0]?.monthlyData || []}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="recycling" 
-                    stroke="hsl(var(--primary))" 
-                    name="Reciclagem (kg)"
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="co2" 
-                    stroke="hsl(var(--accent))" 
-                    name="CO₂ Poupado (kg)"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              {schools.length === 0 || !schools[0]?.monthlyData?.length ? (
+                <div className="text-center py-20 text-muted-foreground">
+                  Sem dados históricos disponíveis
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={schools[0].monthlyData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line 
+                      type="monotone" 
+                      dataKey="recycling" 
+                      stroke="hsl(var(--primary))" 
+                      name="Reciclagem (kg)"
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="co2" 
+                      stroke="hsl(var(--accent))" 
+                      name="CO₂ Poupado (kg)"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -463,17 +488,23 @@ export default function CoordinatorDashboard() {
               <CardTitle>Comparação entre Escolas</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={schools.slice(0, 5)}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
+              {schools.length === 0 ? (
+                <div className="text-center py-20 text-muted-foreground">
+                  Nenhuma escola para comparar
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={schools.slice(0, 5)}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
                   <Bar dataKey="totalRecycling" fill="hsl(var(--primary))" name="Reciclagem (kg)" />
                   <Bar dataKey="totalCO2Saved" fill="hsl(var(--accent))" name="CO₂ Poupado (kg)" />
-                </BarChart>
-              </ResponsiveContainer>
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
