@@ -219,61 +219,73 @@ export default function AdvancedReports() {
   };
 
   const processReportData = (schoolsData: SchoolData[]) => {
-    // Ranking data
-    const ranking = schoolsData
-      .map(school => ({
-        name: school.name,
-        recycled: school.totalRecycled,
-        co2: school.totalCO2,
-        score: school.totalRecycled * 0.5 + school.totalCO2 * 10
-      }))
-      .sort((a, b) => b.score - a.score);
+    if (!schoolsData || schoolsData.length === 0) {
+      setReportData(null);
+      return;
+    }
 
-    // Comparison data
-    const comparison = schoolsData.map(school => ({
-      name: school.name.replace("Escola ", ""),
-      Reciclagem: school.totalRecycled,
-      CO2: school.totalCO2,
-      Água: school.waterConsumption,
-      Energia: school.energyConsumption
-    }));
+    try {
+      // Ranking data
+      const ranking = schoolsData
+        .map(school => ({
+          name: school.name,
+          recycled: school.totalRecycled || 0,
+          co2: school.totalCO2 || 0,
+          score: (school.totalRecycled || 0) * 0.5 + (school.totalCO2 || 0) * 10
+        }))
+        .sort((a, b) => b.score - a.score);
 
-    // Materials distribution
-    const allMaterials: any = {};
-    schoolsData.forEach(school => {
-      school.recyclingByMaterial.forEach(item => {
-        if (!allMaterials[item.material]) allMaterials[item.material] = 0;
-        allMaterials[item.material] += item.quantity;
+      // Comparison data
+      const comparison = schoolsData.map(school => ({
+        name: school.name.replace("Escola ", ""),
+        Reciclagem: school.totalRecycled || 0,
+        CO2: school.totalCO2 || 0,
+        Água: school.waterConsumption || 0,
+        Energia: school.energyConsumption || 0
+      }));
+
+      // Materials distribution
+      const allMaterials: any = {};
+      schoolsData.forEach(school => {
+        if (school.recyclingByMaterial && Array.isArray(school.recyclingByMaterial)) {
+          school.recyclingByMaterial.forEach(item => {
+            if (!allMaterials[item.material]) allMaterials[item.material] = 0;
+            allMaterials[item.material] += item.quantity || 0;
+          });
+        }
       });
-    });
 
-    const materialsData = Object.entries(allMaterials).map(([material, quantity]) => ({
-      name: material,
-      value: quantity as number
-    }));
+      const materialsData = Object.entries(allMaterials).map(([material, quantity]) => ({
+        name: material,
+        value: quantity as number
+      }));
 
-    // Performance metrics
-    const performanceData = schoolsData.map(school => ({
-      school: school.name.replace("Escola ", ""),
-      Reciclagem: Math.min(100, (school.totalRecycled / 1000) * 100),
-      "Redução CO2": Math.min(100, (school.totalCO2 / 500) * 100),
-      "Economia Água": school.goals.find(g => g.type === "Água")?.current || 0,
-      "Economia Energia": school.goals.find(g => g.type === "Energia")?.current || 0
-    }));
+      // Performance metrics
+      const performanceData = schoolsData.map(school => ({
+        school: school.name.replace("Escola ", ""),
+        Reciclagem: Math.min(100, ((school.totalRecycled || 0) / 1000) * 100),
+        "Redução CO2": Math.min(100, ((school.totalCO2 || 0) / 500) * 100),
+        "Economia Água": (school.goals && Array.isArray(school.goals)) ? (school.goals.find(g => g.type === "Água")?.current || 0) : 0,
+        "Economia Energia": (school.goals && Array.isArray(school.goals)) ? (school.goals.find(g => g.type === "Energia")?.current || 0) : 0
+      }));
 
-    setReportData({
-      ranking,
-      comparison,
-      materialsData,
-      performanceData,
-      totals: {
-        recycling: schoolsData.reduce((sum, s) => sum + s.totalRecycled, 0),
-        co2: schoolsData.reduce((sum, s) => sum + s.totalCO2, 0),
-        water: schoolsData.reduce((sum, s) => sum + s.waterConsumption, 0),
-        energy: schoolsData.reduce((sum, s) => sum + s.energyConsumption, 0),
-        schools: schoolsData.length
-      }
-    });
+      setReportData({
+        ranking: ranking || [],
+        comparison: comparison || [],
+        materialsData: materialsData || [],
+        performanceData: performanceData || [],
+        totals: {
+          recycling: schoolsData.reduce((sum, s) => sum + (s.totalRecycled || 0), 0),
+          co2: schoolsData.reduce((sum, s) => sum + (s.totalCO2 || 0), 0),
+          water: schoolsData.reduce((sum, s) => sum + (s.waterConsumption || 0), 0),
+          energy: schoolsData.reduce((sum, s) => sum + (s.energyConsumption || 0), 0),
+          schools: schoolsData.length
+        }
+      });
+    } catch (error) {
+      console.error("Error processing report data:", error);
+      setReportData(null);
+    }
   };
 
   const exportPDF = async () => {
@@ -389,7 +401,7 @@ export default function AdvancedReports() {
     );
   }
 
-  if (!reportData || schools.length === 0 || !reportData.ranking || reportData.ranking.length === 0) {
+  if (!reportData || !reportData.totals || schools.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[600px]">
         <div className="text-center">
@@ -402,6 +414,15 @@ export default function AdvancedReports() {
       </div>
     );
   }
+
+  // Garantir que os arrays existam, mesmo que vazios
+  const safeReportData = {
+    ...reportData,
+    ranking: reportData.ranking || [],
+    comparison: reportData.comparison || [],
+    materialsData: reportData.materialsData || [],
+    performanceData: reportData.performanceData || []
+  };
 
   return (
     <div id="advanced-report" className="space-y-6 p-6">
@@ -446,7 +467,7 @@ export default function AdvancedReports() {
             <div className="flex items-center gap-2">
               <Recycle className="h-4 w-4 text-green-500" />
               <span className="text-2xl font-bold">
-                {reportData?.totals.recycling.toFixed(1)} kg
+                {safeReportData.totals.recycling.toFixed(1)} kg
               </span>
             </div>
           </CardContent>
@@ -462,7 +483,7 @@ export default function AdvancedReports() {
             <div className="flex items-center gap-2">
               <TrendingDown className="h-4 w-4 text-blue-500" />
               <span className="text-2xl font-bold">
-                {reportData?.totals.co2.toFixed(1)} kg
+                {safeReportData.totals.co2.toFixed(1)} kg
               </span>
             </div>
           </CardContent>
@@ -478,7 +499,7 @@ export default function AdvancedReports() {
             <div className="flex items-center gap-2">
               <Droplets className="h-4 w-4 text-cyan-500" />
               <span className="text-2xl font-bold">
-                {reportData?.totals.water.toFixed(0)} m³
+                {safeReportData.totals.water.toFixed(0)} m³
               </span>
             </div>
           </CardContent>
@@ -494,7 +515,7 @@ export default function AdvancedReports() {
             <div className="flex items-center gap-2">
               <Zap className="h-4 w-4 text-yellow-500" />
               <span className="text-2xl font-bold">
-                {reportData?.totals.energy.toFixed(0)} kWh
+                {safeReportData.totals.energy.toFixed(0)} kWh
               </span>
             </div>
           </CardContent>
@@ -510,7 +531,7 @@ export default function AdvancedReports() {
             <div className="flex items-center gap-2">
               <School className="h-4 w-4 text-purple-500" />
               <span className="text-2xl font-bold">
-                {reportData?.totals.schools}
+                {safeReportData.totals.schools}
               </span>
             </div>
           </CardContent>
@@ -535,9 +556,9 @@ export default function AdvancedReports() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {reportData?.ranking && reportData.ranking.length > 0 ? (
-                  reportData.ranking.map((school: any, index: number) => {
-                    const maxScore = reportData.ranking[0]?.score || 1;
+                {safeReportData.ranking.length > 0 ? (
+                  safeReportData.ranking.map((school: any, index: number) => {
+                    const maxScore = safeReportData.ranking[0]?.score || 1;
                     return (
                       <div key={index} className="flex items-center gap-4">
                         <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
@@ -581,9 +602,9 @@ export default function AdvancedReports() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {reportData?.comparison && reportData.comparison.length > 0 ? (
+              {safeReportData.comparison.length > 0 ? (
                 <ResponsiveContainer width="100%" height={400}>
-                  <BarChart data={reportData.comparison}>
+                  <BarChart data={safeReportData.comparison}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
@@ -613,11 +634,11 @@ export default function AdvancedReports() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {reportData?.materialsData && reportData.materialsData.length > 0 ? (
+              {safeReportData.materialsData.length > 0 ? (
                 <ResponsiveContainer width="100%" height={400}>
                   <PieChart>
                     <Pie
-                      data={reportData.materialsData}
+                      data={safeReportData.materialsData}
                       cx="50%"
                       cy="50%"
                       labelLine={false}
@@ -626,7 +647,7 @@ export default function AdvancedReports() {
                       fill="#8884d8"
                       dataKey="value"
                     >
-                      {reportData.materialsData.map((entry: any, index: number) => (
+                      {safeReportData.materialsData.map((entry: any, index: number) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -651,9 +672,9 @@ export default function AdvancedReports() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {reportData?.performanceData && reportData.performanceData.length > 0 ? (
+              {safeReportData.performanceData.length > 0 ? (
                 <ResponsiveContainer width="100%" height={400}>
-                  <RadarChart data={reportData.performanceData}>
+                  <RadarChart data={safeReportData.performanceData}>
                     <PolarGrid />
                     <PolarAngleAxis dataKey="school" />
                     <PolarRadiusAxis angle={90} domain={[0, 100]} />
