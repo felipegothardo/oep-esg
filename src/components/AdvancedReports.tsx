@@ -63,6 +63,15 @@ export default function AdvancedReports() {
       setLoading(true);
       setReportData(null);
 
+      // Check authentication first
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        console.warn("No user session found");
+        setReportData(null);
+        setLoading(false);
+        return;
+      }
+
       // Get date range based on selected period
       const endDate = new Date();
       const startDate = new Date();
@@ -77,13 +86,29 @@ export default function AdvancedReports() {
       }
 
       // Load schools (excluding OEP)
-      const { data: schoolsData } = await supabase
+      const { data: schoolsData, error: schoolsError } = await supabase
         .from("schools")
         .select("*")
         .neq('code', 'OEP')
         .order("name");
 
-      if (!schoolsData) return;
+      if (schoolsError) {
+        console.error("Error loading schools:", schoolsError);
+        toast({
+          title: "Erro ao carregar escolas",
+          description: "Não foi possível carregar a lista de escolas",
+          variant: "destructive"
+        });
+        setReportData(null);
+        setLoading(false);
+        return;
+      }
+
+      if (!schoolsData || schoolsData.length === 0) {
+        setReportData(null);
+        setLoading(false);
+        return;
+      }
 
       // Load data for each school
       const schoolsWithData: SchoolData[] = [];
@@ -197,10 +222,11 @@ export default function AdvancedReports() {
       console.error("Error loading report data:", error);
       toast({
         title: "Erro ao carregar relatórios",
-        description: "Não foi possível carregar os dados dos relatórios",
+        description: error instanceof Error ? error.message : "Não foi possível carregar os dados dos relatórios",
         variant: "destructive"
       });
       setReportData(null);
+      setSchools([]);
     } finally {
       setLoading(false);
     }
