@@ -48,6 +48,13 @@ export default function SchoolDashboard({
 }: SchoolDashboardProps) {
   const [currentMobileTab, setCurrentMobileTab] = useState('calculator');
   
+  // Ensure data is always valid arrays
+  const safeData = {
+    recyclingEntries: data?.recyclingEntries || [],
+    consumptionEntries: data?.consumptionEntries || [],
+    consumptionGoals: data?.consumptionGoals || []
+  };
+  
   // Sempre chamar os hooks (regra do React - hooks não podem ser condicionais)
   const actionHistory = useActionHistory();
   
@@ -85,15 +92,15 @@ export default function SchoolDashboard({
     onConsumptionUpdate(entries, goals);
   };
   
-  // Calculando estatísticas
-  const totalCO2Saved = data.recyclingEntries.reduce((total, entry) => total + entry.co2Saved, 0);
-  const totalRecycled = data.recyclingEntries.reduce((total, entry) => total + entry.quantity, 0);
+  // Calculando estatísticas com dados seguros
+  const totalCO2Saved = safeData.recyclingEntries.reduce((total, entry) => total + entry.co2Saved, 0);
+  const totalRecycled = safeData.recyclingEntries.reduce((total, entry) => total + entry.quantity, 0);
   
-  const lastWaterConsumption = data.consumptionEntries
+  const lastWaterConsumption = safeData.consumptionEntries
     .filter(entry => entry.type === 'water')
     .slice(-1)[0]?.consumption || 0;
     
-  const lastEnergyConsumption = data.consumptionEntries
+  const lastEnergyConsumption = safeData.consumptionEntries
     .filter(entry => entry.type === 'energy')
     .slice(-1)[0]?.consumption || 0;
 
@@ -107,8 +114,8 @@ export default function SchoolDashboard({
         <div className="flex gap-2">
           <ExportButton 
             schoolName={schoolName}
-            recyclingEntries={data.recyclingEntries}
-            consumptionEntries={data.consumptionEntries}
+            recyclingEntries={safeData.recyclingEntries}
+            consumptionEntries={safeData.consumptionEntries}
           />
         </div>
       </div>
@@ -269,7 +276,7 @@ export default function SchoolDashboard({
               )}
               {viewOnly ? (
                 <RecyclingChart 
-                  entries={data.recyclingEntries}
+                  entries={safeData.recyclingEntries}
                 />
               ) : (
                 <RecyclingCalculator
@@ -300,14 +307,14 @@ export default function SchoolDashboard({
               )}
               {viewOnly ? (
                 <ConsumptionChart 
-                  entries={data.consumptionEntries}
-                  goals={data.consumptionGoals}
+                  entries={safeData.consumptionEntries}
+                  goals={safeData.consumptionGoals}
                 />
               ) : (
                 <WaterEnergyTracker
                   onDataUpdate={handleConsumptionUpdate}
-                  existingEntries={data.consumptionEntries}
-                  existingGoals={data.consumptionGoals}
+                  existingEntries={safeData.consumptionEntries}
+                  existingGoals={safeData.consumptionGoals}
                 />
               )}
             </div>
@@ -317,51 +324,51 @@ export default function SchoolDashboard({
         <TabsContent value="goals" className="space-y-6 animate-fade-in">
           <Suspense fallback={<LoadingSkeleton type="form" />}>
             <SmartGoalSuggestion 
-              recyclingEntries={data.recyclingEntries}
-              consumptionEntries={data.consumptionEntries}
-              currentGoals={data.consumptionGoals}
+              recyclingEntries={safeData.recyclingEntries}
+              consumptionEntries={safeData.consumptionEntries}
+              currentGoals={safeData.consumptionGoals}
               onUpdateGoal={(type, percentage) => {
-                const updatedGoals = data.consumptionGoals.map(goal => 
+                const updatedGoals = safeData.consumptionGoals.map(goal => 
                   goal.type === type 
                     ? { ...goal, reductionPercentage: percentage }
                     : goal
                 );
-                handleConsumptionUpdate(data.consumptionEntries, updatedGoals);
+                handleConsumptionUpdate(safeData.consumptionEntries, updatedGoals);
               }}
             />
           </Suspense>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Suspense fallback={<LoadingSkeleton type="chart" />}>
               <GoalProgressCard 
-                entries={data.consumptionEntries} 
-                goals={data.consumptionGoals} 
+                entries={safeData.consumptionEntries} 
+                goals={safeData.consumptionGoals} 
                 type="water" 
               />
             </Suspense>
             <Suspense fallback={<LoadingSkeleton type="chart" />}>
               <GoalProgressCard 
-                entries={data.consumptionEntries} 
-                goals={data.consumptionGoals} 
+                entries={safeData.consumptionEntries} 
+                goals={safeData.consumptionGoals} 
                 type="energy" 
               />
             </Suspense>
           </div>
           <Suspense fallback={<LoadingSkeleton type="chart" />}>
-            <ProjectionCard entries={data.recyclingEntries} schoolName={schoolName} />
+            <ProjectionCard entries={safeData.recyclingEntries} schoolName={schoolName} />
           </Suspense>
         </TabsContent>
 
         <TabsContent value="recycling-charts" className="animate-fade-in">
           <Suspense fallback={<LoadingSkeleton type="chart" />}>
-            <RecyclingChart entries={data.recyclingEntries} />
+            <RecyclingChart entries={safeData.recyclingEntries} />
           </Suspense>
         </TabsContent>
 
         <TabsContent value="consumption-charts" className="animate-fade-in">
           <Suspense fallback={<LoadingSkeleton type="chart" />}>
             <ConsumptionChart 
-              entries={data.consumptionEntries} 
-              goals={data.consumptionGoals} 
+              entries={safeData.consumptionEntries} 
+              goals={safeData.consumptionGoals} 
             />
           </Suspense>
         </TabsContent>
@@ -371,9 +378,9 @@ export default function SchoolDashboard({
             <AchievementSystem 
               recyclingTotal={totalRecycled}
               co2Total={totalCO2Saved}
-              waterReduction={data.consumptionGoals.find(g => g.type === 'water')?.reductionPercentage || 0}
-              energyReduction={data.consumptionGoals.find(g => g.type === 'energy')?.reductionPercentage || 0}
-              monthsActive={Math.max(data.recyclingEntries.length, data.consumptionEntries.length) > 0 ? 1 : 0}
+              waterReduction={safeData.consumptionGoals.find(g => g.type === 'water')?.reductionPercentage || 0}
+              energyReduction={safeData.consumptionGoals.find(g => g.type === 'energy')?.reductionPercentage || 0}
+              monthsActive={Math.max(safeData.recyclingEntries.length, safeData.consumptionEntries.length) > 0 ? 1 : 0}
               schoolName={schoolName}
             />
           </Suspense>

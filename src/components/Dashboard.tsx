@@ -162,6 +162,13 @@ export default function Dashboard() {
     );
   }
 
+  // Refresh data when returning to dashboard tab
+  useEffect(() => {
+    if (activeTab === 'dashboard' && !loading) {
+      refresh();
+    }
+  }, [activeTab]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/30">
       <EcoHeader />
@@ -188,30 +195,36 @@ export default function Dashboard() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="dashboard" className="space-y-6">
-            <SchoolDashboard
-              schoolName={currentSchoolName}
-              schoolType="current"
-              data={{
-                recyclingEntries,
-                consumptionEntries,
-                consumptionGoals
-              }}
-              onRecyclingUpdate={handleRecyclingUpdate}
-              onConsumptionUpdate={handleConsumptionUpdate}
-              onDeleteAll={deleteAllRecords}
-              onDeleteRecyclingByMonth={deleteRecyclingByMonth}
-              onDeleteConsumptionByMonth={deleteConsumptionByMonth}
-            />
+          <TabsContent value="dashboard" key="dashboard-tab" className="space-y-6">
+            {recyclingEntries && consumptionEntries && consumptionGoals ? (
+              <SchoolDashboard
+                schoolName={currentSchoolName}
+                schoolType="current"
+                data={{
+                  recyclingEntries,
+                  consumptionEntries,
+                  consumptionGoals
+                }}
+                onRecyclingUpdate={handleRecyclingUpdate}
+                onConsumptionUpdate={handleConsumptionUpdate}
+                onDeleteAll={deleteAllRecords}
+                onDeleteRecyclingByMonth={deleteRecyclingByMonth}
+                onDeleteConsumptionByMonth={deleteConsumptionByMonth}
+              />
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">Carregando dados...</p>
+              </div>
+            )}
           </TabsContent>
 
           {isCoordinator && (
-            <TabsContent value="coordinator">
+            <TabsContent value="coordinator" key="coordinator-tab">
               <CoordinatorDashboard />
             </TabsContent>
           )}
 
-          <TabsContent value="reports">
+          <TabsContent value="reports" key="reports-tab">
             <AdvancedReports />
           </TabsContent>
         </Tabs>
