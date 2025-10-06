@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useCloudData } from '@/hooks/useCloudData';
 import { supabase } from '@/integrations/supabase/client';
@@ -132,6 +132,13 @@ export default function Dashboard() {
     }
   };
 
+  // Memoize data object to prevent unnecessary re-renders
+  const schoolData = useMemo(() => ({
+    recyclingEntries: recyclingEntries || [],
+    consumptionEntries: consumptionEntries || [],
+    consumptionGoals: consumptionGoals || []
+  }), [recyclingEntries, consumptionEntries, consumptionGoals]);
+
   if (isLoadingUser) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-muted/30 flex items-center justify-center">
@@ -188,36 +195,26 @@ export default function Dashboard() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="dashboard" key="dashboard-tab" className="space-y-6">
-            {recyclingEntries && consumptionEntries && consumptionGoals ? (
-              <SchoolDashboard
-                schoolName={currentSchoolName}
-                schoolType="current"
-                data={{
-                  recyclingEntries,
-                  consumptionEntries,
-                  consumptionGoals
-                }}
-                onRecyclingUpdate={handleRecyclingUpdate}
-                onConsumptionUpdate={handleConsumptionUpdate}
-                onDeleteAll={deleteAllRecords}
-                onDeleteRecyclingByMonth={deleteRecyclingByMonth}
-                onDeleteConsumptionByMonth={deleteConsumptionByMonth}
-              />
-            ) : (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">Carregando dados...</p>
-              </div>
-            )}
+          <TabsContent value="dashboard" className="space-y-6">
+            <SchoolDashboard
+              schoolName={currentSchoolName}
+              schoolType="current"
+              data={schoolData}
+              onRecyclingUpdate={handleRecyclingUpdate}
+              onConsumptionUpdate={handleConsumptionUpdate}
+              onDeleteAll={deleteAllRecords}
+              onDeleteRecyclingByMonth={deleteRecyclingByMonth}
+              onDeleteConsumptionByMonth={deleteConsumptionByMonth}
+            />
           </TabsContent>
 
           {isCoordinator && (
-            <TabsContent value="coordinator" key="coordinator-tab">
+            <TabsContent value="coordinator">
               <CoordinatorDashboard />
             </TabsContent>
           )}
 
-          <TabsContent value="reports" key="reports-tab">
+          <TabsContent value="reports">
             <AdvancedReports />
           </TabsContent>
         </Tabs>
