@@ -216,3 +216,61 @@ export async function exportToPDF(
   // Salvar o PDF
   pdf.save(`relatorio-${schoolName.toLowerCase().replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`);
 }
+
+// Função genérica para exportar dados em tabela para PDF
+export async function generatePDF(headers: string[], rows: any[][], filename: string) {
+  const pdf = new jsPDF('p', 'mm', 'a4');
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  let currentY = 20;
+
+  // Cabeçalho
+  pdf.setFillColor(34, 197, 94);
+  pdf.rect(0, 0, pageWidth, 30, 'F');
+  
+  pdf.setTextColor(255, 255, 255);
+  pdf.setFontSize(20);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Relatório de Dados', pageWidth / 2, 18, { align: 'center' });
+
+  currentY = 40;
+
+  // Data de geração
+  pdf.setTextColor(31, 41, 55);
+  pdf.setFontSize(10);
+  pdf.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, 15, currentY);
+  currentY += 10;
+
+  // Cabeçalho da tabela
+  pdf.setFillColor(240, 242, 245);
+  pdf.rect(15, currentY, pageWidth - 30, 8, 'F');
+  pdf.setFontSize(9);
+  pdf.setFont('helvetica', 'bold');
+  
+  const columnWidth = (pageWidth - 30) / headers.length;
+  headers.forEach((header, index) => {
+    pdf.text(header, 15 + (index * columnWidth) + 2, currentY + 5);
+  });
+  currentY += 10;
+
+  // Dados da tabela
+  pdf.setFont('helvetica', 'normal');
+  rows.forEach((row) => {
+    if (currentY > pageHeight - 20) {
+      pdf.addPage();
+      currentY = 20;
+    }
+    row.forEach((cell, index) => {
+      const text = cell?.toString() || '';
+      pdf.text(text, 15 + (index * columnWidth) + 2, currentY);
+    });
+    currentY += 7;
+  });
+
+  // Rodapé
+  pdf.setFontSize(8);
+  pdf.setTextColor(150, 150, 150);
+  pdf.text('OEP Sustentável', pageWidth / 2, pageHeight - 10, { align: 'center' });
+
+  pdf.save(`${filename}.pdf`);
+}

@@ -130,12 +130,12 @@ All colors MUST be HSL.
   }
 }
 
-/* Animações suaves para transições de tema */
+/* Theme transitions */
 .theme-transition * {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
+  transition: var(--transition-smooth) !important;
 }
 
-/* Destaque do tutorial */
+/* Tutorial highlight */
 .tutorial-highlight {
   animation: highlight-pulse 2s ease-in-out;
   position: relative;
@@ -146,11 +146,11 @@ All colors MUST be HSL.
     box-shadow: 0 0 0 0 hsl(var(--primary) / 0);
   }
   50% {
-    box-shadow: 0 0 20px 10px hsl(var(--primary) / 0.3);
+    box-shadow: var(--shadow-eco);
   }
 }
 
-/* Animações de entrada para componentes */
+/* Smooth animations */
 .animate-enter {
   animation: fade-in 0.3s ease-out, scale-in 0.2s ease-out;
 }
@@ -159,12 +159,37 @@ All colors MUST be HSL.
   animation: fade-out 0.3s ease-out, scale-out 0.2s ease-out;
 }
 
-/* Transições suaves para cards */
+/* Card hover effects */
 .card-transition {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: var(--transition-smooth);
 }
 
 .card-transition:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px -10px hsl(var(--primary) / 0.2);
+  box-shadow: var(--shadow-eco);
+}
+
+/* Interactive hover */
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Skeleton loading animation */
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.skeleton {
+  animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background: hsl(var(--muted));
+  border-radius: var(--radius);
 }
