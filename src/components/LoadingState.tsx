@@ -5,12 +5,14 @@ interface LoadingStateProps {
   message?: string;
   fullScreen?: boolean;
   size?: "sm" | "md" | "lg";
+  className?: string;
 }
 
 export function LoadingState({ 
   message = "Carregando...", 
   fullScreen = false,
-  size = "md" 
+  size = "md",
+  className
 }: LoadingStateProps) {
   const sizeClasses = {
     sm: "h-4 w-4",
@@ -19,7 +21,7 @@ export function LoadingState({
   };
 
   const content = (
-    <div className="flex flex-col items-center justify-center gap-3 animate-fade-in">
+    <div className={cn("flex flex-col items-center justify-center gap-3 animate-fade-in", className)}>
       <Loader2 className={cn("animate-spin text-primary", sizeClasses[size])} />
       {message && (
         <p className="text-sm text-muted-foreground animate-pulse">{message}</p>
