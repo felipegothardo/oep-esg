@@ -162,13 +162,6 @@ export default function Dashboard() {
     );
   }
 
-  // Refresh data when returning to dashboard tab
-  useEffect(() => {
-    if (activeTab === 'dashboard' && !loading) {
-      refresh();
-    }
-  }, [activeTab]);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/30">
       <EcoHeader />
