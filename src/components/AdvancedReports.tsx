@@ -389,7 +389,7 @@ export default function AdvancedReports() {
     );
   }
 
-  if (!reportData || schools.length === 0) {
+  if (!reportData || schools.length === 0 || !reportData.ranking || reportData.ranking.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[600px]">
         <div className="text-center">
@@ -535,29 +535,38 @@ export default function AdvancedReports() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {reportData?.ranking.map((school: any, index: number) => (
-                  <div key={index} className="flex items-center gap-4">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
-                      {index === 0 && <Award className="h-5 w-5 text-yellow-500" />}
-                      {index === 1 && <Award className="h-5 w-5 text-gray-400" />}
-                      {index === 2 && <Award className="h-5 w-5 text-orange-600" />}
-                      {index > 2 && <span className="font-bold">{index + 1}</span>}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-medium">{school.name}</span>
-                        <Badge variant="outline">
-                          {school.score.toFixed(0)} pts
-                        </Badge>
+                {reportData?.ranking && reportData.ranking.length > 0 ? (
+                  reportData.ranking.map((school: any, index: number) => {
+                    const maxScore = reportData.ranking[0]?.score || 1;
+                    return (
+                      <div key={index} className="flex items-center gap-4">
+                        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
+                          {index === 0 && <Award className="h-5 w-5 text-yellow-500" />}
+                          {index === 1 && <Award className="h-5 w-5 text-gray-400" />}
+                          {index === 2 && <Award className="h-5 w-5 text-orange-600" />}
+                          {index > 2 && <span className="font-bold">{index + 1}</span>}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="font-medium">{school.name}</span>
+                            <Badge variant="outline">
+                              {school.score.toFixed(0)} pts
+                            </Badge>
+                          </div>
+                          <Progress value={(school.score / maxScore) * 100} className="h-2" />
+                          <div className="flex gap-4 mt-1 text-xs text-muted-foreground">
+                            <span>{school.recycled.toFixed(1)} kg reciclados</span>
+                            <span>{school.co2.toFixed(1)} kg CO2 evitados</span>
+                          </div>
+                        </div>
                       </div>
-                      <Progress value={(school.score / reportData.ranking[0].score) * 100} className="h-2" />
-                      <div className="flex gap-4 mt-1 text-xs text-muted-foreground">
-                        <span>{school.recycled.toFixed(1)} kg reciclados</span>
-                        <span>{school.co2.toFixed(1)} kg CO2 evitados</span>
-                      </div>
-                    </div>
+                    );
+                  })
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    Nenhuma escola com dados no período selecionado
                   </div>
-                ))}
+                )}
               </div>
             </CardContent>
           </Card>
@@ -572,19 +581,25 @@ export default function AdvancedReports() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={reportData?.comparison}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="Reciclagem" fill="#10b981" />
-                  <Bar dataKey="CO2" fill="#3b82f6" />
-                  <Bar dataKey="Água" fill="#06b6d4" />
-                  <Bar dataKey="Energia" fill="#f59e0b" />
-                </BarChart>
-              </ResponsiveContainer>
+              {reportData?.comparison && reportData.comparison.length > 0 ? (
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={reportData.comparison}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="Reciclagem" fill="#10b981" />
+                    <Bar dataKey="CO2" fill="#3b82f6" />
+                    <Bar dataKey="Água" fill="#06b6d4" />
+                    <Bar dataKey="Energia" fill="#f59e0b" />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="text-center py-20 text-muted-foreground">
+                  Sem dados para comparação
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -598,25 +613,31 @@ export default function AdvancedReports() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
-                <PieChart>
-                  <Pie
-                    data={reportData?.materialsData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={120}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {reportData?.materialsData.map((entry: any, index: number) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+              {reportData?.materialsData && reportData.materialsData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={400}>
+                  <PieChart>
+                    <Pie
+                      data={reportData.materialsData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={120}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {reportData.materialsData.map((entry: any, index: number) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="text-center py-20 text-muted-foreground">
+                  Sem dados de materiais reciclados
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -630,18 +651,24 @@ export default function AdvancedReports() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
-                <RadarChart data={reportData?.performanceData}>
-                  <PolarGrid />
-                  <PolarAngleAxis dataKey="school" />
-                  <PolarRadiusAxis angle={90} domain={[0, 100]} />
-                  <Radar name="Reciclagem" dataKey="Reciclagem" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
-                  <Radar name="Redução CO2" dataKey="Redução CO2" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
-                  <Radar name="Economia Água" dataKey="Economia Água" stroke="#06b6d4" fill="#06b6d4" fillOpacity={0.6} />
-                  <Radar name="Economia Energia" dataKey="Economia Energia" stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.6} />
-                  <Legend />
-                </RadarChart>
-              </ResponsiveContainer>
+              {reportData?.performanceData && reportData.performanceData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={400}>
+                  <RadarChart data={reportData.performanceData}>
+                    <PolarGrid />
+                    <PolarAngleAxis dataKey="school" />
+                    <PolarRadiusAxis angle={90} domain={[0, 100]} />
+                    <Radar name="Reciclagem" dataKey="Reciclagem" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
+                    <Radar name="Redução CO2" dataKey="Redução CO2" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
+                    <Radar name="Economia Água" dataKey="Economia Água" stroke="#06b6d4" fill="#06b6d4" fillOpacity={0.6} />
+                    <Radar name="Economia Energia" dataKey="Economia Energia" stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.6} />
+                    <Legend />
+                  </RadarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="text-center py-20 text-muted-foreground">
+                  Sem dados de desempenho
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

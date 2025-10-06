@@ -37,14 +37,17 @@ export function useCloudData() {
         dataSync.getConsumptionGoals()
       ]);
 
-      setRecyclingEntries(recycling);
-      setConsumptionEntries(consumption);
-      setConsumptionGoals(goals);
+      setRecyclingEntries(recycling || []);
+      setConsumptionEntries(consumption || []);
+      setConsumptionGoals(goals || []);
     } catch (error) {
       console.error("Error loading data:", error);
+      setRecyclingEntries([]);
+      setConsumptionEntries([]);
+      setConsumptionGoals([]);
       toast({
         title: "Erro ao carregar dados",
-        description: "Não foi possível carregar os dados do servidor",
+        description: "Não foi possível carregar os dados. Verifique sua conexão.",
         variant: "destructive"
       });
     } finally {

@@ -64,24 +64,33 @@ export class DataSyncService {
 
   async getRecyclingEntries(): Promise<RecyclingEntry[]> {
     if (!this.schoolId) {
-      throw new Error("School not set");
+      console.warn("School not set, returning empty array");
+      return [];
     }
 
-    const { data, error } = await supabase
-      .from("recycling_entries")
-      .select("*")
-      .eq("school_id", this.schoolId)
-      .order("entry_date", { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from("recycling_entries")
+        .select("*")
+        .eq("school_id", this.schoolId)
+        .order("entry_date", { ascending: false });
 
-    if (error) throw error;
+      if (error) {
+        console.error("Error fetching recycling entries:", error);
+        return [];
+      }
 
-    return data.map(item => ({
-      id: item.id,
-      material: item.material,
-      quantity: Number(item.quantity),
-      co2Saved: Number(item.co2_saved),
-      date: item.entry_date
-    }));
+      return (data || []).map(item => ({
+        id: item.id,
+        material: item.material,
+        quantity: Number(item.quantity),
+        co2Saved: Number(item.co2_saved),
+        date: item.entry_date
+      }));
+    } catch (error) {
+      console.error("Unexpected error fetching recycling entries:", error);
+      return [];
+    }
   }
 
   async saveConsumptionEntry(entry: Omit<ConsumptionEntry, "id">) {
@@ -126,25 +135,34 @@ export class DataSyncService {
 
   async getConsumptionEntries(): Promise<ConsumptionEntry[]> {
     if (!this.schoolId) {
-      throw new Error("School not set");
+      console.warn("School not set, returning empty array");
+      return [];
     }
 
-    const { data, error } = await supabase
-      .from("consumption_entries")
-      .select("*")
-      .eq("school_id", this.schoolId)
-      .order("month", { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from("consumption_entries")
+        .select("*")
+        .eq("school_id", this.schoolId)
+        .order("month", { ascending: false });
 
-    if (error) throw error;
+      if (error) {
+        console.error("Error fetching consumption entries:", error);
+        return [];
+      }
 
-    return data.map(item => ({
-      id: item.id,
-      type: item.type as "water" | "energy",
-      month: item.month,
-      cost: Number(item.cost),
-      consumption: Number(item.consumption),
-      date: item.entry_date
-    }));
+      return (data || []).map(item => ({
+        id: item.id,
+        type: item.type as "water" | "energy",
+        month: item.month,
+        cost: Number(item.cost),
+        consumption: Number(item.consumption),
+        date: item.entry_date
+      }));
+    } catch (error) {
+      console.error("Unexpected error fetching consumption entries:", error);
+      return [];
+    }
   }
 
   async saveConsumptionGoal(goal: ConsumptionGoal) {
@@ -181,20 +199,29 @@ export class DataSyncService {
 
   async getConsumptionGoals(): Promise<ConsumptionGoal[]> {
     if (!this.schoolId) {
-      throw new Error("School not set");
+      console.warn("School not set, returning empty array");
+      return [];
     }
 
-    const { data, error } = await supabase
-      .from("consumption_goals")
-      .select("*")
-      .eq("school_id", this.schoolId);
+    try {
+      const { data, error } = await supabase
+        .from("consumption_goals")
+        .select("*")
+        .eq("school_id", this.schoolId);
 
-    if (error) throw error;
+      if (error) {
+        console.error("Error fetching consumption goals:", error);
+        return [];
+      }
 
-    return data.map(item => ({
-      type: item.type as "water" | "energy",
-      reductionPercentage: Number(item.reduction_percentage)
-    }));
+      return (data || []).map(item => ({
+        type: item.type as "water" | "energy",
+        reductionPercentage: Number(item.reduction_percentage)
+      }));
+    } catch (error) {
+      console.error("Unexpected error fetching consumption goals:", error);
+      return [];
+    }
   }
 
   async deleteRecyclingEntry(id: string) {

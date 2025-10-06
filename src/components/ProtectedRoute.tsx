@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Session } from "@supabase/supabase-js";
-import LoadingSkeleton from "./LoadingSkeleton";
+import { LoadingState } from "./LoadingState";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -13,9 +13,12 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        if (!isMounted) return;
         setSession(session);
         setLoading(false);
       }
@@ -23,15 +26,22 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!isMounted) return;
       setSession(session);
       setLoading(false);
+    }).catch((error) => {
+      console.error("Error getting session:", error);
+      if (isMounted) setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   if (loading) {
-    return <LoadingSkeleton />;
+    return <LoadingState fullScreen message="Verificando autenticação..." />;
   }
 
   if (!session) {
