@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useCloudData } from '@/hooks/useCloudData';
 import { supabase } from '@/integrations/supabase/client';
@@ -132,13 +132,6 @@ export default function Dashboard() {
     }
   };
 
-  // Memoize data object to prevent unnecessary re-renders
-  const schoolData = useMemo(() => ({
-    recyclingEntries: recyclingEntries || [],
-    consumptionEntries: consumptionEntries || [],
-    consumptionGoals: consumptionGoals || []
-  }), [recyclingEntries, consumptionEntries, consumptionGoals]);
-
   if (isLoadingUser) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-muted/30 flex items-center justify-center">
@@ -199,7 +192,11 @@ export default function Dashboard() {
             <SchoolDashboard
               schoolName={currentSchoolName}
               schoolType="current"
-              data={schoolData}
+              data={{
+                recyclingEntries: recyclingEntries || [],
+                consumptionEntries: consumptionEntries || [],
+                consumptionGoals: consumptionGoals || []
+              }}
               onRecyclingUpdate={handleRecyclingUpdate}
               onConsumptionUpdate={handleConsumptionUpdate}
               onDeleteAll={deleteAllRecords}

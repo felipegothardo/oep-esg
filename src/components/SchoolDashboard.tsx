@@ -267,8 +267,8 @@ export default function SchoolDashboard({
                     co2Total={totalCO2Saved}
                     waterConsumption={lastWaterConsumption}
                     energyConsumption={lastEnergyConsumption}
-                    hasRecyclingData={data.recyclingEntries.length > 0}
-                    hasConsumptionData={data.consumptionEntries.length > 0}
+                    hasRecyclingData={safeData.recyclingEntries.length > 0}
+                    hasConsumptionData={safeData.consumptionEntries.length > 0}
                     schoolName={schoolName}
                     onTabChange={setCurrentMobileTab}
                   />
@@ -298,8 +298,8 @@ export default function SchoolDashboard({
                     co2Total={totalCO2Saved}
                     waterConsumption={lastWaterConsumption}
                     energyConsumption={lastEnergyConsumption}
-                    hasRecyclingData={data.recyclingEntries.length > 0}
-                    hasConsumptionData={data.consumptionEntries.length > 0}
+                    hasRecyclingData={safeData.recyclingEntries.length > 0}
+                    hasConsumptionData={safeData.consumptionEntries.length > 0}
                     schoolName={schoolName}
                     onTabChange={setCurrentMobileTab}
                   />
