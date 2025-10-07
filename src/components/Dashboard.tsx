@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useCloudData } from '@/hooks/useCloudData';
 import { supabase } from '@/integrations/supabase/client';
@@ -162,6 +162,24 @@ export default function Dashboard() {
     );
   }
 
+  // Memoizar componentes para evitar remontagem desnecessária
+  const schoolDashboardComponent = useMemo(() => (
+    <SchoolDashboard
+      schoolName={currentSchoolName}
+      schoolType="current"
+      data={{
+        recyclingEntries: recyclingEntries || [],
+        consumptionEntries: consumptionEntries || [],
+        consumptionGoals: consumptionGoals || []
+      }}
+      onRecyclingUpdate={handleRecyclingUpdate}
+      onConsumptionUpdate={handleConsumptionUpdate}
+      onDeleteAll={deleteAllRecords}
+      onDeleteRecyclingByMonth={deleteRecyclingByMonth}
+      onDeleteConsumptionByMonth={deleteConsumptionByMonth}
+    />
+  ), [currentSchoolName, recyclingEntries, consumptionEntries, consumptionGoals]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/30">
       <EcoHeader />
@@ -188,32 +206,19 @@ export default function Dashboard() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="dashboard" className="space-y-6">
-            <SchoolDashboard
-              schoolName={currentSchoolName}
-              schoolType="current"
-              data={{
-                recyclingEntries: recyclingEntries || [],
-                consumptionEntries: consumptionEntries || [],
-                consumptionGoals: consumptionGoals || []
-              }}
-              onRecyclingUpdate={handleRecyclingUpdate}
-              onConsumptionUpdate={handleConsumptionUpdate}
-              onDeleteAll={deleteAllRecords}
-              onDeleteRecyclingByMonth={deleteRecyclingByMonth}
-              onDeleteConsumptionByMonth={deleteConsumptionByMonth}
-            />
-          </TabsContent>
+          <div className={activeTab === 'dashboard' ? 'block space-y-6' : 'hidden'}>
+            {schoolDashboardComponent}
+          </div>
 
           {isCoordinator && (
-            <TabsContent value="coordinator">
+            <div className={activeTab === 'coordinator' ? 'block' : 'hidden'}>
               <CoordinatorDashboard />
-            </TabsContent>
+            </div>
           )}
 
-          <TabsContent value="reports">
+          <div className={activeTab === 'reports' ? 'block' : 'hidden'}>
             <AdvancedReports />
-          </TabsContent>
+          </div>
         </Tabs>
       </div>
       
