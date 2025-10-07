@@ -15,8 +15,7 @@ import OnboardingTutorial from './OnboardingTutorial';
 import AdvancedReports from './AdvancedReports';
 import CoordinatorDashboard from './CoordinatorDashboard';
 import InitialSchoolSelection from './InitialSchoolSelection';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { BarChart3, Home, FileText, Building2 } from 'lucide-react';
+import { BarChart3, Home, Building2 } from 'lucide-react';
 import { RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSchoolData';
 
 export default function Dashboard() {
@@ -167,28 +166,48 @@ export default function Dashboard() {
       <EcoHeader />
       
       <div className="container mx-auto px-2 md:px-4 py-4 md:py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className={cn(
-            "grid w-full mb-6",
+        {/* Tabs apenas para navegação visual */}
+        <div className="w-full">
+          <div className={cn(
+            "grid w-full mb-6 h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
             isCoordinator ? "grid-cols-3" : "grid-cols-2"
           )}>
-            <TabsTrigger value="dashboard" className="gap-2">
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={cn(
+                "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 gap-2",
+                activeTab === 'dashboard' && "bg-background text-foreground shadow-sm"
+              )}
+            >
               <Home className="h-4 w-4" />
               Minha Escola
-            </TabsTrigger>
+            </button>
             {isCoordinator && (
-              <TabsTrigger value="coordinator" className="gap-2">
+              <button
+                onClick={() => setActiveTab('coordinator')}
+                className={cn(
+                  "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 gap-2",
+                  activeTab === 'coordinator' && "bg-background text-foreground shadow-sm"
+                )}
+              >
                 <Building2 className="h-4 w-4" />
                 Todas as Escolas
-              </TabsTrigger>
+              </button>
             )}
-            <TabsTrigger value="reports" className="gap-2">
+            <button
+              onClick={() => setActiveTab('reports')}
+              className={cn(
+                "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 gap-2",
+                activeTab === 'reports' && "bg-background text-foreground shadow-sm"
+              )}
+            >
               <BarChart3 className="h-4 w-4" />
               Relatórios
-            </TabsTrigger>
-          </TabsList>
+            </button>
+          </div>
 
-          <TabsContent value="dashboard" className="space-y-6">
+          {/* Manter todos os componentes montados, apenas alternar visibilidade */}
+          <div className={cn("space-y-6", activeTab !== 'dashboard' && "hidden")}>
             <SchoolDashboard
               schoolName={currentSchoolName}
               schoolType="current"
@@ -203,18 +222,18 @@ export default function Dashboard() {
               onDeleteRecyclingByMonth={deleteRecyclingByMonth}
               onDeleteConsumptionByMonth={deleteConsumptionByMonth}
             />
-          </TabsContent>
+          </div>
 
           {isCoordinator && (
-            <TabsContent value="coordinator">
+            <div className={cn(activeTab !== 'coordinator' && "hidden")}>
               <CoordinatorDashboard />
-            </TabsContent>
+            </div>
           )}
 
-          <TabsContent value="reports">
+          <div className={cn(activeTab !== 'reports' && "hidden")}>
             <AdvancedReports />
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
       </div>
       
       <ConversionReferences />
