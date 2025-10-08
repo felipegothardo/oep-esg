@@ -10,6 +10,8 @@ import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, Cart
 import { cn } from '@/lib/utils';
 import { exportToPDF } from '@/utils/pdfExport';
 import { useToast } from '@/hooks/use-toast';
+import { ErrorBoundary } from './ErrorBoundary';
+import { LoadingState } from './LoadingState';
 import SchoolDashboard from './SchoolDashboard';
 
 interface SchoolData {
@@ -201,57 +203,52 @@ export default function CoordinatorDashboard() {
     : null;
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="text-muted-foreground">Carregando dados das escolas...</p>
-        </div>
-      </div>
-    );
+    return <LoadingState message="Carregando dados das escolas..." />;
   }
 
   // Vista individual de escola
   if (viewMode === 'individual' && selectedSchoolData) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Dados de {selectedSchoolData.name}</h2>
-          <div className="flex gap-2">
-            <Button
-              onClick={() => handleExportSchoolReport(selectedSchoolData)}
-              variant="outline"
-              size="sm"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Exportar PDF
-            </Button>
-            <Button
-              onClick={() => setViewMode('overview')}
-              variant="outline"
-              size="sm"
-            >
-              Voltar ao Resumo
-            </Button>
+      <ErrorBoundary>
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">Dados de {selectedSchoolData.name}</h2>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => handleExportSchoolReport(selectedSchoolData)}
+                variant="outline"
+                size="sm"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Exportar PDF
+              </Button>
+              <Button
+                onClick={() => setViewMode('overview')}
+                variant="outline"
+                size="sm"
+              >
+                Voltar ao Resumo
+              </Button>
+            </div>
           </div>
-        </div>
 
-        <SchoolDashboard
-          schoolName={selectedSchoolData.name}
-          schoolType="view-only"
-          data={{
-            recyclingEntries: selectedSchoolData.recyclingEntries || [],
-            consumptionEntries: selectedSchoolData.consumptionEntries || [],
-            consumptionGoals: []
-          }}
-          onRecyclingUpdate={() => {}}
-          onConsumptionUpdate={() => {}}
-          onDeleteAll={() => {}}
-          onDeleteRecyclingByMonth={() => {}}
-          onDeleteConsumptionByMonth={() => {}}
-          viewOnly={true}
-        />
-      </div>
+          <SchoolDashboard
+            schoolName={selectedSchoolData.name}
+            schoolType="view-only"
+            data={{
+              recyclingEntries: selectedSchoolData.recyclingEntries || [],
+              consumptionEntries: selectedSchoolData.consumptionEntries || [],
+              consumptionGoals: []
+            }}
+            onRecyclingUpdate={() => {}}
+            onConsumptionUpdate={() => {}}
+            onDeleteAll={() => {}}
+            onDeleteRecyclingByMonth={() => {}}
+            onDeleteConsumptionByMonth={() => {}}
+            viewOnly={true}
+          />
+        </div>
+      </ErrorBoundary>
     );
   }
 
