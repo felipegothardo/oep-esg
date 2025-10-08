@@ -1,27 +1,24 @@
-import { useState, Suspense, lazy } from 'react';
+import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Leaf, Droplets, Zap, Recycle } from 'lucide-react';
 import { SchoolData, RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSchoolData';
 import ExportButton from './ExportButton';
 import MobileStats from './MobileStats';
-import LoadingSkeleton from './LoadingSkeleton';
 import { DeleteRecordsDialog } from './DeleteRecordsDialog';
 import { useActionHistory } from '@/hooks/useActionHistory';
-
-// Lazy load dos componentes pesados
-const RecyclingCalculator = lazy(() => import('./RecyclingCalculator'));
-const WaterEnergyTracker = lazy(() => import('./WaterEnergyTracker'));
-const RecyclingChart = lazy(() => import('./RecyclingChart'));
-const ConsumptionChart = lazy(() => import('./ConsumptionChart'));
-const GoalProgressCard = lazy(() => import('./GoalProgressCard'));
-const ProjectionCard = lazy(() => import('./ProjectionCard'));
-const ChatTab = lazy(() => import('./ChatTab'));
-const ResourcesTab = lazy(() => import('./ResourcesTab'));
-const SmartGoalSuggestion = lazy(() => import('./SmartGoalSuggestion'));
-const AchievementSystem = lazy(() => import('./AchievementSystem'));
-const ContextualTips = lazy(() => import('./ContextualTips'));
-const ActionHistory = lazy(() => import('./ActionHistory'));
+import RecyclingCalculator from './RecyclingCalculator';
+import WaterEnergyTracker from './WaterEnergyTracker';
+import RecyclingChart from './RecyclingChart';
+import ConsumptionChart from './ConsumptionChart';
+import GoalProgressCard from './GoalProgressCard';
+import ProjectionCard from './ProjectionCard';
+import ChatTab from './ChatTab';
+import ResourcesTab from './ResourcesTab';
+import SmartGoalSuggestion from './SmartGoalSuggestion';
+import AchievementSystem from './AchievementSystem';
+import ContextualTips from './ContextualTips';
+import ActionHistory from './ActionHistory';
 
 interface SchoolDashboardProps {
   schoolName: string;
@@ -258,155 +255,127 @@ export default function SchoolDashboard({
         </TabsList>
 
         <TabsContent value="calculator" className="animate-fade-in">
-          <Suspense fallback={<LoadingSkeleton type="form" />}>
-            <div className="recycling-section space-y-4">
-              {!viewOnly && (
-                <Suspense fallback={null}>
-                  <ContextualTips 
-                    recyclingTotal={totalRecycled}
-                    co2Total={totalCO2Saved}
-                    waterConsumption={lastWaterConsumption}
-                    energyConsumption={lastEnergyConsumption}
-                    hasRecyclingData={safeData.recyclingEntries.length > 0}
-                    hasConsumptionData={safeData.consumptionEntries.length > 0}
-                    schoolName={schoolName}
-                    onTabChange={setCurrentMobileTab}
-                  />
-                </Suspense>
-              )}
-              {viewOnly ? (
-                <RecyclingChart 
-                  entries={safeData.recyclingEntries}
-                />
-              ) : (
-                <RecyclingCalculator
-                  onEntriesUpdate={handleRecyclingUpdate} 
-                  schoolType={schoolType}
-                />
-              )}
-            </div>
-          </Suspense>
+          <div className="recycling-section space-y-4">
+            {!viewOnly && (
+              <ContextualTips 
+                recyclingTotal={totalRecycled}
+                co2Total={totalCO2Saved}
+                waterConsumption={lastWaterConsumption}
+                energyConsumption={lastEnergyConsumption}
+                hasRecyclingData={safeData.recyclingEntries.length > 0}
+                hasConsumptionData={safeData.consumptionEntries.length > 0}
+                schoolName={schoolName}
+                onTabChange={setCurrentMobileTab}
+              />
+            )}
+            {viewOnly ? (
+              <RecyclingChart 
+                entries={safeData.recyclingEntries}
+              />
+            ) : (
+              <RecyclingCalculator
+                onEntriesUpdate={handleRecyclingUpdate} 
+                schoolType={schoolType}
+              />
+            )}
+          </div>
         </TabsContent>
 
         <TabsContent value="consumption" className="animate-fade-in">
-          <Suspense fallback={<LoadingSkeleton type="form" />}>
-            <div className="consumption-section space-y-4">
-              {!viewOnly && (
-                <Suspense fallback={null}>
-                  <ContextualTips 
-                    recyclingTotal={totalRecycled}
-                    co2Total={totalCO2Saved}
-                    waterConsumption={lastWaterConsumption}
-                    energyConsumption={lastEnergyConsumption}
-                    hasRecyclingData={safeData.recyclingEntries.length > 0}
-                    hasConsumptionData={safeData.consumptionEntries.length > 0}
-                    schoolName={schoolName}
-                    onTabChange={setCurrentMobileTab}
-                  />
-                </Suspense>
-              )}
-              {viewOnly ? (
-                <ConsumptionChart 
-                  entries={safeData.consumptionEntries}
-                  goals={safeData.consumptionGoals}
-                />
-              ) : (
-                <WaterEnergyTracker
-                  onDataUpdate={handleConsumptionUpdate}
-                  existingEntries={safeData.consumptionEntries}
-                  existingGoals={safeData.consumptionGoals}
-                />
-              )}
-            </div>
-          </Suspense>
+          <div className="consumption-section space-y-4">
+            {!viewOnly && (
+              <ContextualTips 
+                recyclingTotal={totalRecycled}
+                co2Total={totalCO2Saved}
+                waterConsumption={lastWaterConsumption}
+                energyConsumption={lastEnergyConsumption}
+                hasRecyclingData={safeData.recyclingEntries.length > 0}
+                hasConsumptionData={safeData.consumptionEntries.length > 0}
+                schoolName={schoolName}
+                onTabChange={setCurrentMobileTab}
+              />
+            )}
+            {viewOnly ? (
+              <ConsumptionChart 
+                entries={safeData.consumptionEntries}
+                goals={safeData.consumptionGoals}
+              />
+            ) : (
+              <WaterEnergyTracker
+                onDataUpdate={handleConsumptionUpdate}
+                existingEntries={safeData.consumptionEntries}
+                existingGoals={safeData.consumptionGoals}
+              />
+            )}
+          </div>
         </TabsContent>
 
         <TabsContent value="goals" className="space-y-6 animate-fade-in">
-          <Suspense fallback={<LoadingSkeleton type="form" />}>
-            <SmartGoalSuggestion 
-              recyclingEntries={safeData.recyclingEntries}
-              consumptionEntries={safeData.consumptionEntries}
-              currentGoals={safeData.consumptionGoals}
-              onUpdateGoal={(type, percentage) => {
-                const updatedGoals = safeData.consumptionGoals.map(goal => 
-                  goal.type === type 
-                    ? { ...goal, reductionPercentage: percentage }
-                    : goal
-                );
-                handleConsumptionUpdate(safeData.consumptionEntries, updatedGoals);
-              }}
-            />
-          </Suspense>
+          <SmartGoalSuggestion 
+            recyclingEntries={safeData.recyclingEntries}
+            consumptionEntries={safeData.consumptionEntries}
+            currentGoals={safeData.consumptionGoals}
+            onUpdateGoal={(type, percentage) => {
+              const updatedGoals = safeData.consumptionGoals.map(goal => 
+                goal.type === type 
+                  ? { ...goal, reductionPercentage: percentage }
+                  : goal
+              );
+              handleConsumptionUpdate(safeData.consumptionEntries, updatedGoals);
+            }}
+          />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Suspense fallback={<LoadingSkeleton type="chart" />}>
-              <GoalProgressCard 
-                entries={safeData.consumptionEntries} 
-                goals={safeData.consumptionGoals} 
-                type="water" 
-              />
-            </Suspense>
-            <Suspense fallback={<LoadingSkeleton type="chart" />}>
-              <GoalProgressCard 
-                entries={safeData.consumptionEntries} 
-                goals={safeData.consumptionGoals} 
-                type="energy" 
-              />
-            </Suspense>
+            <GoalProgressCard 
+              entries={safeData.consumptionEntries} 
+              goals={safeData.consumptionGoals} 
+              type="water" 
+            />
+            <GoalProgressCard 
+              entries={safeData.consumptionEntries} 
+              goals={safeData.consumptionGoals} 
+              type="energy" 
+            />
           </div>
-          <Suspense fallback={<LoadingSkeleton type="chart" />}>
-            <ProjectionCard entries={safeData.recyclingEntries} schoolName={schoolName} />
-          </Suspense>
+          <ProjectionCard entries={safeData.recyclingEntries} schoolName={schoolName} />
         </TabsContent>
 
         <TabsContent value="recycling-charts" className="animate-fade-in">
-          <Suspense fallback={<LoadingSkeleton type="chart" />}>
-            <RecyclingChart entries={safeData.recyclingEntries} />
-          </Suspense>
+          <RecyclingChart entries={safeData.recyclingEntries} />
         </TabsContent>
 
         <TabsContent value="consumption-charts" className="animate-fade-in">
-          <Suspense fallback={<LoadingSkeleton type="chart" />}>
-            <ConsumptionChart 
-              entries={safeData.consumptionEntries} 
-              goals={safeData.consumptionGoals} 
-            />
-          </Suspense>
+          <ConsumptionChart 
+            entries={safeData.consumptionEntries} 
+            goals={safeData.consumptionGoals} 
+          />
         </TabsContent>
 
         <TabsContent value="achievements" className="animate-fade-in">
-          <Suspense fallback={<LoadingSkeleton type="chart" />}>
-            <AchievementSystem 
-              recyclingTotal={totalRecycled}
-              co2Total={totalCO2Saved}
-              waterReduction={safeData.consumptionGoals.find(g => g.type === 'water')?.reductionPercentage || 0}
-              energyReduction={safeData.consumptionGoals.find(g => g.type === 'energy')?.reductionPercentage || 0}
-              monthsActive={Math.max(safeData.recyclingEntries.length, safeData.consumptionEntries.length) > 0 ? 1 : 0}
-              schoolName={schoolName}
-            />
-          </Suspense>
+          <AchievementSystem 
+            recyclingTotal={totalRecycled}
+            co2Total={totalCO2Saved}
+            waterReduction={safeData.consumptionGoals.find(g => g.type === 'water')?.reductionPercentage || 0}
+            energyReduction={safeData.consumptionGoals.find(g => g.type === 'energy')?.reductionPercentage || 0}
+            monthsActive={Math.max(safeData.recyclingEntries.length, safeData.consumptionEntries.length) > 0 ? 1 : 0}
+            schoolName={schoolName}
+          />
         </TabsContent>
 
         <TabsContent value="history" className="animate-fade-in">
-          <Suspense fallback={<LoadingSkeleton type="list" />}>
-            <ActionHistory 
-              history={history}
-              onUndo={undoLastAction}
-              onClear={clearHistory}
-              hasHistory={hasHistory}
-            />
-          </Suspense>
+          <ActionHistory 
+            history={history}
+            onUndo={undoLastAction}
+            onClear={clearHistory}
+            hasHistory={hasHistory}
+          />
         </TabsContent>
 
         <TabsContent value="chat" className="animate-fade-in">
-          <Suspense fallback={<LoadingSkeleton type="form" />}>
-            <ChatTab defaultSchool={schoolName} />
-          </Suspense>
+          <ChatTab defaultSchool={schoolName} />
         </TabsContent>
 
         <TabsContent value="resources" className="animate-fade-in">
-          <Suspense fallback={<LoadingSkeleton type="list" />}>
-            <ResourcesTab />
-          </Suspense>
+          <ResourcesTab />
         </TabsContent>
       </Tabs>
     </div>

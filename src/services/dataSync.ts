@@ -7,20 +7,40 @@ export class DataSyncService {
   private schoolId: string | null = null;
 
   async initialize() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) {
+    try {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError) {
+        console.error("Session error:", sessionError);
+        throw new Error("Authentication failed");
+      }
+      
+      if (!session?.user) {
+        throw new Error("No active session");
+      }
+      
       this.userId = session.user.id;
       
       // Get user's school
-      const { data: profile } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("school_id")
         .eq("user_id", session.user.id)
-        .single();
+        .maybeSingle();
       
-      if (profile) {
-        this.schoolId = profile.school_id;
+      if (profileError) {
+        console.error("Profile error:", profileError);
+        throw new Error("Failed to load user profile");
       }
+      
+      if (profile?.school_id) {
+        this.schoolId = profile.school_id;
+      } else {
+        throw new Error("User has no school assigned");
+      }
+    } catch (error) {
+      console.error("Initialization error:", error);
+      throw error;
     }
   }
 
