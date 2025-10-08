@@ -12,6 +12,8 @@ import OnboardingTutorial from './OnboardingTutorial';
 import AdvancedReports from './AdvancedReports';
 import CoordinatorDashboard from './CoordinatorDashboard';
 import InitialSchoolSelection from './InitialSchoolSelection';
+import { ErrorBoundary } from './ErrorBoundary';
+import { LoadingState } from './LoadingState';
 import { BarChart3, Home, Building2 } from 'lucide-react';
 import { RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSchoolData';
 
@@ -48,7 +50,15 @@ export default function Dashboard() {
   const loadUserSchool = async () => {
     try {
       setIsLoadingUser(true);
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError) {
+        console.error("Session error:", sessionError);
+        // Se houver erro de sessão, limpar e redirecionar para login
+        await supabase.auth.signOut();
+        setIsLoadingUser(false);
+        return;
+      }
       
       if (!session?.user) {
         setIsLoadingUser(false);
@@ -78,6 +88,8 @@ export default function Dashboard() {
       }
     } catch (error) {
       console.error("Error in loadUserSchool:", error);
+      // Em caso de erro, tentar fazer logout para limpar estado
+      await supabase.auth.signOut();
     } finally {
       setIsLoadingUser(false);
     }
@@ -121,14 +133,7 @@ export default function Dashboard() {
   };
 
   if (isLoadingUser) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background to-muted/30 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Carregando...</p>
-        </div>
-      </div>
-    );
+    return <LoadingState message="Carregando..." fullScreen />;
   }
 
   if (!hasProfile) {
@@ -140,19 +145,13 @@ export default function Dashboard() {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background to-muted/30 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Carregando dados...</p>
-        </div>
-      </div>
-    );
+    return <LoadingState message="Carregando dados..." fullScreen />;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/30">
-      <EcoHeader />
+    <ErrorBoundary>
+      <div className="min-h-screen bg-gradient-to-br from-background to-muted/30">
+        <EcoHeader />
       
       <div className="container mx-auto px-2 md:px-4 py-4 md:py-8">
         {/* Navigation Tabs */}
@@ -263,10 +262,11 @@ export default function Dashboard() {
         </div>
       </div>
       
-      <ConversionReferences />
-      <DesktopShortcutButton />
-      <PWAInstallPrompt />
-      <OnboardingTutorial />
-    </div>
+        <ConversionReferences />
+        <DesktopShortcutButton />
+        <PWAInstallPrompt />
+        <OnboardingTutorial />
+      </div>
+    </ErrorBoundary>
   );
 }
