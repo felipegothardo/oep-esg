@@ -163,28 +163,56 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <img src={oepLogo} alt="OEP Logo" className="w-40 h-auto object-contain" />
+    <div className="min-h-screen bg-gradient-vibrant flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-success/10 rounded-full blur-3xl"></div>
+      </div>
+
+      <Card className="w-full max-w-lg shadow-2xl border-2 border-white/20 backdrop-blur-sm bg-card/95 relative z-10">
+        <CardHeader className="text-center space-y-6 pb-8">
+          <div className="flex justify-center">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-eco rounded-full blur-xl opacity-50 animate-pulse"></div>
+              <img 
+                src={oepLogo} 
+                alt="OEP Logo" 
+                className="w-48 h-auto object-contain relative z-10 drop-shadow-2xl animate-float" 
+              />
+            </div>
           </div>
-          <CardTitle className="text-2xl font-bold">OEP Sustentável</CardTitle>
-          <CardDescription>
-            Sistema de Gestão Ambiental Escolar
-          </CardDescription>
+          <div className="space-y-2">
+            <CardTitle className="text-4xl font-bold bg-gradient-eco bg-clip-text text-transparent">
+              OEP Sustentável
+            </CardTitle>
+            <CardDescription className="text-base text-muted-foreground font-medium">
+              Sistema de Gestão Ambiental Escolar
+            </CardDescription>
+          </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
           <Tabs defaultValue="signin" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="signin">Entrar</TabsTrigger>
-              <TabsTrigger value="signup">Cadastrar</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 h-12 p-1 bg-muted/50 backdrop-blur">
+              <TabsTrigger 
+                value="signin" 
+                className="data-[state=active]:bg-gradient-eco data-[state=active]:text-white data-[state=active]:shadow-eco transition-all duration-300 rounded-md font-semibold"
+              >
+                Entrar
+              </TabsTrigger>
+              <TabsTrigger 
+                value="signup"
+                className="data-[state=active]:bg-gradient-eco data-[state=active]:text-white data-[state=active]:shadow-eco transition-all duration-300 rounded-md font-semibold"
+              >
+                Cadastrar
+              </TabsTrigger>
             </TabsList>
             
-            <TabsContent value="signin">
-              <form onSubmit={handleSignIn} className="space-y-4">
+            <TabsContent value="signin" className="mt-6">
+              <form onSubmit={handleSignIn} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="email-signin">Email</Label>
+                  <Label htmlFor="email-signin" className="text-sm font-semibold text-foreground">Email</Label>
                   <Input
                     id="email-signin"
                     type="email"
@@ -193,10 +221,11 @@ export default function Auth() {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     disabled={loading}
+                    className="h-12 px-4 border-2 focus:border-primary transition-all duration-300"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password-signin">Senha</Label>
+                  <Label htmlFor="password-signin" className="text-sm font-semibold text-foreground">Senha</Label>
                   <Input
                     id="password-signin"
                     type="password"
@@ -205,28 +234,35 @@ export default function Auth() {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     disabled={loading}
+                    className="h-12 px-4 border-2 focus:border-primary transition-all duration-300"
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button 
+                  type="submit" 
+                  variant="vibrant"
+                  size="lg"
+                  className="w-full mt-8" 
+                  disabled={loading}
+                >
                   {loading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                       Entrando...
                     </>
                   ) : (
                     <>
-                      <Leaf className="mr-2 h-4 w-4" />
-                      Entrar
+                      <Leaf className="mr-2 h-5 w-5" />
+                      Entrar na Plataforma
                     </>
                   )}
                 </Button>
               </form>
             </TabsContent>
             
-            <TabsContent value="signup">
-              <form onSubmit={handleSignUp} className="space-y-4">
+            <TabsContent value="signup" className="mt-6">
+              <form onSubmit={handleSignUp} className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="fullname">Nome Completo</Label>
+                  <Label htmlFor="fullname" className="text-sm font-semibold text-foreground">Nome Completo</Label>
                   <Input
                     id="fullname"
                     type="text"
@@ -235,10 +271,11 @@ export default function Auth() {
                     onChange={(e) => setFullName(e.target.value)}
                     required
                     disabled={loading}
+                    className="h-12 px-4 border-2 focus:border-primary transition-all duration-300"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="school">Escola</Label>
+                  <Label htmlFor="school" className="text-sm font-semibold text-foreground">Escola</Label>
                   <select
                     id="school"
                     value={schoolId}
@@ -248,13 +285,12 @@ export default function Auth() {
                     }}
                     disabled={loading}
                     required
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    style={{ backgroundColor: 'white', color: 'black' }}
+                    className="flex h-12 w-full rounded-lg border-2 border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     <option value="" disabled>Selecione sua escola</option>
                     {schools.length > 0 ? (
                       schools.map((school) => (
-                        <option key={school.id} value={school.id} style={{ backgroundColor: 'white', color: 'black' }}>
+                        <option key={school.id} value={school.id}>
                           {school.name}
                         </option>
                       ))
@@ -264,7 +300,7 @@ export default function Auth() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email-signup">Email</Label>
+                  <Label htmlFor="email-signup" className="text-sm font-semibold text-foreground">Email</Label>
                   <Input
                     id="email-signup"
                     type="email"
@@ -273,10 +309,11 @@ export default function Auth() {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     disabled={loading}
+                    className="h-12 px-4 border-2 focus:border-primary transition-all duration-300"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password-signup">Senha</Label>
+                  <Label htmlFor="password-signup" className="text-sm font-semibold text-foreground">Senha</Label>
                   <Input
                     id="password-signup"
                     type="password"
@@ -286,18 +323,25 @@ export default function Auth() {
                     required
                     minLength={6}
                     disabled={loading}
+                    className="h-12 px-4 border-2 focus:border-primary transition-all duration-300"
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button 
+                  type="submit" 
+                  variant="vibrant"
+                  size="lg"
+                  className="w-full mt-8" 
+                  disabled={loading}
+                >
                   {loading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                       Criando conta...
                     </>
                   ) : (
                     <>
-                      <Leaf className="mr-2 h-4 w-4" />
-                      Criar Conta
+                      <Leaf className="mr-2 h-5 w-5" />
+                      Criar Conta Agora
                     </>
                   )}
                 </Button>

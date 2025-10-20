@@ -27,7 +27,8 @@ export default {
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))',
-					glow: 'hsl(var(--primary-glow))'
+					glow: 'hsl(var(--primary-glow))',
+					vibrant: 'hsl(var(--primary-vibrant))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -49,9 +50,15 @@ export default {
 					DEFAULT: 'hsl(var(--success))',
 					foreground: 'hsl(var(--success-foreground))'
 				},
+				green: {
+					DEFAULT: 'hsl(var(--green))',
+					foreground: 'hsl(var(--green-foreground))',
+					light: 'hsl(var(--green-light))'
+				},
 				purple: {
 					DEFAULT: 'hsl(var(--purple))',
-					foreground: 'hsl(var(--purple-foreground))'
+					foreground: 'hsl(var(--purple-foreground))',
+					vibrant: 'hsl(var(--purple-vibrant))'
 				},
 				blue: {
 					DEFAULT: 'hsl(var(--blue))',
@@ -119,11 +126,17 @@ export default {
 				'gradient-sky': 'var(--gradient-sky)',
 				'gradient-nature': 'var(--gradient-nature)',
 				'gradient-blue': 'var(--gradient-blue)',
-				'gradient-ocean': 'var(--gradient-ocean)'
+				'gradient-ocean': 'var(--gradient-ocean)',
+				'gradient-purple': 'var(--gradient-purple)',
+				'gradient-sunset': 'var(--gradient-sunset)',
+				'gradient-vibrant': 'var(--gradient-vibrant)'
 			},
 			boxShadow: {
 				'eco': 'var(--shadow-eco)',
-				'soft': 'var(--shadow-soft)'
+				'soft': 'var(--shadow-soft)',
+				'glow': 'var(--shadow-glow)',
+				'purple': 'var(--shadow-purple)',
+				'accent': 'var(--shadow-accent)'
 			}
 		}
 	},

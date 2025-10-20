@@ -17,43 +17,56 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 215 25% 15%;
 
-    --primary: 195 78% 42%;
+    /* Vibrant modern color palette */
+    --primary: 195 85% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 195 78% 62%;
+    --primary-glow: 195 85% 65%;
+    --primary-vibrant: 195 95% 55%;
 
-    --secondary: 210 30% 92%;
-    --secondary-foreground: 215 25% 15%;
+    --secondary: 280 70% 58%;
+    --secondary-foreground: 0 0% 100%;
 
     --muted: 210 25% 95%;
     --muted-foreground: 215 15% 50%;
 
-    --accent: 210 80% 52%;
+    --accent: 33 100% 55%;
     --accent-foreground: 0 0% 100%;
 
-    --blue: 210 95% 58%;
+    --blue: 210 100% 60%;
     --blue-foreground: 0 0% 100%;
-    --blue-light: 210 95% 80%;
-    --blue-dark: 210 95% 42%;
+    --blue-light: 210 100% 85%;
+    --blue-dark: 210 100% 45%;
 
-    --success: 195 78% 42%;
+    --green: 142 76% 45%;
+    --green-foreground: 0 0% 100%;
+    --green-light: 142 76% 65%;
+
+    --success: 142 76% 45%;
     --success-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --purple: 265 67% 55%;
+    --purple: 265 85% 60%;
     --purple-foreground: 0 0% 100%;
+    --purple-vibrant: 280 90% 65%;
 
-    /* Custom modern gradients */
-    --gradient-eco: linear-gradient(135deg, hsl(195 78% 42%), hsl(210 80% 62%));
-    --gradient-sky: linear-gradient(180deg, hsl(210 95% 85%), hsl(210 25% 98%));
-    --gradient-nature: linear-gradient(45deg, hsl(195 78% 42%) 0%, hsl(210 80% 52%) 100%);
-    --gradient-blue: linear-gradient(135deg, hsl(210 95% 58%), hsl(210 95% 80%));
-    --gradient-ocean: linear-gradient(45deg, hsl(195 78% 42%) 0%, hsl(210 80% 58%) 100%);
+    /* Vibrant modern gradients */
+    --gradient-eco: linear-gradient(135deg, hsl(195 85% 45%), hsl(142 76% 45%));
+    --gradient-sky: linear-gradient(180deg, hsl(210 100% 90%), hsl(195 85% 95%));
+    --gradient-nature: linear-gradient(45deg, hsl(142 76% 45%) 0%, hsl(195 85% 45%) 100%);
+    --gradient-blue: linear-gradient(135deg, hsl(210 100% 60%), hsl(195 85% 55%));
+    --gradient-ocean: linear-gradient(45deg, hsl(195 85% 45%) 0%, hsl(210 100% 60%) 100%);
+    --gradient-purple: linear-gradient(135deg, hsl(265 85% 60%), hsl(280 90% 65%));
+    --gradient-sunset: linear-gradient(135deg, hsl(33 100% 55%), hsl(280 70% 58%));
+    --gradient-vibrant: linear-gradient(135deg, hsl(195 95% 55%), hsl(142 76% 50%));
 
-    /* Shadows with modern colors */
-    --shadow-eco: 0 10px 30px -10px hsl(195 78% 42% / 0.25);
-    --shadow-soft: 0 4px 20px -4px hsl(195 78% 42% / 0.12);
+    /* Modern shadows with vibrant colors */
+    --shadow-eco: 0 10px 40px -10px hsl(195 85% 45% / 0.3);
+    --shadow-soft: 0 4px 20px -4px hsl(195 85% 45% / 0.15);
+    --shadow-glow: 0 0 30px hsl(195 95% 55% / 0.4);
+    --shadow-purple: 0 10px 40px -10px hsl(280 90% 65% / 0.35);
+    --shadow-accent: 0 10px 40px -10px hsl(33 100% 55% / 0.35);
 
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
