@@ -8,52 +8,52 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 210 30% 98%;
-    --foreground: 210 20% 15%;
+    --background: 210 25% 98%;
+    --foreground: 215 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 20% 15%;
+    --card-foreground: 215 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 20% 15%;
+    --popover-foreground: 215 25% 15%;
 
-    --primary: 158 64% 42%;
+    --primary: 195 78% 42%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 158 64% 62%;
+    --primary-glow: 195 78% 62%;
 
-    --secondary: 210 25% 92%;
-    --secondary-foreground: 210 20% 15%;
+    --secondary: 210 30% 92%;
+    --secondary-foreground: 215 25% 15%;
 
-    --muted: 210 20% 96%;
-    --muted-foreground: 210 15% 45%;
+    --muted: 210 25% 95%;
+    --muted-foreground: 215 15% 50%;
 
-    --accent: 195 78% 48%;
+    --accent: 210 80% 52%;
     --accent-foreground: 0 0% 100%;
 
-    --blue: 210 95% 65%;
+    --blue: 210 95% 58%;
     --blue-foreground: 0 0% 100%;
-    --blue-light: 210 95% 85%;
-    --blue-dark: 210 95% 45%;
+    --blue-light: 210 95% 80%;
+    --blue-dark: 210 95% 42%;
 
-    --success: 158 64% 42%;
+    --success: 195 78% 42%;
     --success-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --purple: 265 67% 55%;
     --purple-foreground: 0 0% 100%;
 
-    /* Custom eco gradients */
-    --gradient-eco: linear-gradient(135deg, hsl(158 64% 42%), hsl(158 64% 62%));
-    --gradient-sky: linear-gradient(180deg, hsl(195 78% 68%), hsl(210 30% 98%));
-    --gradient-nature: linear-gradient(45deg, hsl(158 64% 42%) 0%, hsl(195 78% 48%) 100%);
-    --gradient-blue: linear-gradient(135deg, hsl(210 95% 65%), hsl(210 95% 85%));
-    --gradient-ocean: linear-gradient(45deg, hsl(210 95% 45%) 0%, hsl(195 78% 48%) 100%);
+    /* Custom modern gradients */
+    --gradient-eco: linear-gradient(135deg, hsl(195 78% 42%), hsl(210 80% 62%));
+    --gradient-sky: linear-gradient(180deg, hsl(210 95% 85%), hsl(210 25% 98%));
+    --gradient-nature: linear-gradient(45deg, hsl(195 78% 42%) 0%, hsl(210 80% 52%) 100%);
+    --gradient-blue: linear-gradient(135deg, hsl(210 95% 58%), hsl(210 95% 80%));
+    --gradient-ocean: linear-gradient(45deg, hsl(195 78% 42%) 0%, hsl(210 80% 58%) 100%);
 
-    /* Shadows with eco colors */
-    --shadow-eco: 0 10px 30px -10px hsl(158 64% 42% / 0.3);
-    --shadow-soft: 0 4px 20px -4px hsl(158 64% 42% / 0.15);
+    /* Shadows with modern colors */
+    --shadow-eco: 0 10px 30px -10px hsl(195 78% 42% / 0.25);
+    --shadow-soft: 0 4px 20px -4px hsl(195 78% 42% / 0.12);
 
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
