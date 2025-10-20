@@ -19,9 +19,17 @@ import { RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSc
 
 type TabType = 'dashboard' | 'coordinator' | 'reports';
 
+const schoolLogos: Record<string, string> = {
+  'ELV': '/lovable-uploads/ac7dcf98-b3a9-4b47-965e-df5f24f90dda.png',
+  'OSW': '/lovable-uploads/13e432d6-adcc-4d69-9735-56086059444c.png',
+  'PIA': '/lovable-uploads/5f155554-a003-48a8-873e-69c765fa77c1.png',
+  'CAR': '/lovable-uploads/15780c7a-3c8b-4d43-a842-9bd423a699c8.png',
+};
+
 export default function Dashboard() {
   const { toast } = useToast();
   const [currentSchoolName, setCurrentSchoolName] = useState<string>('');
+  const [currentSchoolLogo, setCurrentSchoolLogo] = useState<string>('');
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [isCoordinator, setIsCoordinator] = useState(false);
   const [userSchoolCode, setUserSchoolCode] = useState<string>('');
@@ -83,6 +91,7 @@ export default function Dashboard() {
         setHasProfile(true);
         setCurrentSchoolName(profile.schools.name);
         setUserSchoolCode(profile.schools.code);
+        setCurrentSchoolLogo(schoolLogos[profile.schools.code] || '');
         setIsCoordinator(profile.schools.code === 'OEP');
         setActiveTab('dashboard');
       }
@@ -151,7 +160,7 @@ export default function Dashboard() {
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-gradient-to-br from-background to-muted/30">
-        <EcoHeader />
+        <EcoHeader schoolName={currentSchoolName} schoolLogo={currentSchoolLogo} />
       
       <div className="container mx-auto px-2 md:px-4 py-4 md:py-8">
         {/* Navigation Tabs */}
