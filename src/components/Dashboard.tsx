@@ -36,6 +36,7 @@ export default function Dashboard() {
   const [isLoadingUser, setIsLoadingUser] = useState(true);
   const [hasProfile, setHasProfile] = useState(true);
   
+  // Usar useCloudData normalmente - coordenadores serão tratados internamente
   const {
     recyclingEntries,
     consumptionEntries,
@@ -87,13 +88,10 @@ export default function Dashboard() {
       
       if (!profile) {
         setHasProfile(false);
-      } else if (profile.schools) {
+      } else {
         setHasProfile(true);
-        setCurrentSchoolName(profile.schools.name);
-        setUserSchoolCode(profile.schools.code);
-        setCurrentSchoolLogo(schoolLogos[profile.schools.code] || '');
         
-        // Verificar role de coordenador na tabela user_roles (server-side)
+        // Verificar role de coordenador
         const { data: roleData } = await supabase
           .from("user_roles")
           .select("role")
@@ -103,7 +101,15 @@ export default function Dashboard() {
         
         const isCoord = !!roleData;
         setIsCoordinator(isCoord);
-        // Se for coordenador, iniciar na aba de todas as escolas
+        
+        // Se tiver escola associada, carregar info da escola
+        if (profile.schools) {
+          setCurrentSchoolName(profile.schools.name);
+          setUserSchoolCode(profile.schools.code);
+          setCurrentSchoolLogo(schoolLogos[profile.schools.code] || '');
+        }
+        
+        // Definir aba inicial
         setActiveTab(isCoord ? 'coordinator' : 'dashboard');
       }
     } catch (error) {
