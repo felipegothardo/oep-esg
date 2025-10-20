@@ -3,16 +3,16 @@ import { SchoolType } from './useSchoolData';
 
 export const schoolThemes = {
   elvira: {
-    primary: '142 70% 45%', // Verde floresta
-    accent: '82 60% 50%', // Verde lima
-    gradientSky: 'linear-gradient(135deg, hsl(142, 70%, 45%), hsl(82, 60%, 50%))',
-    name: 'Tema Natureza'
+    primary: '265 67% 45%', // Roxo profundo
+    accent: '280 60% 55%', // Violeta
+    gradientSky: 'linear-gradient(135deg, hsl(265, 67%, 45%), hsl(280, 60%, 55%))',
+    name: 'Tema Místico'
   },
   oswald: {
-    primary: '217 71% 53%', // Azul oceano
-    accent: '187 60% 50%', // Ciano
-    gradientSky: 'linear-gradient(135deg, hsl(217, 71%, 53%), hsl(187, 60%, 50%))',
-    name: 'Tema Oceano'
+    primary: '270 65% 50%', // Roxo médio
+    accent: '285 60% 60%', // Lavanda
+    gradientSky: 'linear-gradient(135deg, hsl(270, 65%, 50%), hsl(285, 60%, 60%))',
+    name: 'Tema Elegante'
   },
   piaget: {
     primary: '259 60% 55%', // Roxo educação
@@ -21,15 +21,15 @@ export const schoolThemes = {
     name: 'Tema Conhecimento'
   },
   'santo-antonio': {
-    primary: '25 75% 47%', // Laranja terra
-    accent: '39 77% 53%', // Amarelo dourado
-    gradientSky: 'linear-gradient(135deg, hsl(25, 75%, 47%), hsl(39, 77%, 53%))',
-    name: 'Tema Sol'
+    primary: '275 70% 48%', // Roxo vibrante
+    accent: '290 65% 58%', // Ametista
+    gradientSky: 'linear-gradient(135deg, hsl(275, 70%, 48%), hsl(290, 65%, 58%))',
+    name: 'Tema Celestial'
   },
   consolidated: {
-    primary: '217 71% 53%', // Azul padrão
-    accent: '142 70% 45%', // Verde padrão
-    gradientSky: 'linear-gradient(135deg, hsl(217, 71%, 53%), hsl(142, 70%, 45%))',
+    primary: '265 67% 45%', // Roxo padrão
+    accent: '280 60% 55%', // Violeta padrão
+    gradientSky: 'linear-gradient(135deg, hsl(265, 67%, 45%), hsl(280, 60%, 55%))',
     name: 'Tema Unificado'
   }
 };
