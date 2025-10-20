@@ -17,27 +17,37 @@ export default function AuthHeader() {
   }, []);
 
   const loadUserData = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (session?.user) {
-      setUserEmail(session.user.email);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
       
-      // Load user profile with school info
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select(`
-          full_name,
-          schools (
-            name
-          )
-        `)
-        .eq("user_id", session.user.id)
-        .maybeSingle();
-      
-      if (profile) {
-        setUserName(profile.full_name);
-        setSchoolName(profile.schools?.name);
+      if (session?.user) {
+        setUserEmail(session.user.email);
+        
+        // Load user profile with school info
+        const { data: profile, error } = await supabase
+          .from("profiles")
+          .select(`
+            full_name,
+            school_id,
+            schools (
+              name
+            )
+          `)
+          .eq("user_id", session.user.id)
+          .maybeSingle();
+        
+        if (error) {
+          console.error("Error loading profile:", error);
+          return;
+        }
+        
+        if (profile) {
+          setUserName(profile.full_name);
+          setSchoolName(profile.schools?.name);
+        }
       }
+    } catch (error) {
+      console.error("Error in loadUserData:", error);
     }
   };
 
