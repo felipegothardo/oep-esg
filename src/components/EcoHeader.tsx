@@ -1,7 +1,13 @@
 import { Leaf, Recycle, Wind } from 'lucide-react';
 import ecoHeroImage from '@/assets/eco-hero.jpg';
 import oepLogo from '@/assets/oep-logo.png';
-export default function EcoHeader() {
+
+interface EcoHeaderProps {
+  schoolName?: string;
+  schoolLogo?: string;
+}
+
+export default function EcoHeader({ schoolName, schoolLogo }: EcoHeaderProps = {}) {
   return <div className="relative overflow-hidden bg-gradient-sky py-8 md:py-16 px-4 md:px-6">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{
@@ -12,10 +18,37 @@ export default function EcoHeader() {
       {/* Content */}
       <div className="relative max-w-4xl mx-auto text-center">
         <div className="flex flex-col items-center gap-4 md:gap-6 mb-6 md:mb-8">
-          <img src={oepLogo} alt="OEP Sustentável Logo" width="320" height="320" className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 object-contain animate-float" loading="eager" onError={e => {
-          console.log('Logo error:', e);
-          e.currentTarget.style.display = 'none';
-        }} />
+          {schoolLogo ? (
+            <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
+              <img 
+                src={oepLogo} 
+                alt="OEP Sustentável Logo" 
+                className="w-32 h-32 md:w-40 md:h-40 object-contain animate-float" 
+                loading="eager" 
+              />
+              <div className="w-px h-20 bg-primary/30 hidden md:block" />
+              <img 
+                src={schoolLogo} 
+                alt={`Logo da ${schoolName}`}
+                className="w-32 h-32 md:w-40 md:h-40 object-contain animate-float ring-4 ring-primary/20 rounded-lg p-2 bg-background/80 backdrop-blur-sm shadow-xl" 
+                loading="eager"
+                style={{ animationDelay: '0.3s' }}
+              />
+            </div>
+          ) : (
+            <img 
+              src={oepLogo} 
+              alt="OEP Sustentável Logo" 
+              width="320" 
+              height="320" 
+              className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 object-contain animate-float" 
+              loading="eager" 
+              onError={e => {
+                console.log('Logo error:', e);
+                e.currentTarget.style.display = 'none';
+              }} 
+            />
+          )}
           <div className="flex gap-4">
             <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center animate-float" style={{
             animationDelay: '0.5s'
@@ -36,9 +69,11 @@ export default function EcoHeader() {
         </div>
         
         <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-foreground mb-2 md:mb-4">
-          OEP Sustentável
+          {schoolName ? `OEP Sustentável - ${schoolName}` : 'OEP Sustentável'}
         </h1>
-        <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground mb-2">Controle de consumo e manejo de resíduos</p>
+        <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground mb-2">
+          {schoolName ? `Dashboard de ${schoolName}` : 'Controle de consumo e manejo de resíduos'}
+        </p>
         
         
       </div>

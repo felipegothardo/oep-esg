@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/tooltip";
 
 export default function DesktopShortcutButton() {
+  const location = useLocation();
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const { toast } = useToast();
@@ -52,8 +54,8 @@ export default function DesktopShortcutButton() {
     setDeferredPrompt(null);
   };
 
-  // Don't show button if already installed
-  if (isInstalled) {
+  // Don't show button if already installed or on auth page
+  if (isInstalled || location.pathname === '/auth') {
     return null;
   }
 
