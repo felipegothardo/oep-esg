@@ -182,75 +182,84 @@ export default function SchoolDashboard({
         value={currentMobileTab} 
         onValueChange={setCurrentMobileTab} 
         defaultValue="calculator" 
-        className="space-y-4 md:space-y-6 pb-20 md:pb-0"
+        className="space-y-6 pb-20 md:pb-0"
       >
         <TabsList 
-          className="grid w-full grid-cols-2 md:grid-cols-9 h-auto gap-1"
+          className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 h-auto p-2 bg-gradient-to-r from-primary/5 via-success/5 to-blue/5 rounded-xl shadow-soft backdrop-blur-sm"
           role="tablist"
           aria-label="Seções do dashboard"
         >
           <TabsTrigger 
             value="calculator" 
-            className="text-xs md:text-sm p-2 md:p-3"
+            className="flex flex-col items-center gap-2 p-4 h-auto rounded-lg transition-all duration-300 hover:scale-105 data-[state=active]:bg-gradient-eco data-[state=active]:text-white data-[state=active]:shadow-glow font-semibold border-2 border-transparent data-[state=active]:border-white/20"
             aria-label="Calculadora de reciclagem"
           >
-            📱 Calculadora
+            <span className="text-2xl">🧮</span>
+            <span className="text-sm">Calculadora</span>
           </TabsTrigger>
           <TabsTrigger 
             value="consumption" 
-            className="text-xs md:text-sm p-2 md:p-3"
+            className="flex flex-col items-center gap-2 p-4 h-auto rounded-lg transition-all duration-300 hover:scale-105 data-[state=active]:bg-gradient-ocean data-[state=active]:text-white data-[state=active]:shadow-glow font-semibold border-2 border-transparent data-[state=active]:border-white/20"
             aria-label="Controle de consumo"
           >
-            💧 Consumo
+            <span className="text-2xl">💧</span>
+            <span className="text-sm">Consumo</span>
           </TabsTrigger>
           <TabsTrigger 
             value="goals" 
-            className="text-xs md:text-sm p-2 md:p-3"
+            className="flex flex-col items-center gap-2 p-4 h-auto rounded-lg transition-all duration-300 hover:scale-105 data-[state=active]:bg-gradient-sunset data-[state=active]:text-white data-[state=active]:shadow-accent font-semibold border-2 border-transparent data-[state=active]:border-white/20"
             aria-label="Metas e projeções"
           >
-            🎯 Metas
+            <span className="text-2xl">🎯</span>
+            <span className="text-sm">Metas</span>
           </TabsTrigger>
           <TabsTrigger 
             value="recycling-charts" 
-            className="text-xs md:text-sm p-2 md:p-3"
+            className="flex flex-col items-center gap-2 p-4 h-auto rounded-lg transition-all duration-300 hover:scale-105 data-[state=active]:bg-gradient-nature data-[state=active]:text-white data-[state=active]:shadow-eco font-semibold border-2 border-transparent data-[state=active]:border-white/20"
             aria-label="Gráficos de reciclagem"
           >
-            ♻️ Reciclagem
+            <span className="text-2xl">♻️</span>
+            <span className="text-sm">Reciclagem</span>
           </TabsTrigger>
           <TabsTrigger 
             value="consumption-charts" 
-            className="text-xs md:text-sm p-2 md:p-3"
+            className="flex flex-col items-center gap-2 p-4 h-auto rounded-lg transition-all duration-300 hover:scale-105 data-[state=active]:bg-gradient-blue data-[state=active]:text-white data-[state=active]:shadow-eco font-semibold border-2 border-transparent data-[state=active]:border-white/20"
             aria-label="Gráficos de consumo"
           >
-            ⚡ Gráficos
+            <span className="text-2xl">📊</span>
+            <span className="text-sm">Gráficos</span>
           </TabsTrigger>
           <TabsTrigger 
             value="achievements" 
-            className="text-xs md:text-sm p-2 md:p-3"
+            className="flex flex-col items-center gap-2 p-4 h-auto rounded-lg transition-all duration-300 hover:scale-105 data-[state=active]:bg-gradient-sunset data-[state=active]:text-white data-[state=active]:shadow-accent font-semibold border-2 border-transparent data-[state=active]:border-white/20"
             aria-label="Conquistas"
           >
-            🏆 Conquistas
+            <span className="text-2xl">🏆</span>
+            <span className="text-sm">Conquistas</span>
           </TabsTrigger>
           <TabsTrigger 
             value="history" 
-            className="text-xs md:text-sm p-2 md:p-3"
+            className="flex flex-col items-center gap-2 p-4 h-auto rounded-lg transition-all duration-300 hover:scale-105 data-[state=active]:bg-gradient-purple data-[state=active]:text-white data-[state=active]:shadow-purple font-semibold border-2 border-transparent data-[state=active]:border-white/20"
             aria-label="Histórico"
           >
-            📊 Histórico
+            <span className="text-2xl">📚</span>
+            <span className="text-sm">Histórico</span>
           </TabsTrigger>
           <TabsTrigger 
             value="chat" 
-            className="text-xs md:text-sm p-2 md:p-3"
+            className="flex flex-col items-center gap-2 p-4 h-auto rounded-lg transition-all duration-300 hover:scale-105 data-[state=active]:bg-gradient-blue data-[state=active]:text-white data-[state=active]:shadow-eco font-semibold border-2 border-transparent data-[state=active]:border-white/20"
             aria-label="Chat da comunidade"
           >
-            💬 Chat
+            <span className="text-2xl">💬</span>
+            <span className="text-sm">Chat</span>
           </TabsTrigger>
           <TabsTrigger 
             value="resources" 
-            className="text-xs md:text-sm p-2 md:p-3"
+            className="flex flex-col items-center gap-2 p-4 h-auto rounded-lg transition-all duration-300 hover:scale-105 data-[state=active]:bg-gradient-nature data-[state=active]:text-white data-[state=active]:shadow-eco font-semibold border-2 border-transparent data-[state=active]:border-white/20"
             aria-label="Links e dicas úteis"
           >
-            🔗 Links & Dicas
+            <span className="text-2xl">🔗</span>
+            <span className="text-sm">Links & Dicas</span>
           </TabsTrigger>
         </TabsList>
 
