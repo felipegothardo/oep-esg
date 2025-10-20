@@ -92,7 +92,16 @@ export default function Dashboard() {
         setCurrentSchoolName(profile.schools.name);
         setUserSchoolCode(profile.schools.code);
         setCurrentSchoolLogo(schoolLogos[profile.schools.code] || '');
-        setIsCoordinator(profile.schools.code === 'OEP');
+        
+        // Verificar role de coordenador na tabela user_roles (server-side)
+        const { data: roleData } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", session.user.id)
+          .eq("role", "coordinator")
+          .maybeSingle();
+        
+        setIsCoordinator(!!roleData);
         setActiveTab('dashboard');
       }
     } catch (error) {
