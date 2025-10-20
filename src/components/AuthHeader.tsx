@@ -60,7 +60,7 @@ export default function AuthHeader() {
   };
 
   return (
-    <div className="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-3">
+    <div className="absolute top-4 right-4 z-50 bg-card/95 backdrop-blur-sm rounded-lg shadow-lg p-3 border border-border">
       <div className="flex items-center gap-3">
         <div className="text-right">
           <div className="flex items-center gap-1 text-sm font-medium">

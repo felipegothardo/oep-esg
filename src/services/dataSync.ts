@@ -21,7 +21,21 @@ export class DataSyncService {
       
       this.userId = session.user.id;
       
-      // Get user's school
+      // Verificar se é coordenador
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .eq("role", "coordinator")
+        .maybeSingle();
+      
+      // Se for coordenador, não precisa de school_id
+      if (roleData) {
+        console.log("User is coordinator, no school_id required");
+        return;
+      }
+      
+      // Get user's school (apenas para não-coordenadores)
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("school_id")
