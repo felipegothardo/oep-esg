@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import {
   Tooltip,
   TooltipContent,
@@ -13,6 +14,7 @@ export default function DesktopShortcutButton() {
   const location = useLocation();
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isInstalled, setIsInstalled] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -21,13 +23,29 @@ export default function DesktopShortcutButton() {
       setIsInstalled(true);
     }
 
+    // Check if user is logged in
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsLoggedIn(!!session);
+    };
+    checkAuth();
+
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e);
     };
 
     window.addEventListener('beforeinstallprompt', handler);
-    return () => window.removeEventListener('beforeinstallprompt', handler);
+    
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsLoggedIn(!!session);
+    });
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleInstall = async () => {
@@ -54,8 +72,8 @@ export default function DesktopShortcutButton() {
     setDeferredPrompt(null);
   };
 
-  // Don't show button if already installed or on auth/login pages
-  if (isInstalled || location.pathname.includes('/auth')) {
+  // Don't show button if already installed, on auth pages, or if user is logged in
+  if (isInstalled || location.pathname.includes('/auth') || isLoggedIn) {
     return null;
   }
 
