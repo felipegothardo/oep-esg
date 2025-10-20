@@ -101,8 +101,10 @@ export default function Dashboard() {
           .eq("role", "coordinator")
           .maybeSingle();
         
-        setIsCoordinator(!!roleData);
-        setActiveTab('dashboard');
+        const isCoord = !!roleData;
+        setIsCoordinator(isCoord);
+        // Se for coordenador, iniciar na aba de todas as escolas
+        setActiveTab(isCoord ? 'coordinator' : 'dashboard');
       }
     } catch (error) {
       console.error("Error in loadUserSchool:", error);
@@ -175,28 +177,27 @@ export default function Dashboard() {
         {/* Navigation Tabs */}
         <div className="w-full mb-6">
           <div 
-            className={cn(
-              "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground w-full",
-              isCoordinator ? "grid grid-cols-3 gap-1" : "grid grid-cols-2 gap-1"
-            )}
+            className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground w-full grid grid-cols-2 gap-1"
             role="tablist"
           >
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'dashboard'}
-              aria-controls="dashboard-panel"
-              onClick={() => setActiveTab('dashboard')}
-              className={cn(
-                "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 gap-2",
-                activeTab === 'dashboard' 
-                  ? "bg-background text-foreground shadow-sm" 
-                  : "hover:bg-background/50"
-              )}
-            >
-              <Home className="h-4 w-4" />
-              <span>Minha Escola</span>
-            </button>
+            {!isCoordinator && (
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'dashboard'}
+                aria-controls="dashboard-panel"
+                onClick={() => setActiveTab('dashboard')}
+                className={cn(
+                  "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 gap-2",
+                  activeTab === 'dashboard' 
+                    ? "bg-background text-foreground shadow-sm" 
+                    : "hover:bg-background/50"
+                )}
+              >
+                <Home className="h-4 w-4" />
+                <span>Minha Escola</span>
+              </button>
+            )}
             
             {isCoordinator && (
               <button
@@ -213,7 +214,7 @@ export default function Dashboard() {
                 )}
               >
                 <Building2 className="h-4 w-4" />
-                <span>Todas as Escolas</span>
+                <span>Painel Geral</span>
               </button>
             )}
             
@@ -237,27 +238,29 @@ export default function Dashboard() {
         </div>
 
         {/* Tab Panels - All mounted, visibility controlled by CSS */}
-        <div 
-          id="dashboard-panel" 
-          role="tabpanel" 
-          aria-labelledby="dashboard-tab"
-          className={cn("space-y-6", activeTab !== 'dashboard' && "hidden")}
-        >
-          <SchoolDashboard
-            schoolName={currentSchoolName}
-            schoolType="current"
-            data={{
-              recyclingEntries: recyclingEntries || [],
-              consumptionEntries: consumptionEntries || [],
-              consumptionGoals: consumptionGoals || []
-            }}
-            onRecyclingUpdate={handleRecyclingUpdate}
-            onConsumptionUpdate={handleConsumptionUpdate}
-            onDeleteAll={deleteAllRecords}
-            onDeleteRecyclingByMonth={deleteRecyclingByMonth}
-            onDeleteConsumptionByMonth={deleteConsumptionByMonth}
-          />
-        </div>
+        {!isCoordinator && (
+          <div 
+            id="dashboard-panel" 
+            role="tabpanel" 
+            aria-labelledby="dashboard-tab"
+            className={cn("space-y-6", activeTab !== 'dashboard' && "hidden")}
+          >
+            <SchoolDashboard
+              schoolName={currentSchoolName}
+              schoolType="current"
+              data={{
+                recyclingEntries: recyclingEntries || [],
+                consumptionEntries: consumptionEntries || [],
+                consumptionGoals: consumptionGoals || []
+              }}
+              onRecyclingUpdate={handleRecyclingUpdate}
+              onConsumptionUpdate={handleConsumptionUpdate}
+              onDeleteAll={deleteAllRecords}
+              onDeleteRecyclingByMonth={deleteRecyclingByMonth}
+              onDeleteConsumptionByMonth={deleteConsumptionByMonth}
+            />
+          </div>
+        )}
 
         {isCoordinator && (
           <div 
