@@ -91,20 +91,23 @@ export default function Auth() {
       if (error) throw error;
 
       if (data?.user) {
-        // Aguardar um pouco para evitar tela branca
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Aguardar o trigger criar o perfil
+        await new Promise(resolve => setTimeout(resolve, 1000));
         
-        // Update the user's profile with the school
+        // Garantir que o perfil foi criado com school_id
         const { error: profileError } = await supabase
           .from("profiles")
-          .update({ 
+          .upsert({ 
+            user_id: data.user.id,
             full_name: fullName,
             school_id: schoolId 
-          })
-          .eq("user_id", data.user.id);
+          }, {
+            onConflict: 'user_id'
+          });
 
         if (profileError) {
-          console.error("Error updating profile:", profileError);
+          console.error("Erro ao criar perfil:", profileError);
+          throw new Error("Erro ao criar perfil. Por favor, tente novamente.");
         }
 
         toast({
@@ -115,7 +118,7 @@ export default function Auth() {
         // Aguardar o toast aparecer
         setTimeout(() => {
           window.location.href = "/";
-        }, 1000);
+        }, 1500);
       }
     } catch (error: any) {
       console.error("Erro no cadastro:", error);
