@@ -5,6 +5,7 @@ import { recyclingEntrySchema, consumptionEntrySchema, consumptionGoalSchema, va
 export class DataSyncService {
   private userId: string | null = null;
   private schoolId: string | null = null;
+  private isCoordinator: boolean = false;
 
   async initialize() {
     try {
@@ -31,8 +32,9 @@ export class DataSyncService {
       
       // Se for coordenador, não precisa de school_id
       if (roleData) {
+        this.isCoordinator = true;
         console.log("User is coordinator, no school_id required");
-        return;
+        return; // Coordenadores não têm school_id, mas não é erro
       }
       
       // Get user's school (apenas para não-coordenadores)
@@ -53,6 +55,10 @@ export class DataSyncService {
         throw new Error("User has no school assigned");
       }
     } catch (error) {
+      // Se for coordenador, não lançar erro
+      if (this.isCoordinator) {
+        return;
+      }
       console.error("Initialization error:", error);
       throw error;
     }
