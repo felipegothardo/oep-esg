@@ -118,54 +118,56 @@ export default function SchoolDashboard({
       </div>
       
       {/* Overview Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
-        <Card>
-          <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
-            <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
-              <div className="text-center md:text-left">
-                <p className="text-lg md:text-2xl font-bold">{totalCO2Saved.toFixed(1)}</p>
-                <p className="text-xs text-muted-foreground">kg CO2 evitado</p>
+      <div className="bg-gradient-to-br from-primary/10 via-blue/5 to-success/10 p-4 md:p-6 rounded-2xl border border-primary/20 shadow-lg">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          <Card className="border-primary/30 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
+              <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
+                <div className="text-center md:text-left">
+                  <p className="text-lg md:text-3xl font-bold text-success">{totalCO2Saved.toFixed(1)}</p>
+                  <p className="text-xs font-medium text-muted-foreground">kg CO2 evitado</p>
+                </div>
+                <Leaf className="h-6 w-6 md:h-10 md:w-10 text-success" aria-hidden="true" />
               </div>
-              <Leaf className="h-6 w-6 md:h-8 md:w-8 text-success" aria-hidden="true" />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
-            <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
-              <div className="text-center md:text-left">
-                <p className="text-lg md:text-2xl font-bold">{lastWaterConsumption.toLocaleString()}</p>
-                <p className="text-xs text-muted-foreground">L água/mês</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-blue/30 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
+              <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
+                <div className="text-center md:text-left">
+                  <p className="text-lg md:text-3xl font-bold text-blue">{lastWaterConsumption.toLocaleString()}</p>
+                  <p className="text-xs font-medium text-muted-foreground">L água/mês</p>
+                </div>
+                <Droplets className="h-6 w-6 md:h-10 md:w-10 text-blue" aria-hidden="true" />
               </div>
-              <Droplets className="h-6 w-6 md:h-8 md:w-8 text-blue" aria-hidden="true" />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
-            <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
-              <div className="text-center md:text-left">
-                <p className="text-lg md:text-2xl font-bold">{lastEnergyConsumption}</p>
-                <p className="text-xs text-muted-foreground">kWh energia/mês</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-yellow-600/30 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
+              <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
+                <div className="text-center md:text-left">
+                  <p className="text-lg md:text-3xl font-bold text-yellow-600">{lastEnergyConsumption}</p>
+                  <p className="text-xs font-medium text-muted-foreground">kWh energia/mês</p>
+                </div>
+                <Zap className="h-6 w-6 md:h-10 md:w-10 text-yellow-600" aria-hidden="true" />
               </div>
-              <Zap className="h-6 w-6 md:h-8 md:w-8 text-yellow-600" aria-hidden="true" />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
-            <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
-              <div className="text-center md:text-left">
-                <p className="text-lg md:text-2xl font-bold">{totalRecycled.toFixed(1)}</p>
-                <p className="text-xs text-muted-foreground">kg reciclados</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-purple/30 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
+              <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
+                <div className="text-center md:text-left">
+                  <p className="text-lg md:text-3xl font-bold text-purple">{totalRecycled.toFixed(1)}</p>
+                  <p className="text-xs font-medium text-muted-foreground">kg reciclados</p>
+                </div>
+                <Recycle className="h-6 w-6 md:h-10 md:w-10 text-purple" aria-hidden="true" />
               </div>
-              <Recycle className="h-6 w-6 md:h-8 md:w-8 text-purple" aria-hidden="true" />
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       {/* Mobile Stats */}
