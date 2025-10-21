@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Leaf, Droplets, Zap, Recycle } from 'lucide-react';
+import { Leaf, Droplets, Zap, Recycle, Calculator, Target, BarChart3, Trophy, History, MessageSquare, Link } from 'lucide-react';
 import { SchoolData, RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSchoolData';
 import ExportButton from './ExportButton';
 import MobileStats from './MobileStats';
@@ -19,7 +19,6 @@ import SmartGoalSuggestion from './SmartGoalSuggestion';
 import AchievementSystem from './AchievementSystem';
 import ContextualTips from './ContextualTips';
 import ActionHistory from './ActionHistory';
-import calculatorIcon from '@/assets/calculator-icon.png';
 
 interface SchoolDashboardProps {
   schoolName: string;
@@ -186,81 +185,81 @@ export default function SchoolDashboard({
         className="space-y-6 pb-20 md:pb-0"
       >
         <TabsList 
-          className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 h-auto p-2 bg-muted/30 rounded-lg"
+          className="flex w-full gap-3 h-auto p-4 bg-background border border-border rounded-xl overflow-x-auto"
           role="tablist"
           aria-label="Seções do dashboard"
         >
           <TabsTrigger 
             value="calculator" 
-            className="flex flex-col items-center gap-2 p-3 h-auto rounded-md transition-all duration-200 data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-sm font-medium hover:bg-card/50"
+            className="flex items-center gap-2 px-4 py-2.5 h-auto rounded-lg transition-all duration-200 border border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/5 data-[state=active]:text-primary font-medium hover:bg-muted/50 whitespace-nowrap"
             aria-label="Calculadora de reciclagem"
           >
-            <img src={calculatorIcon} alt="Calculadora" className="w-6 h-6" />
-            <span className="text-xs">Calculadora</span>
+            <Calculator className="h-4 w-4" />
+            <span className="text-sm">Calculadora</span>
           </TabsTrigger>
           <TabsTrigger 
             value="consumption" 
-            className="flex flex-col items-center gap-2 p-3 h-auto rounded-md transition-all duration-200 data-[state=active]:bg-card data-[state=active]:text-blue data-[state=active]:shadow-sm font-medium hover:bg-card/50"
+            className="flex items-center gap-2 px-4 py-2.5 h-auto rounded-lg transition-all duration-200 border border-transparent data-[state=active]:border-blue data-[state=active]:bg-blue/5 data-[state=active]:text-blue font-medium hover:bg-muted/50 whitespace-nowrap"
             aria-label="Controle de consumo"
           >
-            <span className="text-xl">💧</span>
-            <span className="text-xs">Consumo</span>
+            <Droplets className="h-4 w-4" />
+            <span className="text-sm">Consumo</span>
           </TabsTrigger>
           <TabsTrigger 
             value="goals" 
-            className="flex flex-col items-center gap-2 p-3 h-auto rounded-md transition-all duration-200 data-[state=active]:bg-card data-[state=active]:text-accent data-[state=active]:shadow-sm font-medium hover:bg-card/50"
+            className="flex items-center gap-2 px-4 py-2.5 h-auto rounded-lg transition-all duration-200 border border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 data-[state=active]:text-accent font-medium hover:bg-muted/50 whitespace-nowrap"
             aria-label="Metas e projeções"
           >
-            <span className="text-xl">🎯</span>
-            <span className="text-xs">Metas</span>
+            <Target className="h-4 w-4" />
+            <span className="text-sm">Metas</span>
           </TabsTrigger>
           <TabsTrigger 
             value="recycling-charts" 
-            className="flex flex-col items-center gap-2 p-3 h-auto rounded-md transition-all duration-200 data-[state=active]:bg-card data-[state=active]:text-success data-[state=active]:shadow-sm font-medium hover:bg-card/50"
+            className="flex items-center gap-2 px-4 py-2.5 h-auto rounded-lg transition-all duration-200 border border-transparent data-[state=active]:border-success data-[state=active]:bg-success/5 data-[state=active]:text-success font-medium hover:bg-muted/50 whitespace-nowrap"
             aria-label="Gráficos de reciclagem"
           >
-            <span className="text-xl">♻️</span>
-            <span className="text-xs">Reciclagem</span>
+            <Recycle className="h-4 w-4" />
+            <span className="text-sm">Reciclagem</span>
           </TabsTrigger>
           <TabsTrigger 
             value="consumption-charts" 
-            className="flex flex-col items-center gap-2 p-3 h-auto rounded-md transition-all duration-200 data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:shadow-sm font-medium hover:bg-card/50"
+            className="flex items-center gap-2 px-4 py-2.5 h-auto rounded-lg transition-all duration-200 border border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/5 data-[state=active]:text-primary font-medium hover:bg-muted/50 whitespace-nowrap"
             aria-label="Gráficos de consumo"
           >
-            <span className="text-xl">📊</span>
-            <span className="text-xs">Gráficos</span>
+            <BarChart3 className="h-4 w-4" />
+            <span className="text-sm">Gráficos</span>
           </TabsTrigger>
           <TabsTrigger 
             value="achievements" 
-            className="flex flex-col items-center gap-2 p-3 h-auto rounded-md transition-all duration-200 data-[state=active]:bg-card data-[state=active]:text-accent data-[state=active]:shadow-sm font-medium hover:bg-card/50"
+            className="flex items-center gap-2 px-4 py-2.5 h-auto rounded-lg transition-all duration-200 border border-transparent data-[state=active]:border-accent data-[state=active]:bg-accent/5 data-[state=active]:text-accent font-medium hover:bg-muted/50 whitespace-nowrap"
             aria-label="Conquistas"
           >
-            <span className="text-xl">🏆</span>
-            <span className="text-xs">Conquistas</span>
+            <Trophy className="h-4 w-4" />
+            <span className="text-sm">Conquistas</span>
           </TabsTrigger>
           <TabsTrigger 
             value="history" 
-            className="flex flex-col items-center gap-2 p-3 h-auto rounded-md transition-all duration-200 data-[state=active]:bg-card data-[state=active]:text-purple data-[state=active]:shadow-sm font-medium hover:bg-card/50"
+            className="flex items-center gap-2 px-4 py-2.5 h-auto rounded-lg transition-all duration-200 border border-transparent data-[state=active]:border-purple data-[state=active]:bg-purple/5 data-[state=active]:text-purple font-medium hover:bg-muted/50 whitespace-nowrap"
             aria-label="Histórico"
           >
-            <span className="text-xl">📚</span>
-            <span className="text-xs">Histórico</span>
+            <History className="h-4 w-4" />
+            <span className="text-sm">Histórico</span>
           </TabsTrigger>
           <TabsTrigger 
             value="chat" 
-            className="flex flex-col items-center gap-2 p-3 h-auto rounded-md transition-all duration-200 data-[state=active]:bg-card data-[state=active]:text-blue data-[state=active]:shadow-sm font-medium hover:bg-card/50"
+            className="flex items-center gap-2 px-4 py-2.5 h-auto rounded-lg transition-all duration-200 border border-transparent data-[state=active]:border-blue data-[state=active]:bg-blue/5 data-[state=active]:text-blue font-medium hover:bg-muted/50 whitespace-nowrap"
             aria-label="Chat da comunidade"
           >
-            <span className="text-xl">💬</span>
-            <span className="text-xs">Chat</span>
+            <MessageSquare className="h-4 w-4" />
+            <span className="text-sm">Chat</span>
           </TabsTrigger>
           <TabsTrigger 
             value="resources" 
-            className="flex flex-col items-center gap-2 p-3 h-auto rounded-md transition-all duration-200 data-[state=active]:bg-card data-[state=active]:text-success data-[state=active]:shadow-sm font-medium hover:bg-card/50"
+            className="flex items-center gap-2 px-4 py-2.5 h-auto rounded-lg transition-all duration-200 border border-transparent data-[state=active]:border-success data-[state=active]:bg-success/5 data-[state=active]:text-success font-medium hover:bg-muted/50 whitespace-nowrap"
             aria-label="Links e dicas úteis"
           >
-            <span className="text-xl">🔗</span>
-            <span className="text-xs">Links & Dicas</span>
+            <Link className="h-4 w-4" />
+            <span className="text-sm">Links & Dicas</span>
           </TabsTrigger>
         </TabsList>
 
