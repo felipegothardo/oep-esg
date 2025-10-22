@@ -104,10 +104,13 @@ export default function SchoolDashboard({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-        <h3 className="text-lg md:text-xl font-semibold text-foreground">
-          {schoolName}
-        </h3>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div className="flex-1">
+          <h3 className="text-xl md:text-2xl font-bold text-foreground">
+            {schoolName}
+          </h3>
+          <p className="text-sm text-muted-foreground mt-1">Painel de Controle Ambiental</p>
+        </div>
         <div className="flex gap-2">
           <ExportButton 
             schoolName={schoolName}
@@ -118,8 +121,9 @@ export default function SchoolDashboard({
       </div>
       
       {/* Overview Cards */}
-      <div className="bg-gradient-to-br from-primary/10 via-blue/5 to-success/10 p-4 md:p-6 rounded-2xl border border-primary/20 shadow-lg">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+      <div className="bg-gradient-to-br from-primary/10 via-blue/5 to-success/10 p-6 md:p-8 rounded-2xl border-2 border-primary/30 shadow-xl">
+        <h4 className="text-base md:text-lg font-semibold text-foreground mb-4">Métricas Principais</h4>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           <Card className="border-primary/30 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
             <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
               <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
