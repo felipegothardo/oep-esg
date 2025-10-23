@@ -188,10 +188,10 @@ export default function SchoolDashboard({
         value={currentMobileTab} 
         onValueChange={setCurrentMobileTab} 
         defaultValue="calculator" 
-        className="space-y-6 pb-20 md:pb-0"
+        className="space-y-8 pb-20 md:pb-0"
       >
         <TabsList 
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 p-4 bg-background/80 backdrop-blur-sm rounded-2xl border-2 border-border/50 shadow-lg w-full"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 p-4 bg-background/80 backdrop-blur-sm rounded-2xl border-2 border-border/50 shadow-lg w-full mb-8"
           role="tablist"
           aria-label="Seções do dashboard"
         >
@@ -269,7 +269,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="calculator" className="animate-fade-in">
+        <TabsContent value="calculator" className="animate-fade-in mt-8">
           <div className="recycling-section space-y-4">
             {!viewOnly && (
               <ContextualTips 
@@ -296,7 +296,7 @@ export default function SchoolDashboard({
           </div>
         </TabsContent>
 
-        <TabsContent value="consumption" className="animate-fade-in">
+        <TabsContent value="consumption" className="animate-fade-in mt-8">
           <div className="consumption-section space-y-4">
             {!viewOnly && (
               <ContextualTips 
@@ -325,7 +325,7 @@ export default function SchoolDashboard({
           </div>
         </TabsContent>
 
-        <TabsContent value="goals" className="space-y-6 animate-fade-in">
+        <TabsContent value="goals" className="space-y-6 animate-fade-in mt-8">
           <SmartGoalSuggestion 
             recyclingEntries={safeData.recyclingEntries}
             consumptionEntries={safeData.consumptionEntries}
@@ -354,18 +354,18 @@ export default function SchoolDashboard({
           <ProjectionCard entries={safeData.recyclingEntries} schoolName={schoolName} />
         </TabsContent>
 
-        <TabsContent value="recycling-charts" className="animate-fade-in">
+        <TabsContent value="recycling-charts" className="animate-fade-in mt-8">
           <RecyclingChart entries={safeData.recyclingEntries} />
         </TabsContent>
 
-        <TabsContent value="consumption-charts" className="animate-fade-in">
+        <TabsContent value="consumption-charts" className="animate-fade-in mt-8">
           <ConsumptionChart 
             entries={safeData.consumptionEntries} 
             goals={safeData.consumptionGoals} 
           />
         </TabsContent>
 
-        <TabsContent value="achievements" className="animate-fade-in">
+        <TabsContent value="achievements" className="animate-fade-in mt-8">
           <AchievementSystem 
             recyclingTotal={totalRecycled}
             co2Total={totalCO2Saved}
@@ -376,7 +376,7 @@ export default function SchoolDashboard({
           />
         </TabsContent>
 
-        <TabsContent value="history" className="animate-fade-in">
+        <TabsContent value="history" className="animate-fade-in mt-8">
           <ActionHistory 
             history={history}
             onUndo={undoLastAction}
@@ -385,11 +385,11 @@ export default function SchoolDashboard({
           />
         </TabsContent>
 
-        <TabsContent value="chat" className="animate-fade-in">
+        <TabsContent value="chat" className="animate-fade-in mt-8">
           <ChatTab defaultSchool={schoolName} />
         </TabsContent>
 
-        <TabsContent value="resources" className="animate-fade-in">
+        <TabsContent value="resources" className="animate-fade-in mt-8">
           <ResourcesTab />
         </TabsContent>
       </Tabs>
