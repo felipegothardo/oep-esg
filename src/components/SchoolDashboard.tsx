@@ -191,81 +191,81 @@ export default function SchoolDashboard({
         className="space-y-6 pb-20 md:pb-0"
       >
         <TabsList 
-          className="grid grid-cols-3 md:grid-cols-5 gap-3 md:gap-4 h-auto p-2 md:p-4 bg-background/80 backdrop-blur-sm rounded-2xl border-2 border-border/50 shadow-lg"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 p-4 bg-background/80 backdrop-blur-sm rounded-2xl border-2 border-border/50 shadow-lg w-full"
           role="tablist"
           aria-label="Seções do dashboard"
         >
           <TabsTrigger 
             value="calculator" 
-            className="flex flex-col items-center justify-center gap-1.5 md:gap-2 p-3 md:p-4 min-h-[80px] md:min-h-[100px] h-auto rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-primary/5 data-[state=active]:border-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 data-[state=active]:-translate-y-1 hover:border-primary/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-primary/5 data-[state=active]:border-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 data-[state=active]:-translate-y-1 hover:border-primary/50 hover:-translate-y-0.5 group"
             aria-label="Calculadora de reciclagem"
           >
-            <Calculator className="h-5 w-5 md:h-6 md:w-6 text-muted-foreground group-data-[state=active]:text-primary transition-colors" />
-            <span className="text-[10px] md:text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-primary transition-colors leading-tight">Calculadora</span>
+            <Calculator className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-primary transition-colors shrink-0" />
+            <span className="text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-primary transition-colors leading-tight">Calculadora</span>
           </TabsTrigger>
           <TabsTrigger 
             value="consumption" 
-            className="flex flex-col items-center justify-center gap-1.5 md:gap-2 p-3 md:p-4 min-h-[80px] md:min-h-[100px] h-auto rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-blue/5 data-[state=active]:border-blue data-[state=active]:shadow-lg data-[state=active]:shadow-blue/20 data-[state=active]:-translate-y-1 hover:border-blue/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-blue/5 data-[state=active]:border-blue data-[state=active]:shadow-lg data-[state=active]:shadow-blue/20 data-[state=active]:-translate-y-1 hover:border-blue/50 hover:-translate-y-0.5 group"
             aria-label="Controle de consumo"
           >
-            <Droplets className="h-5 w-5 md:h-6 md:w-6 text-muted-foreground group-data-[state=active]:text-blue transition-colors" />
-            <span className="text-[10px] md:text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-blue transition-colors leading-tight">Consumo</span>
+            <Droplets className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-blue transition-colors shrink-0" />
+            <span className="text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-blue transition-colors leading-tight">Consumo</span>
           </TabsTrigger>
           <TabsTrigger 
             value="goals" 
-            className="flex flex-col items-center justify-center gap-1.5 md:gap-2 p-3 md:p-4 min-h-[80px] md:min-h-[100px] h-auto rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-accent/5 data-[state=active]:border-accent data-[state=active]:shadow-lg data-[state=active]:shadow-accent/20 data-[state=active]:-translate-y-1 hover:border-accent/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-accent/5 data-[state=active]:border-accent data-[state=active]:shadow-lg data-[state=active]:shadow-accent/20 data-[state=active]:-translate-y-1 hover:border-accent/50 hover:-translate-y-0.5 group"
             aria-label="Metas e projeções"
           >
-            <Target className="h-5 w-5 md:h-6 md:w-6 text-muted-foreground group-data-[state=active]:text-accent transition-colors" />
-            <span className="text-[10px] md:text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-accent transition-colors leading-tight">Metas</span>
+            <Target className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-accent transition-colors shrink-0" />
+            <span className="text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-accent transition-colors leading-tight">Metas</span>
           </TabsTrigger>
           <TabsTrigger 
             value="recycling-charts" 
-            className="flex flex-col items-center justify-center gap-1.5 md:gap-2 p-3 md:p-4 min-h-[80px] md:min-h-[100px] h-auto rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-success/5 data-[state=active]:border-success data-[state=active]:shadow-lg data-[state=active]:shadow-success/20 data-[state=active]:-translate-y-1 hover:border-success/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-success/5 data-[state=active]:border-success data-[state=active]:shadow-lg data-[state=active]:shadow-success/20 data-[state=active]:-translate-y-1 hover:border-success/50 hover:-translate-y-0.5 group"
             aria-label="Gráficos de reciclagem"
           >
-            <Recycle className="h-5 w-5 md:h-6 md:w-6 text-muted-foreground group-data-[state=active]:text-success transition-colors" />
-            <span className="text-[10px] md:text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-success transition-colors leading-tight">Reciclagem</span>
+            <Recycle className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-success transition-colors shrink-0" />
+            <span className="text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-success transition-colors leading-tight">Reciclagem</span>
           </TabsTrigger>
           <TabsTrigger 
             value="consumption-charts" 
-            className="flex flex-col items-center justify-center gap-1.5 md:gap-2 p-3 md:p-4 min-h-[80px] md:min-h-[100px] h-auto rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-primary/5 data-[state=active]:border-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 data-[state=active]:-translate-y-1 hover:border-primary/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-primary/5 data-[state=active]:border-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 data-[state=active]:-translate-y-1 hover:border-primary/50 hover:-translate-y-0.5 group"
             aria-label="Gráficos de consumo"
           >
-            <BarChart3 className="h-5 w-5 md:h-6 md:w-6 text-muted-foreground group-data-[state=active]:text-primary transition-colors" />
-            <span className="text-[10px] md:text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-primary transition-colors leading-tight">Gráficos</span>
+            <BarChart3 className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-primary transition-colors shrink-0" />
+            <span className="text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-primary transition-colors leading-tight">Gráficos</span>
           </TabsTrigger>
           <TabsTrigger 
             value="achievements" 
-            className="flex flex-col items-center justify-center gap-1.5 md:gap-2 p-3 md:p-4 min-h-[80px] md:min-h-[100px] h-auto rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-accent/5 data-[state=active]:border-accent data-[state=active]:shadow-lg data-[state=active]:shadow-accent/20 data-[state=active]:-translate-y-1 hover:border-accent/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-accent/5 data-[state=active]:border-accent data-[state=active]:shadow-lg data-[state=active]:shadow-accent/20 data-[state=active]:-translate-y-1 hover:border-accent/50 hover:-translate-y-0.5 group"
             aria-label="Conquistas"
           >
-            <Trophy className="h-5 w-5 md:h-6 md:w-6 text-muted-foreground group-data-[state=active]:text-accent transition-colors" />
-            <span className="text-[10px] md:text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-accent transition-colors leading-tight">Conquistas</span>
+            <Trophy className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-accent transition-colors shrink-0" />
+            <span className="text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-accent transition-colors leading-tight">Conquistas</span>
           </TabsTrigger>
           <TabsTrigger 
             value="history" 
-            className="flex flex-col items-center justify-center gap-1.5 md:gap-2 p-3 md:p-4 min-h-[80px] md:min-h-[100px] h-auto rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-purple/5 data-[state=active]:border-purple data-[state=active]:shadow-lg data-[state=active]:shadow-purple/20 data-[state=active]:-translate-y-1 hover:border-purple/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-purple/5 data-[state=active]:border-purple data-[state=active]:shadow-lg data-[state=active]:shadow-purple/20 data-[state=active]:-translate-y-1 hover:border-purple/50 hover:-translate-y-0.5 group"
             aria-label="Histórico"
           >
-            <History className="h-5 w-5 md:h-6 md:w-6 text-muted-foreground group-data-[state=active]:text-purple transition-colors" />
-            <span className="text-[10px] md:text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-purple transition-colors leading-tight">Histórico</span>
+            <History className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-purple transition-colors shrink-0" />
+            <span className="text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-purple transition-colors leading-tight">Histórico</span>
           </TabsTrigger>
           <TabsTrigger 
             value="chat" 
-            className="flex flex-col items-center justify-center gap-1.5 md:gap-2 p-3 md:p-4 min-h-[80px] md:min-h-[100px] h-auto rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-blue/5 data-[state=active]:border-blue data-[state=active]:shadow-lg data-[state=active]:shadow-blue/20 data-[state=active]:-translate-y-1 hover:border-blue/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-blue/5 data-[state=active]:border-blue data-[state=active]:shadow-lg data-[state=active]:shadow-blue/20 data-[state=active]:-translate-y-1 hover:border-blue/50 hover:-translate-y-0.5 group"
             aria-label="Chat da comunidade"
           >
-            <MessageSquare className="h-5 w-5 md:h-6 md:w-6 text-muted-foreground group-data-[state=active]:text-blue transition-colors" />
-            <span className="text-[10px] md:text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-blue transition-colors leading-tight">Bater papo</span>
+            <MessageSquare className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-blue transition-colors shrink-0" />
+            <span className="text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-blue transition-colors leading-tight">Bater papo</span>
           </TabsTrigger>
           <TabsTrigger 
             value="resources" 
-            className="flex flex-col items-center justify-center gap-1.5 md:gap-2 p-3 md:p-4 min-h-[80px] md:min-h-[100px] h-auto rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-success/5 data-[state=active]:border-success data-[state=active]:shadow-lg data-[state=active]:shadow-success/20 data-[state=active]:-translate-y-1 hover:border-success/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-success/5 data-[state=active]:border-success data-[state=active]:shadow-lg data-[state=active]:shadow-success/20 data-[state=active]:-translate-y-1 hover:border-success/50 hover:-translate-y-0.5 group"
             aria-label="Links e dicas úteis"
           >
-            <Link className="h-5 w-5 md:h-6 md:w-6 text-muted-foreground group-data-[state=active]:text-success transition-colors" />
-            <span className="text-[10px] md:text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-success transition-colors leading-tight">Links & Dicas</span>
+            <Link className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-success transition-colors shrink-0" />
+            <span className="text-xs font-medium text-center text-muted-foreground group-data-[state=active]:text-success transition-colors leading-tight">Links & Dicas</span>
           </TabsTrigger>
         </TabsList>
 
