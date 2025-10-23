@@ -188,16 +188,16 @@ export default function SchoolDashboard({
         value={currentMobileTab} 
         onValueChange={setCurrentMobileTab} 
         defaultValue="calculator" 
-        className="space-y-8 pb-20 md:pb-0"
+        className="space-y-6"
       >
         <TabsList 
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 p-4 bg-background/80 backdrop-blur-sm rounded-2xl border-2 border-border/50 shadow-lg w-full mb-8"
+          className="flex flex-wrap gap-3 p-6 bg-background/80 backdrop-blur-sm rounded-2xl border-2 border-border/50 shadow-lg w-full mb-12"
           role="tablist"
           aria-label="Seções do dashboard"
         >
           <TabsTrigger 
             value="calculator" 
-            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-primary/5 data-[state=active]:border-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 data-[state=active]:-translate-y-1 hover:border-primary/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] min-w-[140px] flex-1 rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-primary/5 data-[state=active]:border-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 data-[state=active]:-translate-y-1 hover:border-primary/50 hover:-translate-y-0.5 group"
             aria-label="Calculadora de reciclagem"
           >
             <Calculator className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-primary transition-colors shrink-0" />
@@ -205,7 +205,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
           <TabsTrigger 
             value="consumption" 
-            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-blue/5 data-[state=active]:border-blue data-[state=active]:shadow-lg data-[state=active]:shadow-blue/20 data-[state=active]:-translate-y-1 hover:border-blue/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] min-w-[140px] flex-1 rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-blue/5 data-[state=active]:border-blue data-[state=active]:shadow-lg data-[state=active]:shadow-blue/20 data-[state=active]:-translate-y-1 hover:border-blue/50 hover:-translate-y-0.5 group"
             aria-label="Controle de consumo"
           >
             <Droplets className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-blue transition-colors shrink-0" />
@@ -213,7 +213,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
           <TabsTrigger 
             value="goals" 
-            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-accent/5 data-[state=active]:border-accent data-[state=active]:shadow-lg data-[state=active]:shadow-accent/20 data-[state=active]:-translate-y-1 hover:border-accent/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] min-w-[140px] flex-1 rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-accent/5 data-[state=active]:border-accent data-[state=active]:shadow-lg data-[state=active]:shadow-accent/20 data-[state=active]:-translate-y-1 hover:border-accent/50 hover:-translate-y-0.5 group"
             aria-label="Metas e projeções"
           >
             <Target className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-accent transition-colors shrink-0" />
@@ -221,7 +221,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
           <TabsTrigger 
             value="recycling-charts" 
-            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-success/5 data-[state=active]:border-success data-[state=active]:shadow-lg data-[state=active]:shadow-success/20 data-[state=active]:-translate-y-1 hover:border-success/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] min-w-[140px] flex-1 rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-success/5 data-[state=active]:border-success data-[state=active]:shadow-lg data-[state=active]:shadow-success/20 data-[state=active]:-translate-y-1 hover:border-success/50 hover:-translate-y-0.5 group"
             aria-label="Gráficos de reciclagem"
           >
             <Recycle className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-success transition-colors shrink-0" />
@@ -229,7 +229,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
           <TabsTrigger 
             value="consumption-charts" 
-            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-primary/5 data-[state=active]:border-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 data-[state=active]:-translate-y-1 hover:border-primary/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] min-w-[140px] flex-1 rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-primary/5 data-[state=active]:border-primary data-[state=active]:shadow-lg data-[state=active]:shadow-primary/20 data-[state=active]:-translate-y-1 hover:border-primary/50 hover:-translate-y-0.5 group"
             aria-label="Gráficos de consumo"
           >
             <BarChart3 className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-primary transition-colors shrink-0" />
@@ -237,7 +237,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
           <TabsTrigger 
             value="achievements" 
-            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-accent/5 data-[state=active]:border-accent data-[state=active]:shadow-lg data-[state=active]:shadow-accent/20 data-[state=active]:-translate-y-1 hover:border-accent/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] min-w-[140px] flex-1 rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-accent/5 data-[state=active]:border-accent data-[state=active]:shadow-lg data-[state=active]:shadow-accent/20 data-[state=active]:-translate-y-1 hover:border-accent/50 hover:-translate-y-0.5 group"
             aria-label="Conquistas"
           >
             <Trophy className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-accent transition-colors shrink-0" />
@@ -245,7 +245,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
           <TabsTrigger 
             value="history" 
-            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-purple/5 data-[state=active]:border-purple data-[state=active]:shadow-lg data-[state=active]:shadow-purple/20 data-[state=active]:-translate-y-1 hover:border-purple/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] min-w-[140px] flex-1 rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-purple/5 data-[state=active]:border-purple data-[state=active]:shadow-lg data-[state=active]:shadow-purple/20 data-[state=active]:-translate-y-1 hover:border-purple/50 hover:-translate-y-0.5 group"
             aria-label="Histórico"
           >
             <History className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-purple transition-colors shrink-0" />
@@ -253,7 +253,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
           <TabsTrigger 
             value="chat" 
-            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-blue/5 data-[state=active]:border-blue data-[state=active]:shadow-lg data-[state=active]:shadow-blue/20 data-[state=active]:-translate-y-1 hover:border-blue/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] min-w-[140px] flex-1 rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-blue/5 data-[state=active]:border-blue data-[state=active]:shadow-lg data-[state=active]:shadow-blue/20 data-[state=active]:-translate-y-1 hover:border-blue/50 hover:-translate-y-0.5 group"
             aria-label="Chat da comunidade"
           >
             <MessageSquare className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-blue transition-colors shrink-0" />
@@ -261,7 +261,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
           <TabsTrigger 
             value="resources" 
-            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-success/5 data-[state=active]:border-success data-[state=active]:shadow-lg data-[state=active]:shadow-success/20 data-[state=active]:-translate-y-1 hover:border-success/50 hover:-translate-y-0.5 group"
+            className="flex flex-col items-center justify-center gap-2 p-4 min-h-[100px] min-w-[140px] flex-1 rounded-xl transition-all duration-300 bg-card border-2 border-border/50 data-[state=active]:bg-success/5 data-[state=active]:border-success data-[state=active]:shadow-lg data-[state=active]:shadow-success/20 data-[state=active]:-translate-y-1 hover:border-success/50 hover:-translate-y-0.5 group"
             aria-label="Links e dicas úteis"
           >
             <Link className="h-6 w-6 text-muted-foreground group-data-[state=active]:text-success transition-colors shrink-0" />
@@ -269,7 +269,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="calculator" className="animate-fade-in mt-8">
+        <TabsContent value="calculator" className="animate-fade-in mt-0 pt-6">
           <div className="recycling-section space-y-4">
             {!viewOnly && (
               <ContextualTips 
@@ -296,7 +296,7 @@ export default function SchoolDashboard({
           </div>
         </TabsContent>
 
-        <TabsContent value="consumption" className="animate-fade-in mt-8">
+        <TabsContent value="consumption" className="animate-fade-in mt-0 pt-6">
           <div className="consumption-section space-y-4">
             {!viewOnly && (
               <ContextualTips 
@@ -325,7 +325,7 @@ export default function SchoolDashboard({
           </div>
         </TabsContent>
 
-        <TabsContent value="goals" className="space-y-6 animate-fade-in mt-8">
+        <TabsContent value="goals" className="space-y-6 animate-fade-in mt-0 pt-6">
           <SmartGoalSuggestion 
             recyclingEntries={safeData.recyclingEntries}
             consumptionEntries={safeData.consumptionEntries}
@@ -354,18 +354,18 @@ export default function SchoolDashboard({
           <ProjectionCard entries={safeData.recyclingEntries} schoolName={schoolName} />
         </TabsContent>
 
-        <TabsContent value="recycling-charts" className="animate-fade-in mt-8">
+        <TabsContent value="recycling-charts" className="animate-fade-in mt-0 pt-6">
           <RecyclingChart entries={safeData.recyclingEntries} />
         </TabsContent>
 
-        <TabsContent value="consumption-charts" className="animate-fade-in mt-8">
+        <TabsContent value="consumption-charts" className="animate-fade-in mt-0 pt-6">
           <ConsumptionChart 
             entries={safeData.consumptionEntries} 
             goals={safeData.consumptionGoals} 
           />
         </TabsContent>
 
-        <TabsContent value="achievements" className="animate-fade-in mt-8">
+        <TabsContent value="achievements" className="animate-fade-in mt-0 pt-6">
           <AchievementSystem 
             recyclingTotal={totalRecycled}
             co2Total={totalCO2Saved}
@@ -376,7 +376,7 @@ export default function SchoolDashboard({
           />
         </TabsContent>
 
-        <TabsContent value="history" className="animate-fade-in mt-8">
+        <TabsContent value="history" className="animate-fade-in mt-0 pt-6">
           <ActionHistory 
             history={history}
             onUndo={undoLastAction}
@@ -385,11 +385,11 @@ export default function SchoolDashboard({
           />
         </TabsContent>
 
-        <TabsContent value="chat" className="animate-fade-in mt-8">
+        <TabsContent value="chat" className="animate-fade-in mt-0 pt-6">
           <ChatTab defaultSchool={schoolName} />
         </TabsContent>
 
-        <TabsContent value="resources" className="animate-fade-in mt-8">
+        <TabsContent value="resources" className="animate-fade-in mt-0 pt-6">
           <ResourcesTab />
         </TabsContent>
       </Tabs>
