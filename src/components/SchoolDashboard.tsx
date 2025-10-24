@@ -191,7 +191,7 @@ export default function SchoolDashboard({
         className="space-y-6"
       >
         <TabsList 
-          className="flex flex-row flex-wrap gap-3 p-4 bg-background/80 backdrop-blur-sm rounded-2xl border-2 border-border/50 shadow-lg w-full mb-8 overflow-x-auto"
+          className="flex flex-row flex-wrap gap-3 p-4 bg-background/80 backdrop-blur-sm rounded-2xl border-2 border-border/50 shadow-lg w-full mb-8 min-h-[120px] items-start content-start"
           role="tablist"
           aria-label="Seções do dashboard"
         >
