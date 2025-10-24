@@ -74,7 +74,7 @@ export default function WaterEnergyTracker({
       month: waterMonth,
       cost: parseFloat(waterCost),
       consumption: parseFloat(waterConsumption),
-      date: new Date().toLocaleDateString('pt-BR')
+      date: new Date().toISOString().split('T')[0] // Format: YYYY-MM-DD
     };
 
     const updatedEntries = [newEntry, ...entries];
@@ -119,7 +119,7 @@ export default function WaterEnergyTracker({
       month: energyMonth,
       cost: parseFloat(energyCost),
       consumption: parseFloat(energyConsumption),
-      date: new Date().toLocaleDateString('pt-BR')
+      date: new Date().toISOString().split('T')[0] // Format: YYYY-MM-DD
     };
 
     const updatedEntries = [newEntry, ...entries];
