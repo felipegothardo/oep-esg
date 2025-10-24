@@ -158,7 +158,7 @@ export default function RecyclingCalculator({ onEntriesUpdate, entries = [], sch
       material: allMaterials[selectedMaterial],
       quantity: parseFloat(quantity),
       co2Saved,
-      date: new Date().toLocaleDateString('pt-BR'),
+      date: new Date().toISOString().split('T')[0], // Format: YYYY-MM-DD
       month: selectedMonth
     };
 
