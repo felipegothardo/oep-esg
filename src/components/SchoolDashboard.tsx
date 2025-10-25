@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Leaf, Droplets, Zap, Recycle, Calculator, Target, BarChart3, Trophy, History, MessageSquare, Link } from 'lucide-react';
+import { Leaf, Droplets, Zap, Recycle, Calculator, Target, BarChart3, History, MessageSquare, Link } from 'lucide-react';
 import { SchoolData, RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSchoolData';
 import ExportButton from './ExportButton';
 import MobileStats from './MobileStats';
@@ -16,7 +16,6 @@ import ProjectionCard from './ProjectionCard';
 import ChatTab from './ChatTab';
 import ResourcesTab from './ResourcesTab';
 import SmartGoalSuggestion from './SmartGoalSuggestion';
-import AchievementSystem from './AchievementSystem';
 import ContextualTips from './ContextualTips';
 import ActionHistory from './ActionHistory';
 
@@ -234,14 +233,6 @@ export default function SchoolDashboard({
           >
             <BarChart3 className="h-4 w-4 text-muted-foreground group-data-[state=active]:text-primary transition-colors flex-shrink-0" />
             <span className="text-sm font-medium text-muted-foreground group-data-[state=active]:text-primary transition-colors">Gráficos</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="achievements" 
-            className="flex items-center justify-center gap-2 px-6 py-3 min-h-[48px] rounded-lg transition-all duration-300 bg-card border border-border data-[state=active]:bg-accent/5 data-[state=active]:border-accent data-[state=active]:shadow-md hover:border-accent/50 hover:shadow-sm group whitespace-nowrap"
-            aria-label="Conquistas"
-          >
-            <Trophy className="h-4 w-4 text-muted-foreground group-data-[state=active]:text-accent transition-colors flex-shrink-0" />
-            <span className="text-sm font-medium text-muted-foreground group-data-[state=active]:text-accent transition-colors">Conquistas</span>
           </TabsTrigger>
           <TabsTrigger 
             value="history" 
@@ -465,16 +456,6 @@ export default function SchoolDashboard({
           </div>
         </TabsContent>
 
-        <TabsContent value="achievements" className="animate-fade-in clear-both">
-          <AchievementSystem 
-            recyclingTotal={totalRecycled}
-            co2Total={totalCO2Saved}
-            waterReduction={safeData.consumptionGoals.find(g => g.type === 'water')?.reductionPercentage || 0}
-            energyReduction={safeData.consumptionGoals.find(g => g.type === 'energy')?.reductionPercentage || 0}
-            monthsActive={Math.max(safeData.recyclingEntries.length, safeData.consumptionEntries.length) > 0 ? 1 : 0}
-            schoolName={schoolName}
-          />
-        </TabsContent>
 
         <TabsContent value="history" className="animate-fade-in clear-both">
           <ActionHistory 
