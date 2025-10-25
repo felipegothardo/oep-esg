@@ -1,6 +1,6 @@
 import { Leaf, Recycle, Wind } from 'lucide-react';
 import ecoHeroImage from '@/assets/eco-hero.jpg';
-import oepLogo from '@/assets/oep-logo-optimized.png';
+import oepLogo from '@/assets/oep-logo-new.png';
 
 interface EcoHeaderProps {
   schoolName?: string;

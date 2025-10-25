@@ -17,19 +17,19 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 215 25% 15%;
 
-    /* Vibrant modern color palette */
-    --primary: 195 85% 45%;
+    /* Professional color palette */
+    --primary: 210 70% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 195 85% 65%;
-    --primary-vibrant: 195 95% 55%;
+    --primary-glow: 210 60% 55%;
+    --primary-vibrant: 210 75% 50%;
 
-    --secondary: 280 70% 58%;
+    --secondary: 200 50% 50%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 25% 95%;
-    --muted-foreground: 215 15% 50%;
+    --muted: 210 20% 92%;
+    --muted-foreground: 215 15% 45%;
 
-    --accent: 33 100% 55%;
+    --accent: 195 70% 45%;
     --accent-foreground: 0 0% 100%;
 
     --blue: 210 100% 60%;
