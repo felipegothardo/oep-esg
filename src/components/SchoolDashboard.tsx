@@ -271,6 +271,20 @@ export default function SchoolDashboard({
 
         <TabsContent value="calculator" className="animate-fade-in">
           <div className="recycling-section space-y-6 clear-both">
+            {!viewOnly && safeData.recyclingEntries.length > 0 && (
+              <div className="flex justify-end mb-2">
+                <DeleteRecordsDialog
+                  title="Apagar Dados de Reciclagem"
+                  description="Tem certeza que deseja apagar todos os registros de reciclagem?"
+                  buttonText="Apagar Dados"
+                  size="sm"
+                  variant="outline"
+                  onConfirm={async () => {
+                    onDeleteAll();
+                  }}
+                />
+              </div>
+            )}
             {!viewOnly && (
               <ContextualTips 
                 recyclingTotal={totalRecycled}
@@ -298,6 +312,40 @@ export default function SchoolDashboard({
 
         <TabsContent value="consumption" className="animate-fade-in">
           <div className="consumption-section space-y-6 clear-both">
+            {!viewOnly && safeData.consumptionEntries.length > 0 && (
+              <div className="flex justify-end gap-2 mb-2">
+                <DeleteRecordsDialog
+                  title="Apagar Dados de Água"
+                  description="Tem certeza que deseja apagar todos os registros de consumo de água?"
+                  buttonText="Apagar Água"
+                  size="sm"
+                  variant="outline"
+                  onConfirm={async () => {
+                    const waterMonths = [...new Set(safeData.consumptionEntries
+                      .filter(e => e.type === 'water')
+                      .map(e => e.month))];
+                    for (const month of waterMonths) {
+                      onDeleteConsumptionByMonth('water', month);
+                    }
+                  }}
+                />
+                <DeleteRecordsDialog
+                  title="Apagar Dados de Energia"
+                  description="Tem certeza que deseja apagar todos os registros de consumo de energia?"
+                  buttonText="Apagar Energia"
+                  size="sm"
+                  variant="outline"
+                  onConfirm={async () => {
+                    const energyMonths = [...new Set(safeData.consumptionEntries
+                      .filter(e => e.type === 'energy')
+                      .map(e => e.month))];
+                    for (const month of energyMonths) {
+                      onDeleteConsumptionByMonth('energy', month);
+                    }
+                  }}
+                />
+              </div>
+            )}
             {!viewOnly && (
               <ContextualTips 
                 recyclingTotal={totalRecycled}
@@ -355,14 +403,66 @@ export default function SchoolDashboard({
         </TabsContent>
 
         <TabsContent value="recycling-charts" className="animate-fade-in clear-both">
-          <RecyclingChart entries={safeData.recyclingEntries} />
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold">Dados de Reciclagem</h3>
+              {!viewOnly && safeData.recyclingEntries.length > 0 && (
+                <DeleteRecordsDialog
+                  title="Apagar Dados de Reciclagem"
+                  description="Tem certeza que deseja apagar todos os registros de reciclagem? Todos os dados de materiais reciclados serão removidos permanentemente."
+                  buttonText="Apagar Reciclagem"
+                  onConfirm={async () => {
+                    onDeleteAll();
+                  }}
+                />
+              )}
+            </div>
+            <RecyclingChart entries={safeData.recyclingEntries} />
+          </div>
         </TabsContent>
 
         <TabsContent value="consumption-charts" className="animate-fade-in clear-both">
-          <ConsumptionChart 
-            entries={safeData.consumptionEntries} 
-            goals={safeData.consumptionGoals} 
-          />
+          <div className="space-y-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold">Dados de Consumo</h3>
+              {!viewOnly && safeData.consumptionEntries.length > 0 && (
+                <div className="flex gap-2">
+                  <DeleteRecordsDialog
+                    title="Apagar Dados de Água"
+                    description="Tem certeza que deseja apagar todos os registros de consumo de água?"
+                    buttonText="Apagar Água"
+                    variant="outline"
+                    onConfirm={async () => {
+                      const waterMonths = [...new Set(safeData.consumptionEntries
+                        .filter(e => e.type === 'water')
+                        .map(e => e.month))];
+                      for (const month of waterMonths) {
+                        onDeleteConsumptionByMonth('water', month);
+                      }
+                    }}
+                  />
+                  <DeleteRecordsDialog
+                    title="Apagar Dados de Energia"
+                    description="Tem certeza que deseja apagar todos os registros de consumo de energia?"
+                    buttonText="Apagar Energia"
+                    variant="outline"
+                    onConfirm={async () => {
+                      const energyMonths = [...new Set(safeData.consumptionEntries
+                        .filter(e => e.type === 'energy')
+                        .map(e => e.month))];
+                      for (const month of energyMonths) {
+                        onDeleteConsumptionByMonth('energy', month);
+                      }
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+            <ConsumptionChart 
+              entries={safeData.consumptionEntries} 
+              goals={safeData.consumptionGoals} 
+            />
+          </div>
         </TabsContent>
 
         <TabsContent value="achievements" className="animate-fade-in clear-both">
