@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Leaf, Loader2 } from "lucide-react";
-import oepLogo from "@/assets/oep-logo.png";
+import oepLogo from "@/assets/oep-logo-new.png";
 
 export default function Auth() {
   const navigate = useNavigate();

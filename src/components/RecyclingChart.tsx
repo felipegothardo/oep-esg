@@ -16,16 +16,16 @@ interface RecyclingChartProps {
 }
 
 const COLORS = {
-  'Papel': '#22c55e',
-  'Papelão': '#16a34a',
-  'Plástico PET': '#3b82f6',
-  'Plástico Polietileno': '#1d4ed8',
-  'Vidro': '#06b6d4',
-  'Alumínio': '#f59e0b',
-  'Aço': '#6b7280',
-  'Eletrônicos': '#8b5cf6',
-  'Orgânico': '#84cc16',
-  'Madeira': '#a3a3a3'
+  'Papel': 'hsl(195, 65%, 45%)',
+  'Papelão': 'hsl(195, 65%, 35%)',
+  'Plástico PET': 'hsl(200, 70%, 50%)',
+  'Plástico Polietileno': 'hsl(205, 75%, 45%)',
+  'Vidro': 'hsl(190, 70%, 50%)',
+  'Alumínio': 'hsl(210, 65%, 55%)',
+  'Aço': 'hsl(215, 60%, 50%)',
+  'Eletrônicos': 'hsl(195, 70%, 40%)',
+  'Orgânico': 'hsl(200, 65%, 48%)',
+  'Madeira': 'hsl(210, 60%, 45%)'
 };
 
 export default function RecyclingChart({ entries }: RecyclingChartProps) {
