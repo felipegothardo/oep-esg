@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Leaf, Droplets, Zap, Recycle, Calculator, Target, BarChart3, History, MessageSquare, Link } from 'lucide-react';
+import { Leaf, Droplets, Zap, Recycle, Calculator, Target, BarChart3, History, Link } from 'lucide-react';
 import { SchoolData, RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSchoolData';
 import ExportButton from './ExportButton';
 import MobileStats from './MobileStats';
@@ -13,7 +13,7 @@ import RecyclingChart from './RecyclingChart';
 import ConsumptionChart from './ConsumptionChart';
 import GoalProgressCard from './GoalProgressCard';
 import ProjectionCard from './ProjectionCard';
-import ChatTab from './ChatTab';
+
 import ResourcesTab from './ResourcesTab';
 import SmartGoalSuggestion from './SmartGoalSuggestion';
 import ContextualTips from './ContextualTips';
@@ -243,14 +243,6 @@ export default function SchoolDashboard({
             <span className="text-sm font-medium text-muted-foreground group-data-[state=active]:text-purple transition-colors">Histórico</span>
           </TabsTrigger>
           <TabsTrigger 
-            value="chat" 
-            className="flex items-center justify-center gap-2 px-6 py-3 min-h-[48px] rounded-lg transition-all duration-300 bg-card border border-border data-[state=active]:bg-blue/5 data-[state=active]:border-blue data-[state=active]:shadow-md hover:border-blue/50 hover:shadow-sm group whitespace-nowrap"
-            aria-label="Chat da comunidade"
-          >
-            <MessageSquare className="h-4 w-4 text-muted-foreground group-data-[state=active]:text-blue transition-colors flex-shrink-0" />
-            <span className="text-sm font-medium text-muted-foreground group-data-[state=active]:text-blue transition-colors">Bater papo</span>
-          </TabsTrigger>
-          <TabsTrigger 
             value="resources" 
             className="flex items-center justify-center gap-2 px-6 py-3 min-h-[48px] rounded-lg transition-all duration-300 bg-card border border-border data-[state=active]:bg-success/5 data-[state=active]:border-success data-[state=active]:shadow-md hover:border-success/50 hover:shadow-sm group whitespace-nowrap"
             aria-label="Links e dicas úteis"
@@ -466,9 +458,6 @@ export default function SchoolDashboard({
           />
         </TabsContent>
 
-        <TabsContent value="chat" className="animate-fade-in clear-both">
-          <ChatTab defaultSchool={schoolName} />
-        </TabsContent>
 
         <TabsContent value="resources" className="animate-fade-in clear-both">
           <ResourcesTab />
