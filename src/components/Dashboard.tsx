@@ -19,11 +19,16 @@ import { RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSc
 
 type TabType = 'dashboard' | 'coordinator' | 'reports';
 
+import logoElvira from '@/assets/logo-elvira.png';
+import logoOswald from '@/assets/logo-oswald.png';
+import logoPiaget from '@/assets/logo-piaget.png';
+import logoCaranda from '@/assets/logo-caranda.png';
+
 const schoolLogos: Record<string, string> = {
-  'ELV': '/lovable-uploads/ac7dcf98-b3a9-4b47-965e-df5f24f90dda.png',
-  'OSW': '/lovable-uploads/13e432d6-adcc-4d69-9735-56086059444c.png',
-  'PIA': '/lovable-uploads/5f155554-a003-48a8-873e-69c765fa77c1.png',
-  'CAR': '/lovable-uploads/15780c7a-3c8b-4d43-a842-9bd423a699c8.png',
+  'elvira': logoElvira,
+  'oswald': logoOswald,
+  'piaget': logoPiaget,
+  'santo-antonio': logoCaranda,
 };
 
 export default function Dashboard() {
