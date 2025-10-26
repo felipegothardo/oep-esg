@@ -68,6 +68,17 @@ export default function WaterEnergyTracker({
       return;
     }
 
+    // Validate month format MM/YYYY
+    const monthRegex = /^(0[1-9]|1[0-2])\/\d{4}$/;
+    if (!monthRegex.test(waterMonth)) {
+      toast({
+        title: "Erro",
+        description: "Formato de mês inválido. Use MM/YYYY (ex: 01/2024)",
+        variant: "destructive"
+      });
+      return;
+    }
+
     const newEntry: ConsumptionEntry = {
       id: Date.now().toString(),
       type: 'water',
@@ -108,6 +119,17 @@ export default function WaterEnergyTracker({
       toast({
         title: "Erro",
         description: "Por favor, preencha todos os campos de energia.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Validate month format MM/YYYY
+    const monthRegex = /^(0[1-9]|1[0-2])\/\d{4}$/;
+    if (!monthRegex.test(energyMonth)) {
+      toast({
+        title: "Erro",
+        description: "Formato de mês inválido. Use MM/YYYY (ex: 01/2024)",
         variant: "destructive"
       });
       return;
@@ -269,8 +291,15 @@ export default function WaterEnergyTracker({
                   <Input
                     id="water-month"
                     value={waterMonth}
-                    onChange={(e) => setWaterMonth(e.target.value)}
+                    onChange={(e) => {
+                      let value = e.target.value.replace(/\D/g, '');
+                      if (value.length >= 2) {
+                        value = value.slice(0, 2) + '/' + value.slice(2, 6);
+                      }
+                      setWaterMonth(value);
+                    }}
                     placeholder="Ex: 01/2024"
+                    maxLength={7}
                   />
                 </div>
                 <div className="space-y-2">
@@ -343,8 +372,15 @@ export default function WaterEnergyTracker({
                   <Input
                     id="energy-month"
                     value={energyMonth}
-                    onChange={(e) => setEnergyMonth(e.target.value)}
+                    onChange={(e) => {
+                      let value = e.target.value.replace(/\D/g, '');
+                      if (value.length >= 2) {
+                        value = value.slice(0, 2) + '/' + value.slice(2, 6);
+                      }
+                      setEnergyMonth(value);
+                    }}
                     placeholder="Ex: 01/2024"
+                    maxLength={7}
                   />
                 </div>
                 <div className="space-y-2">
