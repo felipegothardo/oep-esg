@@ -16,7 +16,7 @@ const schools = [
   {
     key: 'elvira' as const,
     label: 'Elvira Brandão',
-    icon: '/lovable-uploads/ac7dcf98-b3a9-4b47-965e-df5f24f90dda.png',
+    icon: '/lovable-uploads/logo-elvira-new.png',
     alt: 'Logo do Colégio Elvira Brandão',
     bgClass: 'bg-gradient-to-br from-blue via-blue to-blue-light text-blue-foreground shadow-lg hover:shadow-xl hover:scale-105',
     hoverClass: 'bg-gradient-to-br from-card to-muted border-2 border-blue/30 hover:border-blue hover:shadow-lg hover:scale-105'
@@ -24,7 +24,7 @@ const schools = [
   {
     key: 'oswald' as const,
     label: 'Oswald',
-    icon: '/lovable-uploads/13e432d6-adcc-4d69-9735-56086059444c.png',
+    icon: '/lovable-uploads/logo-oswald-new.png',
     alt: 'Logo do Colégio Oswald',
     bgClass: 'bg-gradient-to-br from-success via-primary-glow to-success text-success-foreground shadow-lg hover:shadow-xl hover:scale-105',
     hoverClass: 'bg-gradient-to-br from-card to-muted border-2 border-success/30 hover:border-success hover:shadow-lg hover:scale-105'
@@ -32,7 +32,7 @@ const schools = [
   {
     key: 'piaget' as const,
     label: 'Piaget',
-    icon: '/lovable-uploads/5f155554-a003-48a8-873e-69c765fa77c1.png',
+    icon: '/lovable-uploads/logo-piaget-new.png',
     alt: 'Logo do Colégio Piaget',
     bgClass: 'bg-gradient-to-br from-blue-dark via-blue to-blue-light text-blue-foreground shadow-lg hover:shadow-xl hover:scale-105',
     hoverClass: 'bg-gradient-to-br from-card to-muted border-2 border-blue-dark/30 hover:border-blue-dark hover:shadow-lg hover:scale-105'
@@ -40,7 +40,7 @@ const schools = [
   {
     key: 'santo-antonio' as const,
     label: 'Carandá',
-    icon: '/lovable-uploads/15780c7a-3c8b-4d43-a842-9bd423a699c8.png',
+    icon: '/lovable-uploads/logo-caranda-new.png',
     alt: 'Logo do Colégio Carandá',
     bgClass: 'bg-gradient-to-br from-purple via-purple to-purple/90 text-purple-foreground shadow-lg hover:shadow-xl hover:scale-105',
     hoverClass: 'bg-gradient-to-br from-card to-muted border-2 border-purple/30 hover:border-purple hover:shadow-lg hover:scale-105'
