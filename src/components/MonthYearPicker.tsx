@@ -46,7 +46,7 @@ export function MonthYearPicker({ value, onChange, className }: MonthYearPickerP
           {value ? format(new Date(value + '-01'), "MMMM 'de' yyyy", { locale: ptBR }) : <span>Selecione o mês e ano</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-0 pointer-events-auto" align="start">
         <Calendar
           mode="single"
           selected={date}
