@@ -54,17 +54,21 @@ export default function EcoHeader({ schoolName, schoolLogo }: EcoHeaderProps = {
             )}
             
             <div className="text-left flex-1 min-w-0">
-              <h1 className="text-2xl md:text-4xl font-bold text-primary leading-tight tracking-tight">
-                {schoolName ? `OEP Sustentável` : 'OEP Sustentável'}
-              </h1>
               {schoolName && (
-                <p className="text-base md:text-lg text-foreground font-semibold mt-2">
-                  {schoolName}
+                <>
+                  <h1 className="text-2xl md:text-4xl font-bold text-primary leading-tight tracking-tight">
+                    {schoolName}
+                  </h1>
+                  <p className="text-xs md:text-sm text-muted-foreground mt-2 font-medium">
+                    Dashboard de Gestão Ambiental
+                  </p>
+                </>
+              )}
+              {!schoolName && (
+                <p className="text-base md:text-lg text-muted-foreground font-medium">
+                  Sistema de Controle de Consumo e Manejo de Resíduos
                 </p>
               )}
-              <p className="text-xs md:text-sm text-muted-foreground mt-1 font-medium">
-                {schoolName ? `Dashboard de Gestão Ambiental` : 'Sistema de Controle de Consumo e Manejo de Resíduos'}
-              </p>
             </div>
           </div>
 
