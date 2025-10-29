@@ -15,17 +15,24 @@ interface RecyclingChartProps {
   entries: RecyclingEntry[];
 }
 
-const COLORS = {
-  'Papel': 'hsl(210, 60%, 42%)',
-  'Papelão': 'hsl(210, 60%, 35%)',
-  'Plástico PET': 'hsl(195, 55%, 45%)',
-  'Plástico Polietileno': 'hsl(195, 55%, 38%)',
-  'Vidro': 'hsl(142, 65%, 42%)',
-  'Alumínio': 'hsl(215, 20%, 50%)',
-  'Aço': 'hsl(215, 20%, 42%)',
-  'Eletrônicos': 'hsl(265, 60%, 50%)',
-  'Orgânico': 'hsl(142, 50%, 38%)',
-  'Madeira': 'hsl(142, 55%, 35%)'
+// Paleta de cores distintas para materiais
+const MATERIAL_COLORS = [
+  'hsl(210, 70%, 50%)',   // Azul vibrante
+  'hsl(142, 70%, 45%)',   // Verde
+  'hsl(35, 85%, 55%)',    // Laranja
+  'hsl(265, 70%, 55%)',   // Roxo
+  'hsl(345, 75%, 55%)',   // Rosa/Vermelho
+  'hsl(190, 70%, 50%)',   // Ciano
+  'hsl(280, 65%, 55%)',   // Magenta
+  'hsl(160, 65%, 45%)',   // Verde-água
+  'hsl(25, 80%, 55%)',    // Laranja escuro
+  'hsl(220, 70%, 50%)',   // Azul índigo
+  'hsl(85, 60%, 45%)',    // Verde-lima
+  'hsl(310, 70%, 55%)',   // Rosa púrpura
+];
+
+const getColorForMaterial = (material: string, index: number): string => {
+  return MATERIAL_COLORS[index % MATERIAL_COLORS.length];
 };
 
 export default function RecyclingChart({ entries }: RecyclingChartProps) {
@@ -58,10 +65,10 @@ export default function RecyclingChart({ entries }: RecyclingChartProps) {
   }, [] as Array<{material: string; quantity: number; co2Saved: number; count: number}>);
 
   // Dados para gráfico de pizza (quantidade)
-  const pieData = materialData.map(item => ({
+  const pieData = materialData.map((item, index) => ({
     name: item.material,
     value: item.quantity,
-    color: COLORS[item.material as keyof typeof COLORS] || '#6b7280'
+    color: getColorForMaterial(item.material, index)
   }));
 
   // Dados para gráfico de barras (CO2 economizado)
@@ -250,7 +257,7 @@ export default function RecyclingChart({ entries }: RecyclingChartProps) {
                 <div className="flex items-center gap-3">
                   <div 
                     className="w-4 h-4 rounded-full"
-                    style={{ backgroundColor: COLORS[item.material as keyof typeof COLORS] || '#6b7280' }}
+                    style={{ backgroundColor: getColorForMaterial(item.material, index) }}
                   />
                   <div>
                     <p className="font-medium">{item.material}</p>
