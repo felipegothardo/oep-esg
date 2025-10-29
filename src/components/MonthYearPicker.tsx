@@ -32,25 +32,35 @@ const years = Array.from({ length: 31 }, (_, i) => 2000 + i); // 2000 a 2030
 
 export function MonthYearPicker({ value, onChange, className }: MonthYearPickerProps) {
   const [open, setOpen] = React.useState(false);
+  
+  // Inicializar com o valor correto (mês 1-12, não índice 0-11)
   const [tempMonth, setTempMonth] = React.useState<string>(() => {
-    return value ? new Date(value + '-01').getMonth().toString() : new Date().getMonth().toString();
+    if (value) {
+      const [year, month] = value.split('-');
+      return month; // já está no formato "01" a "12"
+    }
+    return String(new Date().getMonth() + 1).padStart(2, '0');
   });
+  
   const [tempYear, setTempYear] = React.useState<string>(() => {
-    return value ? new Date(value + '-01').getFullYear().toString() : new Date().getFullYear().toString();
+    if (value) {
+      const [year] = value.split('-');
+      return year;
+    }
+    return new Date().getFullYear().toString();
   });
 
   // Atualizar valores temporários quando o value mudar
   React.useEffect(() => {
     if (value) {
-      const date = new Date(value + '-01');
-      setTempMonth(date.getMonth().toString());
-      setTempYear(date.getFullYear().toString());
+      const [year, month] = value.split('-');
+      setTempMonth(month);
+      setTempYear(year);
     }
   }, [value]);
 
   const handleConfirm = () => {
-    const month = String(parseInt(tempMonth) + 1).padStart(2, '0');
-    const formattedValue = `${tempYear}-${month}`;
+    const formattedValue = `${tempYear}-${tempMonth}`;
     onChange(formattedValue);
     setOpen(false);
   };
@@ -84,7 +94,7 @@ export function MonthYearPicker({ value, onChange, className }: MonthYearPickerP
               </SelectTrigger>
               <SelectContent>
                 {months.map((month, index) => (
-                  <SelectItem key={index} value={index.toString()}>
+                  <SelectItem key={index} value={String(index + 1).padStart(2, '0')}>
                     {month}
                   </SelectItem>
                 ))}
