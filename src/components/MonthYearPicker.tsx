@@ -65,9 +65,12 @@ export function MonthYearPicker({ value, onChange, className }: MonthYearPickerP
     setOpen(false);
   };
 
-  const displayValue = value 
-    ? format(new Date(value + '-01'), "MMMM 'de' yyyy", { locale: ptBR })
-    : 'Selecione o mês e ano';
+  const displayValue = React.useMemo(() => {
+    if (!value) return 'Selecione o mês e ano';
+    const [year, month] = value.split('-');
+    const monthIndex = parseInt(month, 10) - 1;
+    return `${months[monthIndex]} de ${year}`;
+  }, [value]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
