@@ -54,6 +54,9 @@ export function MonthYearPicker({ value, onChange, className }: MonthYearPickerP
           initialFocus
           className={cn("p-3 pointer-events-auto")}
           locale={ptBR}
+          fromYear={2000}
+          toYear={2030}
+          captionLayout="dropdown-buttons"
         />
       </PopoverContent>
     </Popover>

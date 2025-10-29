@@ -65,10 +65,10 @@ export default function SchoolSelection({ activeSchool, onSchoolChange }: School
               <img
                 src={school.icon}
                 alt={school.alt}
-                className="h-5 w-5 md:h-6 md:w-6 rounded-sm object-contain"
+                className="h-6 w-6 md:h-8 md:w-8 object-contain"
                 loading="lazy"
-                width="24"
-                height="24"
+                width="32"
+                height="32"
               />
               <span>{school.label}</span>
             </div>
