@@ -29,23 +29,26 @@ export default function EcoHeader({ schoolName, schoolLogo }: EcoHeaderProps = {
                 <img 
                   src={oepLogo} 
                   alt="OEP Sustentável Logo" 
-                  className="w-28 h-28 md:w-40 md:h-40 object-contain"
-                  loading="eager" 
+                  className="w-24 h-24 md:w-36 md:h-36 object-contain"
+                  loading="eager"
+                  style={{ padding: 0, margin: 0 }}
                 />
                 <div className="w-px h-20 md:h-28 bg-border/30" />
                 <img 
                   src={schoolLogo} 
                   alt={`Logo da ${schoolName}`}
-                  className="w-24 h-24 md:w-32 md:h-32 object-contain"
+                  className="w-20 h-20 md:w-28 md:h-28 object-contain"
                   loading="eager"
+                  style={{ padding: 0, margin: 0 }}
                 />
               </div>
             ) : (
             <img 
               src={oepLogo} 
               alt="OEP Sustentável Logo" 
-              className="w-32 h-32 md:w-44 md:h-44 object-contain"
-                loading="eager" 
+              className="w-28 h-28 md:w-40 md:h-40 object-contain"
+                loading="eager"
+                style={{ padding: 0, margin: 0 }}
                 onError={(e) => {
                   console.log('Logo error:', e);
                   e.currentTarget.style.display = 'none';

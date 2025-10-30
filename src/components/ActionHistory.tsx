@@ -149,9 +149,18 @@ export default function ActionHistory({
                       <div className="mt-2 p-2 bg-muted/50 rounded text-xs">
                         <details className="cursor-pointer">
                           <summary className="font-medium">Detalhes</summary>
-                          <pre className="mt-2 overflow-x-auto">
-                            {JSON.stringify(action.data, null, 2)}
-                          </pre>
+                          <div className="mt-2 space-y-1">
+                            {Object.entries(action.data).map(([key, value]) => (
+                              <div key={key} className="flex gap-2">
+                                <span className="font-medium text-primary">{key}:</span>
+                                <span className="text-foreground">
+                                  {typeof value === 'object' 
+                                    ? JSON.stringify(value) 
+                                    : String(value)}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
                         </details>
                       </div>
                     )}
