@@ -9,7 +9,7 @@ interface EcoHeaderProps {
 
 export default function EcoHeader({ schoolName, schoolLogo }: EcoHeaderProps = {}) {
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-primary/20 via-background to-accent/10 border-b border-primary/30 backdrop-blur-sm">
+    <div className="relative overflow-hidden bg-gradient-to-r from-primary/30 via-accent/25 to-primary/20 border-b border-primary/40 backdrop-blur-sm shadow-lg">
       {/* Minimal tech grid pattern */}
       <div className="absolute inset-0 opacity-[0.02]">
         <div className="absolute inset-0" style={{

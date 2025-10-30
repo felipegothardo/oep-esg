@@ -2,6 +2,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Droplets, Zap, Target, TrendingDown, TrendingUp } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useState } from 'react';
 
 interface ConsumptionEntry {
   id: string;
@@ -23,8 +25,24 @@ interface ConsumptionChartProps {
 }
 
 export default function ConsumptionChart({ entries, goals }: ConsumptionChartProps) {
-  const waterEntries = entries.filter(e => e.type === 'water').sort((a, b) => a.month.localeCompare(b.month));
-  const energyEntries = entries.filter(e => e.type === 'energy').sort((a, b) => a.month.localeCompare(b.month));
+  const [periodFilter, setPeriodFilter] = useState<string>('all');
+
+  // Filtrar entradas por período
+  const filteredEntries = (() => {
+    if (periodFilter === 'all') return entries;
+    
+    const now = new Date();
+    const monthsAgo = parseInt(periodFilter);
+    const cutoffDate = new Date(now.getFullYear(), now.getMonth() - monthsAgo, 1);
+    
+    return entries.filter(entry => {
+      const entryDate = new Date(entry.month + '-01');
+      return entryDate >= cutoffDate;
+    });
+  })();
+
+  const waterEntries = filteredEntries.filter(e => e.type === 'water').sort((a, b) => a.month.localeCompare(b.month));
+  const energyEntries = filteredEntries.filter(e => e.type === 'energy').sort((a, b) => a.month.localeCompare(b.month));
   
   const waterGoal = goals.find(g => g.type === 'water');
   const energyGoal = goals.find(g => g.type === 'energy');
@@ -97,6 +115,26 @@ export default function ConsumptionChart({ entries, goals }: ConsumptionChartPro
 
   return (
     <div className="space-y-6">
+      {/* Filtro de período */}
+      <Card className="border-0 shadow-soft">
+        <CardContent className="pt-6">
+          <div className="flex items-center gap-4">
+            <label className="text-sm font-medium">Período:</label>
+            <Select value={periodFilter} onValueChange={setPeriodFilter}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="3">Últimos 3 meses</SelectItem>
+                <SelectItem value="6">Últimos 6 meses</SelectItem>
+                <SelectItem value="12">Último ano</SelectItem>
+                <SelectItem value="all">Todo período</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
       <Tabs defaultValue="water" className="space-y-6">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="water" className="flex items-center gap-2">

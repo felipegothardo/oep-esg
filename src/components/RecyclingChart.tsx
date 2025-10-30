@@ -1,6 +1,8 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Recycle, TrendingUp } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useState } from 'react';
 
 interface RecyclingEntry {
   id: string;
@@ -36,8 +38,26 @@ const getColorForMaterial = (material: string, index: number): string => {
 };
 
 export default function RecyclingChart({ entries }: RecyclingChartProps) {
+  const [periodFilter, setPeriodFilter] = useState<string>('all');
+
+  // Filtrar entradas por período
+  const filteredEntries = (() => {
+    if (periodFilter === 'all') return entries;
+    
+    const now = new Date();
+    const monthsAgo = parseInt(periodFilter);
+    const cutoffDate = new Date(now.getFullYear(), now.getMonth() - monthsAgo, 1);
+    
+    return entries.filter(entry => {
+      const entryDate = entry.month 
+        ? new Date(entry.month + '-01')
+        : new Date(entry.date);
+      return entryDate >= cutoffDate;
+    });
+  })();
+
   // Agrupar dados por mês
-  const monthlyData = entries.reduce((acc, entry) => {
+  const monthlyData = filteredEntries.reduce((acc, entry) => {
     const monthKey = entry.month || entry.date;
     if (!acc[monthKey]) {
       acc[monthKey] = [];
@@ -47,7 +67,7 @@ export default function RecyclingChart({ entries }: RecyclingChartProps) {
   }, {} as Record<string, RecyclingEntry[]>);
 
   // Agregar dados por material
-  const materialData = entries.reduce((acc, entry) => {
+  const materialData = filteredEntries.reduce((acc, entry) => {
     const existing = acc.find(item => item.material === entry.material);
     if (existing) {
       existing.quantity += entry.quantity;
@@ -97,6 +117,26 @@ export default function RecyclingChart({ entries }: RecyclingChartProps) {
 
   return (
     <div className="space-y-6">
+      {/* Filtro de período */}
+      <Card className="border-0 shadow-soft">
+        <CardContent className="pt-6">
+          <div className="flex items-center gap-4">
+            <label className="text-sm font-medium">Período:</label>
+            <Select value={periodFilter} onValueChange={setPeriodFilter}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="3">Últimos 3 meses</SelectItem>
+                <SelectItem value="6">Últimos 6 meses</SelectItem>
+                <SelectItem value="12">Último ano</SelectItem>
+                <SelectItem value="all">Todo período</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Estatísticas gerais */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="border-0 shadow-soft">
