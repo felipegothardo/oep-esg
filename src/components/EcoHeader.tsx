@@ -26,13 +26,15 @@ export default function EcoHeader({ schoolName, schoolLogo }: EcoHeaderProps = {
           <div className="flex items-center gap-4 md:gap-6 flex-1">
             {schoolLogo ? (
               <div className="flex items-center gap-4 md:gap-6">
-                <img 
-                  src={oepLogo} 
-                  alt="OEP Sustentável Logo" 
-                  className="w-24 h-24 md:w-36 md:h-36 object-contain"
-                  loading="eager"
-                  style={{ padding: 0, margin: 0 }}
-                />
+                <div className="rounded-full bg-white/95 p-3 md:p-4 shadow-lg">
+                  <img 
+                    src={oepLogo} 
+                    alt="OEP Sustentável Logo" 
+                    className="w-20 h-20 md:w-28 md:h-28 object-contain"
+                    loading="eager"
+                    style={{ padding: 0, margin: 0 }}
+                  />
+                </div>
                 <div className="w-px h-20 md:h-28 bg-border/30" />
                 <img 
                   src={schoolLogo} 
@@ -43,17 +45,19 @@ export default function EcoHeader({ schoolName, schoolLogo }: EcoHeaderProps = {
                 />
               </div>
             ) : (
-            <img 
-              src={oepLogo} 
-              alt="OEP Sustentável Logo" 
-              className="w-28 h-28 md:w-40 md:h-40 object-contain"
-                loading="eager"
-                style={{ padding: 0, margin: 0 }}
-                onError={(e) => {
-                  console.log('Logo error:', e);
-                  e.currentTarget.style.display = 'none';
-                }} 
-              />
+              <div className="rounded-full bg-white/95 p-4 md:p-5 shadow-lg">
+                <img 
+                  src={oepLogo} 
+                  alt="OEP Sustentável Logo" 
+                  className="w-24 h-24 md:w-32 md:h-32 object-contain"
+                  loading="eager"
+                  style={{ padding: 0, margin: 0 }}
+                  onError={(e) => {
+                    console.log('Logo error:', e);
+                    e.currentTarget.style.display = 'none';
+                  }} 
+                />
+              </div>
             )}
             
             <div className="text-left flex-1 min-w-0">
