@@ -25,17 +25,7 @@ export default function EcoHeader({ schoolName, schoolLogo }: EcoHeaderProps = {
           {/* Left side - Logo and branding */}
           <div className="flex items-center gap-4 md:gap-6 flex-1">
             {schoolLogo ? (
-              <div className="flex items-center gap-4 md:gap-6">
-                <div className="rounded-full bg-white/95 p-3 md:p-4 shadow-lg">
-                  <img 
-                    src={oepLogo} 
-                    alt="OEP Sustentável Logo" 
-                    className="w-20 h-20 md:w-28 md:h-28 object-contain"
-                    loading="eager"
-                    style={{ padding: 0, margin: 0 }}
-                  />
-                </div>
-                <div className="w-px h-20 md:h-28 bg-border/30" />
+              <div className="rounded-full bg-white/95 p-3 md:p-4 shadow-lg">
                 <img 
                   src={schoolLogo} 
                   alt={`Logo da ${schoolName}`}
