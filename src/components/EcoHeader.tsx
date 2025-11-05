@@ -25,21 +25,21 @@ export default function EcoHeader({ schoolName, schoolLogo }: EcoHeaderProps = {
           {/* Left side - Logo and branding */}
           <div className="flex items-center gap-4 md:gap-6 flex-1">
             {schoolLogo ? (
-              <div className="rounded-full bg-white/95 p-3 md:p-4 shadow-lg">
+              <div className="w-28 h-28 md:w-36 md:h-36 rounded-full bg-white/95 p-3 md:p-4 shadow-lg flex items-center justify-center">
                 <img 
                   src={schoolLogo} 
                   alt={`Logo da ${schoolName}`}
-                  className="w-20 h-20 md:w-28 md:h-28 object-contain"
+                  className="w-full h-full object-contain"
                   loading="eager"
                   style={{ padding: 0, margin: 0 }}
                 />
               </div>
             ) : (
-              <div className="rounded-full bg-white/95 p-4 md:p-5 shadow-lg">
+              <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-white/95 p-4 md:p-5 shadow-lg flex items-center justify-center">
                 <img 
                   src={oepLogo} 
                   alt="OEP Sustentável Logo" 
-                  className="w-24 h-24 md:w-32 md:h-32 object-contain"
+                  className="w-full h-full object-contain"
                   loading="eager"
                   style={{ padding: 0, margin: 0 }}
                   onError={(e) => {
