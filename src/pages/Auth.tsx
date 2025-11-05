@@ -173,11 +173,11 @@ export default function Auth() {
       <Card className="w-full max-w-lg shadow-2xl border border-border backdrop-blur-sm bg-card relative z-10">
         <CardHeader className="text-center space-y-6 pb-8">
           <div className="flex justify-center">
-            <div className="rounded-full bg-white/95 p-6 shadow-lg">
+            <div className="w-52 h-52 rounded-full bg-white/95 p-6 shadow-lg flex items-center justify-center">
               <img 
                 src={oepLogo} 
                 alt="OEP Logo" 
-                className="w-40 h-40 object-contain" 
+                className="w-full h-full object-contain" 
               />
             </div>
           </div>
