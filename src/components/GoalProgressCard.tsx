@@ -43,15 +43,15 @@ export default function GoalProgressCard({ entries, goals, type }: GoalProgressC
   const isImproving = actualReduction > 0;
 
   const getStatusIcon = () => {
-    if (isOnTrack) return <TrendingDown className="w-4 h-4 text-green-600" />;
-    if (isImproving) return <TrendingUp className="w-4 h-4 text-yellow-600" />;
-    return <Minus className="w-4 h-4 text-red-600" />;
+    if (isOnTrack) return <TrendingDown className="w-4 h-4 text-success" />;
+    if (isImproving) return <TrendingUp className="w-4 h-4 text-primary" />;
+    return <Minus className="w-4 h-4 text-destructive" />;
   };
 
   const getStatusColor = () => {
-    if (isOnTrack) return 'text-green-600';
-    if (isImproving) return 'text-yellow-600';
-    return 'text-red-600';
+    if (isOnTrack) return 'text-success';
+    if (isImproving) return 'text-primary';
+    return 'text-destructive';
   };
 
   const getStatusText = () => {
@@ -61,9 +61,9 @@ export default function GoalProgressCard({ entries, goals, type }: GoalProgressC
   };
 
   const getProgressColor = () => {
-    if (isOnTrack) return 'bg-green-500';
-    if (progressPercentage > 50) return 'bg-yellow-500';
-    return 'bg-red-500';
+    if (isOnTrack) return 'hsl(var(--success))';
+    if (progressPercentage > 50) return 'hsl(var(--primary))';
+    return 'hsl(var(--destructive))';
   };
 
   return (
@@ -89,13 +89,19 @@ export default function GoalProgressCard({ entries, goals, type }: GoalProgressC
             <span>Progresso da Meta</span>
             <span className="font-medium">{progressPercentage.toFixed(1)}%</span>
           </div>
-          <Progress 
-            value={progressPercentage} 
-            className="h-2"
-            style={{ 
-              ['--progress-background' as any]: getProgressColor()
-            }}
-          />
+          <div className="relative">
+            <Progress 
+              value={progressPercentage} 
+              className="h-3"
+            />
+            <div 
+              className="absolute inset-0 rounded-full h-3 transition-all duration-500"
+              style={{ 
+                width: `${progressPercentage}%`,
+                background: getProgressColor()
+              }}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4 text-sm">
