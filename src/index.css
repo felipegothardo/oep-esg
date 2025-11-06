@@ -95,6 +95,13 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 210 100% 95%;
     --sidebar-border: 220 20% 25%;
     --sidebar-ring: 210 100% 55%;
+
+    /* Chart colors for data visualization */
+    --chart-1: 142 70% 50%;  /* Green - Reciclagem */
+    --chart-2: 210 100% 55%; /* Blue - CO2 */
+    --chart-3: 195 100% 50%; /* Cyan - Água */
+    --chart-4: 45 100% 55%;  /* Yellow/Orange - Energia */
+    --chart-5: 265 70% 60%;  /* Purple - Extra */
   }
 
   .light {
@@ -147,6 +154,13 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 210 100% 45%;
+
+    /* Chart colors for data visualization (light mode) */
+    --chart-1: 142 70% 42%;  /* Green - Reciclagem */
+    --chart-2: 210 100% 45%; /* Blue - CO2 */
+    --chart-3: 195 100% 40%; /* Cyan - Água */
+    --chart-4: 45 100% 45%;  /* Yellow/Orange - Energia */
+    --chart-5: 265 70% 50%;  /* Purple - Extra */
   }
 }
 

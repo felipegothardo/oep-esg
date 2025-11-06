@@ -40,14 +40,32 @@ export default function AdvancedReports() {
   const [selectedSchool, setSelectedSchool] = useState("all");
   const [schools, setSchools] = useState<SchoolData[]>([]);
   const [reportData, setReportData] = useState<any>(null);
+  const [isCoordinator, setIsCoordinator] = useState(false);
 
   const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
 
   useEffect(() => {
     let isMounted = true;
     
+    const checkCoordinatorRole = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) return;
+
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .eq("role", "coordinator")
+        .maybeSingle();
+
+      if (isMounted) {
+        setIsCoordinator(!!roleData);
+      }
+    };
+    
     const loadData = async () => {
       if (!isMounted) return;
+      await checkCoordinatorRole();
       await loadReportData();
     };
     
@@ -564,99 +582,103 @@ export default function AdvancedReports() {
         </Card>
       </div>
 
-      <Tabs defaultValue="ranking" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="ranking">Ranking</TabsTrigger>
-          <TabsTrigger value="comparison">Comparação</TabsTrigger>
-          <TabsTrigger value="materials">Materiais</TabsTrigger>
+      <Tabs defaultValue={isCoordinator ? "ranking" : "performance"} className="w-full">
+        <TabsList className={`grid w-full ${isCoordinator ? 'grid-cols-4' : 'grid-cols-2'}`}>
+          {isCoordinator && <TabsTrigger value="ranking">Ranking</TabsTrigger>}
+          {isCoordinator && <TabsTrigger value="comparison">Comparação</TabsTrigger>}
+          <TabsTrigger value="materials">Resíduos</TabsTrigger>
           <TabsTrigger value="performance">Desempenho</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="ranking" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Ranking de Sustentabilidade</CardTitle>
-              <CardDescription>
-                Classificação das escolas baseada em reciclagem e redução de CO2
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {safeReportData.ranking.length > 0 ? (
-                  safeReportData.ranking.map((school: any, index: number) => {
-                    const maxScore = safeReportData.ranking[0]?.score || 1;
-                    return (
-                      <div key={index} className="flex items-center gap-4">
-                        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
-                          {index === 0 && <Award className="h-5 w-5 text-yellow-500" />}
-                          {index === 1 && <Award className="h-5 w-5 text-gray-400" />}
-                          {index === 2 && <Award className="h-5 w-5 text-orange-600" />}
-                          {index > 2 && <span className="font-bold">{index + 1}</span>}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="font-medium">{school.name}</span>
-                            <Badge variant="outline">
-                              {school.score.toFixed(0)} pts
-                            </Badge>
+        {isCoordinator && (
+          <TabsContent value="ranking" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Ranking de Sustentabilidade</CardTitle>
+                <CardDescription>
+                  Classificação das escolas baseada em reciclagem e redução de CO2
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {safeReportData.ranking.length > 0 ? (
+                    safeReportData.ranking.map((school: any, index: number) => {
+                      const maxScore = safeReportData.ranking[0]?.score || 1;
+                      return (
+                        <div key={index} className="flex items-center gap-4">
+                          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
+                            {index === 0 && <Award className="h-5 w-5 text-yellow-500" />}
+                            {index === 1 && <Award className="h-5 w-5 text-gray-400" />}
+                            {index === 2 && <Award className="h-5 w-5 text-orange-600" />}
+                            {index > 2 && <span className="font-bold">{index + 1}</span>}
                           </div>
-                          <Progress value={(school.score / maxScore) * 100} className="h-2" />
-                          <div className="flex gap-4 mt-1 text-xs text-muted-foreground">
-                            <span>{school.recycled.toFixed(1)} kg reciclados</span>
-                            <span>{school.co2.toFixed(1)} kg CO2 evitados</span>
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="font-medium">{school.name}</span>
+                              <Badge variant="outline">
+                                {school.score.toFixed(0)} pts
+                              </Badge>
+                            </div>
+                            <Progress value={(school.score / maxScore) * 100} className="h-2" />
+                            <div className="flex gap-4 mt-1 text-xs text-muted-foreground">
+                              <span>{school.recycled.toFixed(1)} kg reciclados</span>
+                              <span>{school.co2.toFixed(1)} kg CO2 evitados</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })
+                      );
+                    })
+                  ) : (
+                    <div className="text-center py-8 text-muted-foreground">
+                      Nenhuma escola com dados no período selecionado
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
+
+        {isCoordinator && (
+          <TabsContent value="comparison">
+            <Card>
+              <CardHeader>
+                <CardTitle>Comparação entre Escolas</CardTitle>
+                <CardDescription>
+                  Visualização comparativa de todos os indicadores
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {safeReportData.comparison.length > 0 ? (
+                  <ResponsiveContainer width="100%" height={400}>
+                    <BarChart data={safeReportData.comparison}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="Reciclagem" fill="#10b981" />
+                      <Bar dataKey="CO2" fill="#3b82f6" />
+                      <Bar dataKey="Água" fill="#06b6d4" />
+                      <Bar dataKey="Energia" fill="#f59e0b" />
+                    </BarChart>
+                  </ResponsiveContainer>
                 ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    Nenhuma escola com dados no período selecionado
+                  <div className="text-center py-20 text-muted-foreground">
+                    Sem dados para comparação
                   </div>
                 )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="comparison">
-          <Card>
-            <CardHeader>
-              <CardTitle>Comparação entre Escolas</CardTitle>
-              <CardDescription>
-                Visualização comparativa de todos os indicadores
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {safeReportData.comparison.length > 0 ? (
-                <ResponsiveContainer width="100%" height={400}>
-                  <BarChart data={safeReportData.comparison}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="Reciclagem" fill="#10b981" />
-                    <Bar dataKey="CO2" fill="#3b82f6" />
-                    <Bar dataKey="Água" fill="#06b6d4" />
-                    <Bar dataKey="Energia" fill="#f59e0b" />
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="text-center py-20 text-muted-foreground">
-                  Sem dados para comparação
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
 
         <TabsContent value="materials">
           <Card>
             <CardHeader>
-              <CardTitle>Distribuição de Materiais Reciclados</CardTitle>
+              <CardTitle>Distribuição de Resíduos Reciclados</CardTitle>
               <CardDescription>
-                Proporção de cada tipo de material reciclado
+                Proporção de cada tipo de resíduo reciclado
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -682,7 +704,7 @@ export default function AdvancedReports() {
                 </ResponsiveContainer>
               ) : (
                 <div className="text-center py-20 text-muted-foreground">
-                  Sem dados de materiais reciclados
+                  Sem dados de resíduos reciclados
                 </div>
               )}
             </CardContent>
@@ -699,18 +721,131 @@ export default function AdvancedReports() {
             </CardHeader>
             <CardContent>
               {safeReportData.performanceData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={400}>
-                  <RadarChart data={safeReportData.performanceData}>
-                    <PolarGrid />
-                    <PolarAngleAxis dataKey="school" />
-                    <PolarRadiusAxis angle={90} domain={[0, 100]} />
-                    <Radar name="Reciclagem" dataKey="Reciclagem" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
-                    <Radar name="Redução CO2" dataKey="Redução CO2" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.6} />
-                    <Radar name="Economia Água" dataKey="Economia Água" stroke="#06b6d4" fill="#06b6d4" fillOpacity={0.6} />
-                    <Radar name="Economia Energia" dataKey="Economia Energia" stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.6} />
-                    <Legend />
-                  </RadarChart>
-                </ResponsiveContainer>
+                <div className="space-y-6">
+                  <ResponsiveContainer width="100%" height={450}>
+                    <RadarChart data={safeReportData.performanceData}>
+                      <defs>
+                        <linearGradient id="colorRecycling" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0.3}/>
+                        </linearGradient>
+                        <linearGradient id="colorCO2" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0.3}/>
+                        </linearGradient>
+                        <linearGradient id="colorWater" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="hsl(var(--chart-3))" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="hsl(var(--chart-3))" stopOpacity={0.3}/>
+                        </linearGradient>
+                        <linearGradient id="colorEnergy" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="hsl(var(--chart-4))" stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor="hsl(var(--chart-4))" stopOpacity={0.3}/>
+                        </linearGradient>
+                      </defs>
+                      <PolarGrid 
+                        strokeDasharray="3 3" 
+                        stroke="hsl(var(--muted-foreground))" 
+                        strokeOpacity={0.2}
+                      />
+                      <PolarAngleAxis 
+                        dataKey="school" 
+                        tick={{ fill: 'hsl(var(--foreground))', fontSize: 12, fontWeight: 500 }}
+                      />
+                      <PolarRadiusAxis 
+                        angle={90} 
+                        domain={[0, 100]} 
+                        tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+                        tickFormatter={(value) => `${value}%`}
+                      />
+                      <Radar 
+                        name="Reciclagem" 
+                        dataKey="Reciclagem" 
+                        stroke="hsl(var(--chart-1))" 
+                        fill="url(#colorRecycling)" 
+                        strokeWidth={2}
+                        dot={{ fill: 'hsl(var(--chart-1))', r: 4 }}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Radar 
+                        name="Redução CO2" 
+                        dataKey="Redução CO2" 
+                        stroke="hsl(var(--chart-2))" 
+                        fill="url(#colorCO2)" 
+                        strokeWidth={2}
+                        dot={{ fill: 'hsl(var(--chart-2))', r: 4 }}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Radar 
+                        name="Economia Água" 
+                        dataKey="Economia Água" 
+                        stroke="hsl(var(--chart-3))" 
+                        fill="url(#colorWater)" 
+                        strokeWidth={2}
+                        dot={{ fill: 'hsl(var(--chart-3))', r: 4 }}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Radar 
+                        name="Economia Energia" 
+                        dataKey="Economia Energia" 
+                        stroke="hsl(var(--chart-4))" 
+                        fill="url(#colorEnergy)" 
+                        strokeWidth={2}
+                        dot={{ fill: 'hsl(var(--chart-4))', r: 4 }}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'hsl(var(--popover))',
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                        }}
+                        labelStyle={{ color: 'hsl(var(--popover-foreground))', fontWeight: 600 }}
+                        formatter={(value: any) => [`${value.toFixed(1)}%`, '']}
+                      />
+                      <Legend 
+                        wrapperStyle={{ paddingTop: '20px' }}
+                        iconType="circle"
+                      />
+                    </RadarChart>
+                  </ResponsiveContainer>
+                  
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
+                    {safeReportData.performanceData.map((school: any, index: number) => (
+                      <Card key={index} className="shadow-sm">
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-sm font-medium">{school.school}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                          <div className="flex justify-between text-xs">
+                            <span className="text-muted-foreground">Reciclagem</span>
+                            <Badge variant="outline" className="text-xs">
+                              {school.Reciclagem.toFixed(0)}%
+                            </Badge>
+                          </div>
+                          <div className="flex justify-between text-xs">
+                            <span className="text-muted-foreground">CO2</span>
+                            <Badge variant="outline" className="text-xs">
+                              {school["Redução CO2"].toFixed(0)}%
+                            </Badge>
+                          </div>
+                          <div className="flex justify-between text-xs">
+                            <span className="text-muted-foreground">Água</span>
+                            <Badge variant="outline" className="text-xs">
+                              {school["Economia Água"].toFixed(0)}%
+                            </Badge>
+                          </div>
+                          <div className="flex justify-between text-xs">
+                            <span className="text-muted-foreground">Energia</span>
+                            <Badge variant="outline" className="text-xs">
+                              {school["Economia Energia"].toFixed(0)}%
+                            </Badge>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
               ) : (
                 <div className="text-center py-20 text-muted-foreground">
                   Sem dados de desempenho
