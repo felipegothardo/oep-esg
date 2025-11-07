@@ -2,8 +2,8 @@ import React from 'react';
 
 export default function ConversionReferences() {
   return (
-    <section id="fatores-conversao" aria-labelledby="fatores-title" className="border-t border-muted mt-20 md:mt-32">
-      <div className="container mx-auto px-4 py-10 md:py-16">
+    <section id="fatores-conversao" aria-labelledby="fatores-title" className="border-t border-muted mt-8 md:mt-12">
+      <div className="container mx-auto px-4 py-8 md:py-12">
         <h2 id="fatores-title" className="text-lg md:text-xl font-semibold text-foreground text-center mb-4 md:mb-6">
           📊 Fatores de Conversão (Valores de Referência)
         </h2>

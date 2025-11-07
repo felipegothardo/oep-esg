@@ -104,17 +104,17 @@ export default function SmartGoalSuggestion({
       </CardHeader>
       <CardContent className="space-y-4">
         {waterSuggestion && (
-          <div className="p-4 rounded-lg bg-blue/10 border border-blue/30">
+          <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center gap-2">
-                <h4 className="font-semibold text-blue">Água</h4>
+                <h4 className="font-semibold text-blue-900 dark:text-blue-100">Água</h4>
                 <Badge variant={waterSuggestion.confidence === 'alta' ? 'default' : 'secondary'}>
                   Confiança {waterSuggestion.confidence}
                 </Badge>
                 {waterSuggestion.trend < 0 ? (
-                  <TrendingDown className="w-4 h-4 text-success" />
+                  <TrendingDown className="w-4 h-4 text-green-600" />
                 ) : waterSuggestion.trend > 0 ? (
-                  <TrendingUp className="w-4 h-4 text-destructive" />
+                  <TrendingUp className="w-4 h-4 text-red-600" />
                 ) : null}
               </div>
             </div>
@@ -146,17 +146,17 @@ export default function SmartGoalSuggestion({
         )}
         
         {energySuggestion && (
-          <div className="p-4 rounded-lg bg-primary/10 border border-primary/30">
+          <div className="p-4 rounded-lg bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800">
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center gap-2">
-                <h4 className="font-semibold text-primary">Energia</h4>
+                <h4 className="font-semibold text-yellow-900 dark:text-yellow-100">Energia</h4>
                 <Badge variant={energySuggestion.confidence === 'alta' ? 'default' : 'secondary'}>
                   Confiança {energySuggestion.confidence}
                 </Badge>
                 {energySuggestion.trend < 0 ? (
-                  <TrendingDown className="w-4 h-4 text-success" />
+                  <TrendingDown className="w-4 h-4 text-green-600" />
                 ) : energySuggestion.trend > 0 ? (
-                  <TrendingUp className="w-4 h-4 text-destructive" />
+                  <TrendingUp className="w-4 h-4 text-red-600" />
                 ) : null}
               </div>
             </div>
