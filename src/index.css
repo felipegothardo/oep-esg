@@ -102,10 +102,6 @@ All colors MUST be HSL.
     --chart-3: 195 100% 50%; /* Cyan - Água */
     --chart-4: 45 100% 55%;  /* Yellow/Orange - Energia */
     --chart-5: 265 70% 60%;  /* Purple - Extra */
-    
-    /* Navigation highlight area */
-    --nav-highlight: 220 35% 15%;
-    --nav-highlight-border: 210 100% 55%;
   }
 
   .light {
@@ -165,10 +161,6 @@ All colors MUST be HSL.
     --chart-3: 195 100% 40%; /* Cyan - Água */
     --chart-4: 45 100% 45%;  /* Yellow/Orange - Energia */
     --chart-5: 265 70% 50%;  /* Purple - Extra */
-    
-    /* Navigation highlight area (light mode) */
-    --nav-highlight: 210 100% 97%;
-    --nav-highlight-border: 210 100% 45%;
   }
 }
 
