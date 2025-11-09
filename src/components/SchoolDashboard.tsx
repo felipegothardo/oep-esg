@@ -196,59 +196,59 @@ export default function SchoolDashboard({
         >
           <TabsTrigger 
             value="calculator" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 border border-transparent data-[state=active]:bg-primary data-[state=active]:border-primary data-[state=active]:shadow-md hover:bg-muted/50 group"
+            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-card/50 border border-border/30 data-[state=active]:bg-primary data-[state=active]:border-primary data-[state=active]:shadow-md hover:bg-card/70 group"
             aria-label="Calculadora de reciclagem"
           >
-            <Calculator className="h-5 w-5 md:h-6 md:w-6 text-slate-700 dark:text-slate-200 group-data-[state=active]:text-primary-foreground transition-colors" />
-            <span className="text-base md:text-lg font-medium text-slate-700 dark:text-slate-200 group-data-[state=active]:text-primary-foreground transition-colors">Calculadora</span>
+            <Calculator className="h-5 w-5 md:h-6 md:w-6 text-foreground/70 group-data-[state=active]:text-primary-foreground transition-colors" />
+            <span className="text-base md:text-lg font-medium text-foreground/70 group-data-[state=active]:text-primary-foreground transition-colors">Calculadora</span>
           </TabsTrigger>
           <TabsTrigger 
             value="consumption" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 border border-transparent data-[state=active]:bg-blue data-[state=active]:border-blue data-[state=active]:shadow-md hover:bg-muted/50 group"
+            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-card/50 border border-border/30 data-[state=active]:bg-blue data-[state=active]:border-blue data-[state=active]:shadow-md hover:bg-card/70 group"
             aria-label="Controle de consumo"
           >
-            <Droplets className="h-5 w-5 md:h-6 md:w-6 text-slate-700 dark:text-slate-200 group-data-[state=active]:text-white transition-colors" />
-            <span className="text-base md:text-lg font-medium text-slate-700 dark:text-slate-200 group-data-[state=active]:text-white transition-colors">Consumo</span>
+            <Droplets className="h-5 w-5 md:h-6 md:w-6 text-foreground/70 group-data-[state=active]:text-white transition-colors" />
+            <span className="text-base md:text-lg font-medium text-foreground/70 group-data-[state=active]:text-white transition-colors">Consumo</span>
           </TabsTrigger>
           <TabsTrigger 
             value="goals" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 border border-transparent data-[state=active]:bg-accent data-[state=active]:border-accent data-[state=active]:shadow-md hover:bg-muted/50 group"
+            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-card/50 border border-border/30 data-[state=active]:bg-accent data-[state=active]:border-accent data-[state=active]:shadow-md hover:bg-card/70 group"
             aria-label="Metas e projeções"
           >
-            <Target className="h-5 w-5 md:h-6 md:w-6 text-slate-700 dark:text-slate-200 group-data-[state=active]:text-white transition-colors" />
-            <span className="text-base md:text-lg font-medium text-slate-700 dark:text-slate-200 group-data-[state=active]:text-white transition-colors">Metas</span>
+            <Target className="h-5 w-5 md:h-6 md:w-6 text-foreground/70 group-data-[state=active]:text-white transition-colors" />
+            <span className="text-base md:text-lg font-medium text-foreground/70 group-data-[state=active]:text-white transition-colors">Metas</span>
           </TabsTrigger>
           <TabsTrigger 
             value="recycling-charts" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 border border-transparent data-[state=active]:bg-success data-[state=active]:border-success data-[state=active]:shadow-md hover:bg-muted/50 group"
+            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-card/50 border border-border/30 data-[state=active]:bg-success data-[state=active]:border-success data-[state=active]:shadow-md hover:bg-card/70 group"
             aria-label="Gráficos de reciclagem"
           >
-            <Recycle className="h-5 w-5 md:h-6 md:w-6 text-slate-700 dark:text-slate-200 group-data-[state=active]:text-white transition-colors" />
-            <span className="text-base md:text-lg font-medium text-slate-700 dark:text-slate-200 group-data-[state=active]:text-white transition-colors">Reciclagem</span>
+            <Recycle className="h-5 w-5 md:h-6 md:w-6 text-foreground/70 group-data-[state=active]:text-white transition-colors" />
+            <span className="text-base md:text-lg font-medium text-foreground/70 group-data-[state=active]:text-white transition-colors">Reciclagem</span>
           </TabsTrigger>
           <TabsTrigger 
             value="consumption-charts" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 border border-transparent data-[state=active]:bg-primary data-[state=active]:border-primary data-[state=active]:shadow-md hover:bg-muted/50 group"
+            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-card/50 border border-border/30 data-[state=active]:bg-primary data-[state=active]:border-primary data-[state=active]:shadow-md hover:bg-card/70 group"
             aria-label="Gráficos de consumo"
           >
-            <BarChart3 className="h-5 w-5 md:h-6 md:w-6 text-slate-700 dark:text-slate-200 group-data-[state=active]:text-primary-foreground transition-colors" />
-            <span className="text-base md:text-lg font-medium text-slate-700 dark:text-slate-200 group-data-[state=active]:text-primary-foreground transition-colors">Gráficos</span>
+            <BarChart3 className="h-5 w-5 md:h-6 md:w-6 text-foreground/70 group-data-[state=active]:text-primary-foreground transition-colors" />
+            <span className="text-base md:text-lg font-medium text-foreground/70 group-data-[state=active]:text-primary-foreground transition-colors">Gráficos</span>
           </TabsTrigger>
           <TabsTrigger 
             value="history" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 border border-transparent data-[state=active]:bg-purple data-[state=active]:border-purple data-[state=active]:shadow-md hover:bg-muted/50 group"
+            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-card/50 border border-border/30 data-[state=active]:bg-purple data-[state=active]:border-purple data-[state=active]:shadow-md hover:bg-card/70 group"
             aria-label="Histórico"
           >
-            <History className="h-5 w-5 md:h-6 md:w-6 text-slate-700 dark:text-slate-200 group-data-[state=active]:text-white transition-colors" />
-            <span className="text-base md:text-lg font-medium text-slate-700 dark:text-slate-200 group-data-[state=active]:text-white transition-colors">Histórico</span>
+            <History className="h-5 w-5 md:h-6 md:w-6 text-foreground/70 group-data-[state=active]:text-white transition-colors" />
+            <span className="text-base md:text-lg font-medium text-foreground/70 group-data-[state=active]:text-white transition-colors">Histórico</span>
           </TabsTrigger>
           <TabsTrigger 
             value="resources" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 border border-transparent data-[state=active]:bg-success data-[state=active]:border-success data-[state=active]:shadow-md hover:bg-muted/50 group"
+            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-card/50 border border-border/30 data-[state=active]:bg-success data-[state=active]:border-success data-[state=active]:shadow-md hover:bg-card/70 group"
             aria-label="Links e dicas úteis"
           >
-            <Link className="h-5 w-5 md:h-6 md:w-6 text-slate-700 dark:text-slate-200 group-data-[state=active]:text-white transition-colors" />
-            <span className="text-base md:text-lg font-medium text-slate-700 dark:text-slate-200 group-data-[state=active]:text-white transition-colors">Links & Dicas</span>
+            <Link className="h-5 w-5 md:h-6 md:w-6 text-foreground/70 group-data-[state=active]:text-white transition-colors" />
+            <span className="text-base md:text-lg font-medium text-foreground/70 group-data-[state=active]:text-white transition-colors">Links & Dicas</span>
           </TabsTrigger>
         </TabsList>
 
