@@ -190,13 +190,13 @@ export default function SchoolDashboard({
         className="space-y-6"
       >
         <TabsList 
-          className="flex flex-row flex-wrap justify-center items-center gap-4 md:gap-5 p-4 md:p-6 min-h-[160px] md:min-h-[120px] w-full mb-12"
+          className="flex flex-row flex-wrap justify-center items-center gap-4 md:gap-5 p-4 md:p-6 min-h-[160px] md:min-h-[120px] w-full mb-20"
           role="tablist"
           aria-label="Seções do dashboard"
         >
           <TabsTrigger 
             value="calculator" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 data-[state=active]:bg-primary data-[state=active]:border-primary data-[state=active]:shadow-md hover:brightness-95 group"
+            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 border border-transparent data-[state=active]:bg-primary data-[state=active]:border-primary data-[state=active]:shadow-md hover:bg-muted/50 group"
             aria-label="Calculadora de reciclagem"
           >
             <Calculator className="h-5 w-5 md:h-6 md:w-6 text-slate-700 dark:text-slate-200 group-data-[state=active]:text-primary-foreground transition-colors" />
@@ -204,7 +204,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
           <TabsTrigger 
             value="consumption" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 data-[state=active]:bg-blue data-[state=active]:border-blue data-[state=active]:shadow-md hover:brightness-95 group"
+            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 border border-transparent data-[state=active]:bg-blue data-[state=active]:border-blue data-[state=active]:shadow-md hover:bg-muted/50 group"
             aria-label="Controle de consumo"
           >
             <Droplets className="h-5 w-5 md:h-6 md:w-6 text-slate-700 dark:text-slate-200 group-data-[state=active]:text-white transition-colors" />
@@ -212,7 +212,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
           <TabsTrigger 
             value="goals" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 data-[state=active]:bg-accent data-[state=active]:border-accent data-[state=active]:shadow-md hover:brightness-95 group"
+            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 border border-transparent data-[state=active]:bg-accent data-[state=active]:border-accent data-[state=active]:shadow-md hover:bg-muted/50 group"
             aria-label="Metas e projeções"
           >
             <Target className="h-5 w-5 md:h-6 md:w-6 text-slate-700 dark:text-slate-200 group-data-[state=active]:text-white transition-colors" />
@@ -220,7 +220,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
           <TabsTrigger 
             value="recycling-charts" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 data-[state=active]:bg-success data-[state=active]:border-success data-[state=active]:shadow-md hover:brightness-95 group"
+            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 border border-transparent data-[state=active]:bg-success data-[state=active]:border-success data-[state=active]:shadow-md hover:bg-muted/50 group"
             aria-label="Gráficos de reciclagem"
           >
             <Recycle className="h-5 w-5 md:h-6 md:w-6 text-slate-700 dark:text-slate-200 group-data-[state=active]:text-white transition-colors" />
@@ -228,7 +228,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
           <TabsTrigger 
             value="consumption-charts" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 data-[state=active]:bg-primary data-[state=active]:border-primary data-[state=active]:shadow-md hover:brightness-95 group"
+            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 border border-transparent data-[state=active]:bg-primary data-[state=active]:border-primary data-[state=active]:shadow-md hover:bg-muted/50 group"
             aria-label="Gráficos de consumo"
           >
             <BarChart3 className="h-5 w-5 md:h-6 md:w-6 text-slate-700 dark:text-slate-200 group-data-[state=active]:text-primary-foreground transition-colors" />
@@ -236,7 +236,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
           <TabsTrigger 
             value="history" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 data-[state=active]:bg-purple data-[state=active]:border-purple data-[state=active]:shadow-md hover:brightness-95 group"
+            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 border border-transparent data-[state=active]:bg-purple data-[state=active]:border-purple data-[state=active]:shadow-md hover:bg-muted/50 group"
             aria-label="Histórico"
           >
             <History className="h-5 w-5 md:h-6 md:w-6 text-slate-700 dark:text-slate-200 group-data-[state=active]:text-white transition-colors" />
@@ -244,7 +244,7 @@ export default function SchoolDashboard({
           </TabsTrigger>
           <TabsTrigger 
             value="resources" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 data-[state=active]:bg-success data-[state=active]:border-success data-[state=active]:shadow-md hover:brightness-95 group"
+            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 border border-transparent data-[state=active]:bg-success data-[state=active]:border-success data-[state=active]:shadow-md hover:bg-muted/50 group"
             aria-label="Links e dicas úteis"
           >
             <Link className="h-5 w-5 md:h-6 md:w-6 text-slate-700 dark:text-slate-200 group-data-[state=active]:text-white transition-colors" />
