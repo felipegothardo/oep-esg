@@ -104,7 +104,7 @@ export default function SmartGoalSuggestion({
       </CardHeader>
       <CardContent className="space-y-4">
         {waterSuggestion && (
-          <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
+          <div className="p-4 rounded-lg bg-blue-100/80 dark:bg-blue-950/30 border border-blue-300 dark:border-blue-700">
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center gap-2">
                 <h4 className="font-semibold text-blue-900 dark:text-blue-100">Água</h4>
@@ -119,14 +119,14 @@ export default function SmartGoalSuggestion({
               </div>
             </div>
             
-            <p className="text-sm text-muted-foreground mb-3">
+            <p className="text-sm text-blue-800 dark:text-blue-200 mb-3 font-medium">
               {waterSuggestion.reason}
             </p>
             
             <div className="flex items-center justify-between">
               <div className="text-sm">
-                <span className="font-medium">Meta sugerida: </span>
-                <span className="text-lg font-bold text-primary">
+                <span className="font-medium text-blue-800 dark:text-blue-200">Meta sugerida: </span>
+                <span className="text-lg font-bold text-blue-900 dark:text-blue-100">
                   {waterSuggestion.percentage.toFixed(0)}% de redução
                 </span>
               </div>
@@ -139,14 +139,14 @@ export default function SmartGoalSuggestion({
               </Button>
             </div>
             
-            <div className="mt-2 text-xs text-muted-foreground">
+            <div className="mt-2 text-xs text-blue-700 dark:text-blue-300 font-medium">
               Média atual: {waterSuggestion.avgConsumption.toFixed(0)}L/mês
             </div>
           </div>
         )}
         
         {energySuggestion && (
-          <div className="p-4 rounded-lg bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800">
+          <div className="p-4 rounded-lg bg-yellow-100/80 dark:bg-yellow-950/30 border border-yellow-300 dark:border-yellow-700">
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center gap-2">
                 <h4 className="font-semibold text-yellow-900 dark:text-yellow-100">Energia</h4>
@@ -161,14 +161,14 @@ export default function SmartGoalSuggestion({
               </div>
             </div>
             
-            <p className="text-sm text-muted-foreground mb-3">
+            <p className="text-sm text-yellow-800 dark:text-yellow-200 mb-3 font-medium">
               {energySuggestion.reason}
             </p>
             
             <div className="flex items-center justify-between">
               <div className="text-sm">
-                <span className="font-medium">Meta sugerida: </span>
-                <span className="text-lg font-bold text-primary">
+                <span className="font-medium text-yellow-800 dark:text-yellow-200">Meta sugerida: </span>
+                <span className="text-lg font-bold text-yellow-900 dark:text-yellow-100">
                   {energySuggestion.percentage.toFixed(0)}% de redução
                 </span>
               </div>
@@ -181,7 +181,7 @@ export default function SmartGoalSuggestion({
               </Button>
             </div>
             
-            <div className="mt-2 text-xs text-muted-foreground">
+            <div className="mt-2 text-xs text-yellow-700 dark:text-yellow-300 font-medium">
               Média atual: {energySuggestion.avgConsumption.toFixed(0)}kWh/mês
             </div>
           </div>
