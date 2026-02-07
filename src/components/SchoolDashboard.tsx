@@ -4,7 +4,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Leaf, Droplets, Zap, Recycle, Calculator, Target, BarChart3, History, Link } from 'lucide-react';
 import { SchoolData, RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSchoolData';
 import ExportButton from './ExportButton';
-import MobileStats from './MobileStats';
 import { DeleteRecordsDialog } from './DeleteRecordsDialog';
 import { useActionHistory } from '@/hooks/useActionHistory';
 import RecyclingCalculator from './RecyclingCalculator';
@@ -13,7 +12,6 @@ import RecyclingChart from './RecyclingChart';
 import ConsumptionChart from './ConsumptionChart';
 import GoalProgressCard from './GoalProgressCard';
 import ProjectionCard from './ProjectionCard';
-
 import ResourcesTab from './ResourcesTab';
 import SmartGoalSuggestion from './SmartGoalSuggestion';
 import ContextualTips from './ContextualTips';
@@ -42,33 +40,26 @@ export default function SchoolDashboard({
   onDeleteConsumptionByMonth,
   viewOnly = false
 }: SchoolDashboardProps) {
-  const [currentMobileTab, setCurrentMobileTab] = useState('calculator');
+  const [currentTab, setCurrentTab] = useState('calculator');
   
-  // Ensure data is always valid arrays
   const safeData = {
     recyclingEntries: data?.recyclingEntries || [],
     consumptionEntries: data?.consumptionEntries || [],
     consumptionGoals: data?.consumptionGoals || []
   };
   
-  // Sempre chamar os hooks (regra do React - hooks não podem ser condicionais)
   const actionHistory = useActionHistory();
-  
-  // Usar valores do hook ou valores vazios baseado em viewOnly
   const { history, addToHistory, clearHistory, undoLastAction, hasHistory } = viewOnly 
     ? { history: [], addToHistory: () => {}, clearHistory: () => {}, undoLastAction: () => {}, hasHistory: false }
     : actionHistory;
   
-  // Wrapper para adicionar ações ao histórico
   const handleRecyclingUpdate = (entries: RecyclingEntry[]) => {
     const lastEntry = entries[entries.length - 1];
     if (lastEntry) {
       addToHistory({
-        type: 'add',
-        category: 'recycling',
+        type: 'add', category: 'recycling',
         description: `Reciclou ${lastEntry.quantity}kg de ${lastEntry.material}`,
-        data: lastEntry,
-        schoolName
+        data: lastEntry, schoolName
       });
     }
     onRecyclingUpdate(entries);
@@ -78,274 +69,172 @@ export default function SchoolDashboard({
     const lastEntry = entries[entries.length - 1];
     if (lastEntry) {
       addToHistory({
-        type: 'add',
-        category: 'consumption',
+        type: 'add', category: 'consumption',
         description: `Registrou consumo de ${lastEntry.type === 'water' ? 'água' : 'energia'}: R$ ${lastEntry.cost}`,
-        data: lastEntry,
-        schoolName
+        data: lastEntry, schoolName
       });
     }
     onConsumptionUpdate(entries, goals);
   };
   
-  // Calculando estatísticas com dados seguros
   const totalCO2Saved = safeData.recyclingEntries.reduce((total, entry) => total + entry.co2Saved, 0);
   const totalRecycled = safeData.recyclingEntries.reduce((total, entry) => total + entry.quantity, 0);
-  
   const lastWaterConsumption = safeData.consumptionEntries
-    .filter(entry => entry.type === 'water')
-    .slice(-1)[0]?.consumption || 0;
-    
+    .filter(entry => entry.type === 'water').slice(-1)[0]?.consumption || 0;
   const lastEnergyConsumption = safeData.consumptionEntries
-    .filter(entry => entry.type === 'energy')
-    .slice(-1)[0]?.consumption || 0;
+    .filter(entry => entry.type === 'energy').slice(-1)[0]?.consumption || 0;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <div className="flex-1">
-          <h3 className="text-xl md:text-2xl font-bold text-foreground">
-            {schoolName}
-          </h3>
-          <p className="text-sm text-muted-foreground mt-1">Painel de Controle Ambiental</p>
-        </div>
-        <div className="flex gap-2">
-          <ExportButton 
-            schoolName={schoolName}
-            recyclingEntries={safeData.recyclingEntries}
-            consumptionEntries={safeData.consumptionEntries}
-          />
-        </div>
-      </div>
-      
-      {/* Overview Cards */}
-      <div className="bg-gradient-to-br from-primary/10 via-blue/5 to-success/10 p-6 md:p-8 rounded-2xl border-2 border-primary/30 shadow-xl">
-        <h4 className="text-base md:text-lg font-semibold text-foreground mb-4">Métricas Principais</h4>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          <Card className="border-primary/30 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
-              <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
-                <div className="text-center md:text-left">
-                  <p className="text-lg md:text-3xl font-bold text-success">{totalCO2Saved.toFixed(1)}</p>
-                  <p className="text-xs font-medium text-muted-foreground">kg CO2 evitado</p>
-                </div>
-                <Leaf className="h-6 w-6 md:h-10 md:w-10 text-success" aria-hidden="true" />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="border-blue/30 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
-              <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
-                <div className="text-center md:text-left">
-                  <p className="text-lg md:text-3xl font-bold text-blue">{lastWaterConsumption.toLocaleString()}</p>
-                  <p className="text-xs font-medium text-muted-foreground">L água/mês</p>
-                </div>
-                <Droplets className="h-6 w-6 md:h-10 md:w-10 text-blue" aria-hidden="true" />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="border-yellow-600/30 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
-              <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
-                <div className="text-center md:text-left">
-                  <p className="text-lg md:text-3xl font-bold text-yellow-600">{lastEnergyConsumption}</p>
-                  <p className="text-xs font-medium text-muted-foreground">kWh energia/mês</p>
-                </div>
-                <Zap className="h-6 w-6 md:h-10 md:w-10 text-yellow-600" aria-hidden="true" />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="border-purple/30 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="pt-3 md:pt-6 p-3 md:p-6">
-              <div className="flex flex-col md:flex-row items-center md:justify-between gap-2">
-                <div className="text-center md:text-left">
-                  <p className="text-lg md:text-3xl font-bold text-purple">{totalRecycled.toFixed(1)}</p>
-                  <p className="text-xs font-medium text-muted-foreground">kg reciclados</p>
-                </div>
-                <Recycle className="h-6 w-6 md:h-10 md:w-10 text-purple" aria-hidden="true" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+    <div className="space-y-4">
+      {/* Compact Stats Bar */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+        <Card className="border-success/20">
+          <CardContent className="p-3 flex items-center gap-2">
+            <Leaf className="h-4 w-4 text-success flex-shrink-0" />
+            <div className="min-w-0">
+              <p className="text-base md:text-lg font-bold text-success">{totalCO2Saved.toFixed(1)}</p>
+              <p className="text-[10px] text-muted-foreground">kg CO₂ evitado</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-blue/20">
+          <CardContent className="p-3 flex items-center gap-2">
+            <Droplets className="h-4 w-4 text-blue flex-shrink-0" />
+            <div className="min-w-0">
+              <p className="text-base md:text-lg font-bold text-blue">{lastWaterConsumption.toLocaleString()}</p>
+              <p className="text-[10px] text-muted-foreground">L água/mês</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-yellow-600/20">
+          <CardContent className="p-3 flex items-center gap-2">
+            <Zap className="h-4 w-4 text-yellow-600 flex-shrink-0" />
+            <div className="min-w-0">
+              <p className="text-base md:text-lg font-bold text-yellow-600">{lastEnergyConsumption}</p>
+              <p className="text-[10px] text-muted-foreground">kWh/mês</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-purple/20">
+          <CardContent className="p-3 flex items-center gap-2">
+            <Recycle className="h-4 w-4 text-purple flex-shrink-0" />
+            <div className="min-w-0">
+              <p className="text-base md:text-lg font-bold text-purple">{totalRecycled.toFixed(1)}</p>
+              <p className="text-[10px] text-muted-foreground">kg reciclados</p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Mobile Stats */}
-      <MobileStats
-        totalCO2={totalCO2Saved}
-        totalRecycled={totalRecycled}
-        waterConsumption={lastWaterConsumption}
-        energyConsumption={lastEnergyConsumption}
-        schoolName={schoolName}
-      />
+      {/* Export row */}
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-muted-foreground">Painel de Controle Ambiental</p>
+        <ExportButton 
+          schoolName={schoolName}
+          recyclingEntries={safeData.recyclingEntries}
+          consumptionEntries={safeData.consumptionEntries}
+        />
+      </div>
 
-      {/* Main Content Tabs */}
-      <Tabs 
-        value={currentMobileTab} 
-        onValueChange={setCurrentMobileTab} 
-        defaultValue="calculator" 
-        className="space-y-6"
-      >
-        <TabsList 
-          className="flex flex-row flex-wrap justify-center items-center gap-4 md:gap-5 p-4 md:p-6 min-h-[160px] md:min-h-[120px] w-full mb-20"
-          role="tablist"
-          aria-label="Seções do dashboard"
-        >
-          <TabsTrigger 
-            value="calculator" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-card/50 border border-border/30 data-[state=active]:bg-primary data-[state=active]:border-primary data-[state=active]:shadow-md hover:bg-card/70 group"
-            aria-label="Calculadora de reciclagem"
-          >
-            <Calculator className="h-5 w-5 md:h-6 md:w-6 text-foreground/70 group-data-[state=active]:text-primary-foreground transition-colors" />
-            <span className="text-base md:text-lg font-medium text-foreground/70 group-data-[state=active]:text-primary-foreground transition-colors">Calculadora</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="consumption" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-card/50 border border-border/30 data-[state=active]:bg-blue data-[state=active]:border-blue data-[state=active]:shadow-md hover:bg-card/70 group"
-            aria-label="Controle de consumo"
-          >
-            <Droplets className="h-5 w-5 md:h-6 md:w-6 text-foreground/70 group-data-[state=active]:text-white transition-colors" />
-            <span className="text-base md:text-lg font-medium text-foreground/70 group-data-[state=active]:text-white transition-colors">Consumo</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="goals" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-card/50 border border-border/30 data-[state=active]:bg-accent data-[state=active]:border-accent data-[state=active]:shadow-md hover:bg-card/70 group"
-            aria-label="Metas e projeções"
-          >
-            <Target className="h-5 w-5 md:h-6 md:w-6 text-foreground/70 group-data-[state=active]:text-white transition-colors" />
-            <span className="text-base md:text-lg font-medium text-foreground/70 group-data-[state=active]:text-white transition-colors">Metas</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="recycling-charts" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-card/50 border border-border/30 data-[state=active]:bg-success data-[state=active]:border-success data-[state=active]:shadow-md hover:bg-card/70 group"
-            aria-label="Gráficos de reciclagem"
-          >
-            <Recycle className="h-5 w-5 md:h-6 md:w-6 text-foreground/70 group-data-[state=active]:text-white transition-colors" />
-            <span className="text-base md:text-lg font-medium text-foreground/70 group-data-[state=active]:text-white transition-colors">Reciclagem</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="consumption-charts" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-card/50 border border-border/30 data-[state=active]:bg-primary data-[state=active]:border-primary data-[state=active]:shadow-md hover:bg-card/70 group"
-            aria-label="Gráficos de consumo"
-          >
-            <BarChart3 className="h-5 w-5 md:h-6 md:w-6 text-foreground/70 group-data-[state=active]:text-primary-foreground transition-colors" />
-            <span className="text-base md:text-lg font-medium text-foreground/70 group-data-[state=active]:text-primary-foreground transition-colors">Gráficos</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="history" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-card/50 border border-border/30 data-[state=active]:bg-purple data-[state=active]:border-purple data-[state=active]:shadow-md hover:bg-card/70 group"
-            aria-label="Histórico"
-          >
-            <History className="h-5 w-5 md:h-6 md:w-6 text-foreground/70 group-data-[state=active]:text-white transition-colors" />
-            <span className="text-base md:text-lg font-medium text-foreground/70 group-data-[state=active]:text-white transition-colors">Histórico</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="resources" 
-            className="flex items-center justify-center gap-3 px-6 md:px-8 py-3 md:py-4 min-h-[56px] md:min-h-[64px] min-w-[140px] md:min-w-[160px] flex-grow rounded-lg transition-all duration-300 bg-card/50 border border-border/30 data-[state=active]:bg-success data-[state=active]:border-success data-[state=active]:shadow-md hover:bg-card/70 group"
-            aria-label="Links e dicas úteis"
-          >
-            <Link className="h-5 w-5 md:h-6 md:w-6 text-foreground/70 group-data-[state=active]:text-white transition-colors" />
-            <span className="text-base md:text-lg font-medium text-foreground/70 group-data-[state=active]:text-white transition-colors">Links & Dicas</span>
-          </TabsTrigger>
-        </TabsList>
+      {/* Tabs - compact & scrollable */}
+      <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-4">
+        <div className="overflow-x-auto -mx-2 px-2 pb-1">
+          <TabsList className="inline-flex w-auto gap-1 p-1 bg-muted/50 rounded-lg">
+            <TabsTrigger value="calculator" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm">
+              <Calculator className="h-3.5 w-3.5" />
+              Calculadora
+            </TabsTrigger>
+            <TabsTrigger value="consumption" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap rounded-md data-[state=active]:bg-blue data-[state=active]:text-white data-[state=active]:shadow-sm">
+              <Droplets className="h-3.5 w-3.5" />
+              Consumo
+            </TabsTrigger>
+            <TabsTrigger value="goals" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-sm">
+              <Target className="h-3.5 w-3.5" />
+              Metas
+            </TabsTrigger>
+            <TabsTrigger value="recycling-charts" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap rounded-md data-[state=active]:bg-success data-[state=active]:text-success-foreground data-[state=active]:shadow-sm">
+              <Recycle className="h-3.5 w-3.5" />
+              Reciclagem
+            </TabsTrigger>
+            <TabsTrigger value="consumption-charts" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm">
+              <BarChart3 className="h-3.5 w-3.5" />
+              Gráficos
+            </TabsTrigger>
+            <TabsTrigger value="history" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap rounded-md data-[state=active]:bg-purple data-[state=active]:text-purple-foreground data-[state=active]:shadow-sm">
+              <History className="h-3.5 w-3.5" />
+              Histórico
+            </TabsTrigger>
+            <TabsTrigger value="resources" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap rounded-md data-[state=active]:bg-success data-[state=active]:text-success-foreground data-[state=active]:shadow-sm">
+              <Link className="h-3.5 w-3.5" />
+              Dicas
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="calculator" className="animate-fade-in">
-          <div className="recycling-section space-y-6 clear-both">
+          <div className="space-y-4">
             {!viewOnly && safeData.recyclingEntries.length > 0 && (
-              <div className="flex justify-end mb-2">
+              <div className="flex justify-end">
                 <DeleteRecordsDialog
                   title="Apagar Dados de Reciclagem"
                   description="Tem certeza que deseja apagar todos os registros de reciclagem?"
                   buttonText="Apagar Dados"
                   size="sm"
                   variant="outline"
-                  onConfirm={async () => {
-                    onDeleteAll();
-                  }}
+                  onConfirm={async () => { onDeleteAll(); }}
                 />
               </div>
             )}
             {!viewOnly && (
               <ContextualTips 
-                recyclingTotal={totalRecycled}
-                co2Total={totalCO2Saved}
-                waterConsumption={lastWaterConsumption}
-                energyConsumption={lastEnergyConsumption}
+                recyclingTotal={totalRecycled} co2Total={totalCO2Saved}
+                waterConsumption={lastWaterConsumption} energyConsumption={lastEnergyConsumption}
                 hasRecyclingData={safeData.recyclingEntries.length > 0}
                 hasConsumptionData={safeData.consumptionEntries.length > 0}
-                schoolName={schoolName}
-                onTabChange={setCurrentMobileTab}
+                schoolName={schoolName} onTabChange={setCurrentTab}
               />
             )}
             {viewOnly ? (
-              <RecyclingChart 
-                entries={safeData.recyclingEntries}
-              />
+              <RecyclingChart entries={safeData.recyclingEntries} />
             ) : (
-              <RecyclingCalculator
-                onEntriesUpdate={handleRecyclingUpdate} 
-                schoolType={schoolType}
-              />
+              <RecyclingCalculator onEntriesUpdate={handleRecyclingUpdate} schoolType={schoolType} />
             )}
           </div>
         </TabsContent>
 
         <TabsContent value="consumption" className="animate-fade-in">
-          <div className="consumption-section space-y-6 clear-both">
+          <div className="space-y-4">
             {!viewOnly && safeData.consumptionEntries.length > 0 && (
-              <div className="flex justify-end gap-2 mb-2">
+              <div className="flex justify-end gap-2">
                 <DeleteRecordsDialog
-                  title="Apagar Dados de Água"
-                  description="Tem certeza que deseja apagar todos os registros de consumo de água?"
-                  buttonText="Apagar Água"
-                  size="sm"
-                  variant="outline"
+                  title="Apagar Dados de Água" description="Tem certeza que deseja apagar todos os registros de consumo de água?"
+                  buttonText="Apagar Água" size="sm" variant="outline"
                   onConfirm={async () => {
-                    const waterMonths = [...new Set(safeData.consumptionEntries
-                      .filter(e => e.type === 'water')
-                      .map(e => e.month))];
-                    for (const month of waterMonths) {
-                      onDeleteConsumptionByMonth('water', month);
-                    }
+                    const waterMonths = [...new Set(safeData.consumptionEntries.filter(e => e.type === 'water').map(e => e.month))];
+                    for (const month of waterMonths) { onDeleteConsumptionByMonth('water', month); }
                   }}
                 />
                 <DeleteRecordsDialog
-                  title="Apagar Dados de Energia"
-                  description="Tem certeza que deseja apagar todos os registros de consumo de energia?"
-                  buttonText="Apagar Energia"
-                  size="sm"
-                  variant="outline"
+                  title="Apagar Dados de Energia" description="Tem certeza que deseja apagar todos os registros de consumo de energia?"
+                  buttonText="Apagar Energia" size="sm" variant="outline"
                   onConfirm={async () => {
-                    const energyMonths = [...new Set(safeData.consumptionEntries
-                      .filter(e => e.type === 'energy')
-                      .map(e => e.month))];
-                    for (const month of energyMonths) {
-                      onDeleteConsumptionByMonth('energy', month);
-                    }
+                    const energyMonths = [...new Set(safeData.consumptionEntries.filter(e => e.type === 'energy').map(e => e.month))];
+                    for (const month of energyMonths) { onDeleteConsumptionByMonth('energy', month); }
                   }}
                 />
               </div>
             )}
             {!viewOnly && (
               <ContextualTips 
-                recyclingTotal={totalRecycled}
-                co2Total={totalCO2Saved}
-                waterConsumption={lastWaterConsumption}
-                energyConsumption={lastEnergyConsumption}
+                recyclingTotal={totalRecycled} co2Total={totalCO2Saved}
+                waterConsumption={lastWaterConsumption} energyConsumption={lastEnergyConsumption}
                 hasRecyclingData={safeData.recyclingEntries.length > 0}
                 hasConsumptionData={safeData.consumptionEntries.length > 0}
-                schoolName={schoolName}
-                onTabChange={setCurrentMobileTab}
+                schoolName={schoolName} onTabChange={setCurrentTab}
               />
             )}
             {viewOnly ? (
-              <ConsumptionChart 
-                entries={safeData.consumptionEntries}
-                goals={safeData.consumptionGoals}
-              />
+              <ConsumptionChart entries={safeData.consumptionEntries} goals={safeData.consumptionGoals} />
             ) : (
               <WaterEnergyTracker
                 onDataUpdate={handleConsumptionUpdate}
@@ -356,47 +245,34 @@ export default function SchoolDashboard({
           </div>
         </TabsContent>
 
-        <TabsContent value="goals" className="space-y-6 animate-fade-in clear-both">
+        <TabsContent value="goals" className="space-y-4 animate-fade-in">
           <SmartGoalSuggestion 
             recyclingEntries={safeData.recyclingEntries}
             consumptionEntries={safeData.consumptionEntries}
             currentGoals={safeData.consumptionGoals}
             onUpdateGoal={(type, percentage) => {
               const updatedGoals = safeData.consumptionGoals.map(goal => 
-                goal.type === type 
-                  ? { ...goal, reductionPercentage: percentage }
-                  : goal
+                goal.type === type ? { ...goal, reductionPercentage: percentage } : goal
               );
               handleConsumptionUpdate(safeData.consumptionEntries, updatedGoals);
             }}
           />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <GoalProgressCard 
-              entries={safeData.consumptionEntries} 
-              goals={safeData.consumptionGoals} 
-              type="water" 
-            />
-            <GoalProgressCard 
-              entries={safeData.consumptionEntries} 
-              goals={safeData.consumptionGoals} 
-              type="energy" 
-            />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <GoalProgressCard entries={safeData.consumptionEntries} goals={safeData.consumptionGoals} type="water" />
+            <GoalProgressCard entries={safeData.consumptionEntries} goals={safeData.consumptionGoals} type="energy" />
           </div>
           <ProjectionCard entries={safeData.recyclingEntries} schoolName={schoolName} />
         </TabsContent>
 
-        <TabsContent value="recycling-charts" className="animate-fade-in clear-both">
+        <TabsContent value="recycling-charts" className="animate-fade-in">
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold">Dados de Reciclagem</h3>
+              <h3 className="text-base font-semibold">Dados de Reciclagem</h3>
               {!viewOnly && safeData.recyclingEntries.length > 0 && (
                 <DeleteRecordsDialog
-                  title="Apagar Dados de Reciclagem"
-                  description="Tem certeza que deseja apagar todos os registros de reciclagem? Todos os dados de materiais reciclados serão removidos permanentemente."
-                  buttonText="Apagar Reciclagem"
-                  onConfirm={async () => {
-                    onDeleteAll();
-                  }}
+                  title="Apagar Dados de Reciclagem" 
+                  description="Todos os dados de materiais reciclados serão removidos permanentemente."
+                  buttonText="Apagar" onConfirm={async () => { onDeleteAll(); }}
                 />
               )}
             </div>
@@ -404,62 +280,40 @@ export default function SchoolDashboard({
           </div>
         </TabsContent>
 
-        <TabsContent value="consumption-charts" className="animate-fade-in clear-both">
+        <TabsContent value="consumption-charts" className="animate-fade-in">
           <div className="space-y-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">Dados de Consumo</h3>
+            <div className="flex justify-between items-center">
+              <h3 className="text-base font-semibold">Dados de Consumo</h3>
               {!viewOnly && safeData.consumptionEntries.length > 0 && (
                 <div className="flex gap-2">
                   <DeleteRecordsDialog
-                    title="Apagar Dados de Água"
-                    description="Tem certeza que deseja apagar todos os registros de consumo de água?"
-                    buttonText="Apagar Água"
-                    variant="outline"
+                    title="Apagar Água" description="Apagar todos os registros de consumo de água?"
+                    buttonText="Água" variant="outline"
                     onConfirm={async () => {
-                      const waterMonths = [...new Set(safeData.consumptionEntries
-                        .filter(e => e.type === 'water')
-                        .map(e => e.month))];
-                      for (const month of waterMonths) {
-                        onDeleteConsumptionByMonth('water', month);
-                      }
+                      const waterMonths = [...new Set(safeData.consumptionEntries.filter(e => e.type === 'water').map(e => e.month))];
+                      for (const month of waterMonths) { onDeleteConsumptionByMonth('water', month); }
                     }}
                   />
                   <DeleteRecordsDialog
-                    title="Apagar Dados de Energia"
-                    description="Tem certeza que deseja apagar todos os registros de consumo de energia?"
-                    buttonText="Apagar Energia"
-                    variant="outline"
+                    title="Apagar Energia" description="Apagar todos os registros de consumo de energia?"
+                    buttonText="Energia" variant="outline"
                     onConfirm={async () => {
-                      const energyMonths = [...new Set(safeData.consumptionEntries
-                        .filter(e => e.type === 'energy')
-                        .map(e => e.month))];
-                      for (const month of energyMonths) {
-                        onDeleteConsumptionByMonth('energy', month);
-                      }
+                      const energyMonths = [...new Set(safeData.consumptionEntries.filter(e => e.type === 'energy').map(e => e.month))];
+                      for (const month of energyMonths) { onDeleteConsumptionByMonth('energy', month); }
                     }}
                   />
                 </div>
               )}
             </div>
-            <ConsumptionChart 
-              entries={safeData.consumptionEntries} 
-              goals={safeData.consumptionGoals} 
-            />
+            <ConsumptionChart entries={safeData.consumptionEntries} goals={safeData.consumptionGoals} />
           </div>
         </TabsContent>
 
-
-        <TabsContent value="history" className="animate-fade-in clear-both">
-          <ActionHistory 
-            history={history}
-            onUndo={undoLastAction}
-            onClear={clearHistory}
-            hasHistory={hasHistory}
-          />
+        <TabsContent value="history" className="animate-fade-in">
+          <ActionHistory history={history} onUndo={undoLastAction} onClear={clearHistory} hasHistory={hasHistory} />
         </TabsContent>
 
-
-        <TabsContent value="resources" className="animate-fade-in clear-both">
+        <TabsContent value="resources" className="animate-fade-in">
           <ResourcesTab />
         </TabsContent>
       </Tabs>
