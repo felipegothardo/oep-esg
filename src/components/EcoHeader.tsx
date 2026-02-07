@@ -1,5 +1,9 @@
-import { Leaf, Recycle, Wind } from 'lucide-react';
-import ecoHeroImage from '@/assets/eco-hero.jpg';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { LogOut, User, ChevronDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 import oepLogo from '@/assets/oep-logo-new.png';
 
 interface EcoHeaderProps {
@@ -8,67 +12,103 @@ interface EcoHeaderProps {
 }
 
 export default function EcoHeader({ schoolName, schoolLogo }: EcoHeaderProps = {}) {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
+
+  const loadUserData = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        setUserEmail(session.user.email);
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("full_name")
+          .eq("user_id", session.user.id)
+          .maybeSingle();
+        if (profile?.full_name) setUserName(profile.full_name);
+      }
+    } catch (error) {
+      console.error("Error loading user data:", error);
+    }
+  };
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({ title: "Erro ao sair", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Até logo!", description: "Logout realizado com sucesso." });
+      navigate("/auth");
+    }
+  };
+
+  const displayName = userName || userEmail?.split('@')[0] || '';
+
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-primary/30 via-accent/25 to-primary/20 border-b border-primary/40 backdrop-blur-sm shadow-lg">
-      {/* Minimal tech grid pattern */}
-      <div className="absolute inset-0 opacity-[0.02]">
-        <div className="absolute inset-0" style={{
-          backgroundImage: 'linear-gradient(hsl(210 60% 42% / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(210 60% 42% / 0.1) 1px, transparent 1px)',
-          backgroundSize: '50px 50px'
-        }}></div>
-      </div>
-
-      {/* Content */}
-      <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12">
-        <div className="flex flex-row items-center justify-between gap-4 md:gap-8">
-          
-          {/* Left side - Logo and branding */}
-          <div className="flex items-center gap-4 md:gap-6 flex-1">
-            {schoolLogo ? (
-              <img 
-                src={schoolLogo} 
-                alt={`Logo da ${schoolName}`}
-                className="w-20 h-20 md:w-28 md:h-28 object-contain"
-                loading="eager"
-                style={{ padding: 0, margin: 0 }}
-              />
-            ) : (
-              <img 
-                src={oepLogo} 
-                alt="OEP Sustentável Logo" 
-                className="w-24 h-24 md:w-32 md:h-32 object-contain"
-                loading="eager"
-                style={{ padding: 0, margin: 0 }}
-                onError={(e) => {
-                  console.log('Logo error:', e);
-                  e.currentTarget.style.display = 'none';
-                }} 
-              />
-            )}
-            
-            <div className="text-left flex-1 min-w-0">
-              <p className="text-xs md:text-sm text-muted-foreground font-medium">
-                {schoolName ? 'Dashboard de Gestão Ambiental' : 'Sistema de Controle de Consumo e Manejo de Resíduos'}
-              </p>
-            </div>
-          </div>
-
-          {/* Right side - Minimal tech badges */}
-          <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-primary/10 rounded-lg flex items-center justify-center border border-primary/20">
-              <Leaf className="w-5 h-5 md:w-6 md:h-6 text-primary" />
-            </div>
-            
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-success/10 rounded-lg flex items-center justify-center border border-success/20">
-              <Recycle className="w-5 h-5 md:w-6 md:h-6 text-success" />
-            </div>
-            
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-blue/10 rounded-lg flex items-center justify-center border border-blue/20">
-              <Wind className="w-5 h-5 md:w-6 md:h-6 text-blue" />
-            </div>
+    <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-md border-b border-border shadow-sm">
+      <div className="max-w-7xl mx-auto px-3 md:px-6 h-14 md:h-16 flex items-center justify-between gap-3">
+        {/* Left - Logo + Name */}
+        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+          <img 
+            src={schoolLogo || oepLogo} 
+            alt={schoolName ? `Logo ${schoolName}` : "OEP Sustentável"} 
+            className="w-8 h-8 md:w-10 md:h-10 object-contain flex-shrink-0"
+            loading="eager"
+          />
+          <div className="min-w-0">
+            <h1 className="text-sm md:text-base font-bold text-foreground truncate">
+              {schoolName || 'OEP Sustentável'}
+            </h1>
+            <p className="text-[10px] md:text-xs text-muted-foreground truncate hidden sm:block">
+              Gestão Ambiental Escolar
+            </p>
           </div>
         </div>
+
+        {/* Right - User Info */}
+        <div className="relative flex-shrink-0">
+          <button
+            onClick={() => setShowUserMenu(!showUserMenu)}
+            className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-muted/50 transition-colors"
+          >
+            <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center">
+              <User className="w-3.5 h-3.5 text-primary" />
+            </div>
+            <span className="text-sm font-medium text-foreground hidden md:block max-w-[120px] truncate">
+              {displayName}
+            </span>
+            <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
+          </button>
+
+          {showUserMenu && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)} />
+              <div className="absolute right-0 top-full mt-1 z-50 bg-popover border border-border rounded-lg shadow-lg p-2 min-w-[180px]">
+                <div className="px-3 py-2 border-b border-border mb-1">
+                  <p className="text-sm font-medium text-foreground truncate">{displayName}</p>
+                  {userEmail && <p className="text-xs text-muted-foreground truncate">{userEmail}</p>}
+                </div>
+                <Button
+                  onClick={handleSignOut}
+                  variant="ghost"
+                  size="sm"
+                  className="w-full justify-start gap-2 text-destructive hover:text-destructive"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sair
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </header>
   );
 }
