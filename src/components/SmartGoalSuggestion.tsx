@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Lightbulb, TrendingDown, TrendingUp, AlertCircle } from 'lucide-react';
+import { Target, TrendingDown, TrendingUp, AlertCircle } from 'lucide-react';
 import { ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSchoolData';
 
 interface SmartGoalSuggestionProps {
@@ -80,7 +80,7 @@ export default function SmartGoalSuggestion({
       <Card className="border-dashed">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Lightbulb className="w-5 h-5 text-primary" />
+            <Target className="w-5 h-5 text-primary" />
             Metas Inteligentes
           </CardTitle>
           <CardDescription>
@@ -95,8 +95,8 @@ export default function SmartGoalSuggestion({
     <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Lightbulb className="w-5 h-5 text-primary animate-pulse" />
-          Sugestões de Metas Inteligentes
+            <Target className="w-5 h-5 text-primary" />
+            Sugestões de Metas
         </CardTitle>
         <CardDescription>
           Baseado no seu histórico de consumo dos últimos meses
@@ -104,29 +104,29 @@ export default function SmartGoalSuggestion({
       </CardHeader>
       <CardContent className="space-y-4">
         {waterSuggestion && (
-          <div className="p-4 rounded-lg bg-blue-100/80 dark:bg-blue-950/30 border border-blue-300 dark:border-blue-700">
+          <div className="p-4 rounded-lg bg-blue/10 border border-blue/20">
             <div className="flex items-start justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <h4 className="font-semibold text-blue-900 dark:text-blue-100">Água</h4>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h4 className="font-semibold text-foreground">Água</h4>
                 <Badge variant={waterSuggestion.confidence === 'alta' ? 'default' : 'secondary'}>
                   Confiança {waterSuggestion.confidence}
                 </Badge>
                 {waterSuggestion.trend < 0 ? (
-                  <TrendingDown className="w-4 h-4 text-green-600" />
+                  <TrendingDown className="w-4 h-4 text-success" />
                 ) : waterSuggestion.trend > 0 ? (
-                  <TrendingUp className="w-4 h-4 text-red-600" />
+                  <TrendingUp className="w-4 h-4 text-destructive" />
                 ) : null}
               </div>
             </div>
             
-            <p className="text-sm text-blue-800 dark:text-blue-200 mb-3 font-medium">
+            <p className="text-sm text-muted-foreground mb-3 break-words">
               {waterSuggestion.reason}
             </p>
             
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="text-sm">
-                <span className="font-medium text-blue-800 dark:text-blue-200">Meta sugerida: </span>
-                <span className="text-lg font-bold text-blue-900 dark:text-blue-100">
+                <span className="font-medium text-muted-foreground">Meta sugerida: </span>
+                <span className="text-lg font-bold text-foreground">
                   {waterSuggestion.percentage.toFixed(0)}% de redução
                 </span>
               </div>
@@ -139,36 +139,36 @@ export default function SmartGoalSuggestion({
               </Button>
             </div>
             
-            <div className="mt-2 text-xs text-blue-700 dark:text-blue-300 font-medium">
+            <div className="mt-2 text-xs text-muted-foreground font-medium">
               Média atual: {waterSuggestion.avgConsumption.toFixed(0)}L/mês
             </div>
           </div>
         )}
         
         {energySuggestion && (
-          <div className="p-4 rounded-lg bg-yellow-100/80 dark:bg-yellow-950/30 border border-yellow-300 dark:border-yellow-700">
+          <div className="p-4 rounded-lg bg-accent/10 border border-accent/20">
             <div className="flex items-start justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <h4 className="font-semibold text-yellow-900 dark:text-yellow-100">Energia</h4>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h4 className="font-semibold text-foreground">Energia</h4>
                 <Badge variant={energySuggestion.confidence === 'alta' ? 'default' : 'secondary'}>
                   Confiança {energySuggestion.confidence}
                 </Badge>
                 {energySuggestion.trend < 0 ? (
-                  <TrendingDown className="w-4 h-4 text-green-600" />
+                  <TrendingDown className="w-4 h-4 text-success" />
                 ) : energySuggestion.trend > 0 ? (
-                  <TrendingUp className="w-4 h-4 text-red-600" />
+                  <TrendingUp className="w-4 h-4 text-destructive" />
                 ) : null}
               </div>
             </div>
             
-            <p className="text-sm text-yellow-800 dark:text-yellow-200 mb-3 font-medium">
+            <p className="text-sm text-muted-foreground mb-3 break-words">
               {energySuggestion.reason}
             </p>
             
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap gap-2">
               <div className="text-sm">
-                <span className="font-medium text-yellow-800 dark:text-yellow-200">Meta sugerida: </span>
-                <span className="text-lg font-bold text-yellow-900 dark:text-yellow-100">
+                <span className="font-medium text-muted-foreground">Meta sugerida: </span>
+                <span className="text-lg font-bold text-foreground">
                   {energySuggestion.percentage.toFixed(0)}% de redução
                 </span>
               </div>
@@ -181,7 +181,7 @@ export default function SmartGoalSuggestion({
               </Button>
             </div>
             
-            <div className="mt-2 text-xs text-yellow-700 dark:text-yellow-300 font-medium">
+            <div className="mt-2 text-xs text-muted-foreground font-medium">
               Média atual: {energySuggestion.avgConsumption.toFixed(0)}kWh/mês
             </div>
           </div>
