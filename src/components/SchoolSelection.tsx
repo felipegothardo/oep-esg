@@ -9,7 +9,7 @@ interface SchoolSelectionProps {
 const schools = [
   {
     key: 'consolidated' as const,
-    label: '📊 Visão Geral',
+    label: 'Visão Geral',
     bgClass: 'bg-gradient-to-br from-primary via-primary-glow to-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105',
     hoverClass: 'bg-gradient-to-br from-card to-muted border-2 border-primary/30 hover:border-primary hover:shadow-lg hover:scale-105'
   },
