@@ -107,36 +107,6 @@ export default function ResourcesTab() {
         </CardContent>
       </Card>
 
-      {/* Telefones úteis */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Telefones Úteis</CardTitle>
-          <CardDescription>Adicionar contatos de secretarias municipais, coleta seletiva, catadores, etc.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-1 text-sm">
-            <li>Prefeitura / Coleta Seletiva: —</li>
-            <li>Central de Reciclagem Local: —</li>
-            <li>Contato Emergencial: —</li>
-          </ul>
-        </CardContent>
-      </Card>
-
-      {/* Destinação dos resíduos */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Destinação dos Resíduos – Ecoponto e Coleta Seletiva</CardTitle>
-          <CardDescription>Resumo das principais informações (insira os detalhes na sequência).</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ul className="list-disc pl-5 space-y-1 text-sm">
-            <li>O que vai para o Ecoponto: —</li>
-            <li>O que entra na Coleta Seletiva: —</li>
-            <li>Horários / Procedimentos: —</li>
-            <li>Documentos / Regras específicas: —</li>
-          </ul>
-        </CardContent>
-      </Card>
     </section>
   );
 }
