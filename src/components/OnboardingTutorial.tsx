@@ -110,7 +110,7 @@ export default function OnboardingTutorial() {
           </button>
           
           <div className="flex flex-col items-center text-center space-y-4">
-            <div className="p-4 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full animate-float">
+            <div className="p-4 bg-primary/10 rounded-xl">
               {currentStepData.icon}
             </div>
             
