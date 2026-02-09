@@ -131,7 +131,7 @@ export default function Dashboard() {
       <div className="min-h-screen bg-background">
         <EcoHeader schoolName={currentSchoolName} schoolLogo={currentSchoolLogo} />
       
-        <div className="max-w-7xl mx-auto px-3 md:px-6 py-3 md:py-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-5 md:py-8">
           {/* Top-level nav */}
           <nav className="flex gap-1 mb-4 p-1 bg-muted/40 rounded-lg w-fit" role="tablist">
             {tabs.map(tab => {
