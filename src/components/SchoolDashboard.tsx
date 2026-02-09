@@ -85,9 +85,9 @@ export default function SchoolDashboard({
     .filter(entry => entry.type === 'energy').slice(-1)[0]?.consumption || 0;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Compact Stats Bar */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         <Card className="border-success/20">
           <CardContent className="p-3 flex items-center gap-2">
             <Leaf className="h-4 w-4 text-success flex-shrink-0" />
@@ -126,9 +126,18 @@ export default function SchoolDashboard({
         </Card>
       </div>
 
-      {/* Export row */}
-      <div className="flex items-center justify-between">
-        <p className="text-xs text-muted-foreground">Painel de Controle Ambiental</p>
+      {/* Section divider - Painel de Controle Ambiental */}
+      <div className="flex items-center gap-4 pt-2">
+        <div className="flex-1 h-px bg-border" />
+        <div className="flex items-center gap-3 px-4 py-2 bg-primary/10 border border-primary/20 rounded-lg">
+          <BarChart3 className="h-5 w-5 text-primary" />
+          <h2 className="text-sm md:text-base font-bold text-primary tracking-wide uppercase">
+            Painel de Controle Ambiental
+          </h2>
+        </div>
+        <div className="flex-1 h-px bg-border" />
+      </div>
+      <div className="flex justify-end">
         <ExportButton 
           schoolName={schoolName}
           recyclingEntries={safeData.recyclingEntries}
@@ -137,7 +146,7 @@ export default function SchoolDashboard({
       </div>
 
       {/* Tabs - compact & scrollable */}
-      <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-4">
+      <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-6">
         <div className="overflow-x-auto -mx-2 px-2 pb-1">
           <TabsList className="inline-flex w-auto gap-1 p-1 bg-muted/50 rounded-lg">
             <TabsTrigger value="calculator" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm">

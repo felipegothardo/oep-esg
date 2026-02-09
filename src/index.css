@@ -9,13 +9,13 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* Dark mode azul como padrão */
-    --background: 220 30% 8%;
+    --background: 220 25% 12%;
     --foreground: 210 100% 95%;
 
-    --card: 220 28% 12%;
+    --card: 220 22% 16%;
     --card-foreground: 210 100% 95%;
 
-    --popover: 220 28% 12%;
+    --popover: 220 22% 16%;
     --popover-foreground: 210 100% 95%;
 
     /* Cores azuis vibrantes com alto contraste */
@@ -25,10 +25,10 @@ All colors MUST be HSL.
     --primary-glow: 210 100% 65%;
     --primary-vibrant: 210 100% 60%;
 
-    --secondary: 220 25% 20%;
+    --secondary: 220 22% 22%;
     --secondary-foreground: 210 100% 95%;
 
-    --muted: 220 20% 18%;
+    --muted: 220 18% 20%;
     --muted-foreground: 210 40% 70%;
 
     --accent: 195 100% 50%;
@@ -81,13 +81,13 @@ All colors MUST be HSL.
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    --border: 220 20% 25%;
-    --input: 220 20% 20%;
+    --border: 220 18% 28%;
+    --input: 220 18% 22%;
     --ring: 210 100% 55%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 220 28% 12%;
+    --sidebar-background: 220 22% 14%;
     --sidebar-foreground: 210 100% 95%;
     --sidebar-primary: 210 100% 55%;
     --sidebar-primary-foreground: 220 30% 8%;
