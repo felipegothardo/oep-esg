@@ -8,11 +8,12 @@ import ConversionReferences from './ConversionReferences';
 import SchoolDashboard from './SchoolDashboard';
 import OnboardingTutorial from './OnboardingTutorial';
 import AdvancedReports from './AdvancedReports';
+import AdminUsersPanel from './AdminUsersPanel';
 import CoordinatorDashboard from './CoordinatorDashboard';
 import InitialSchoolSelection from './InitialSchoolSelection';
 import { ErrorBoundary } from './ErrorBoundary';
 import { LoadingState } from './LoadingState';
-import { BarChart3, Home, Building2 } from 'lucide-react';
+import { BarChart3, Home, Building2, Users } from 'lucide-react';
 import { RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from '@/hooks/useSchoolData';
 
 import logoElvira from '@/assets/logo-elvira.png';
@@ -27,7 +28,7 @@ const schoolLogos: Record<string, string> = {
   'santo-antonio': logoCaranda,
 };
 
-type TabType = 'dashboard' | 'coordinator' | 'reports';
+type TabType = 'dashboard' | 'coordinator' | 'reports' | 'admin';
 
 export default function Dashboard() {
   const { toast } = useToast();
@@ -124,6 +125,7 @@ export default function Dashboard() {
     ...(!isCoordinator ? [{ id: 'dashboard' as TabType, label: 'Minha Escola', icon: Home }] : []),
     ...(isCoordinator ? [{ id: 'coordinator' as TabType, label: 'Painel Geral', icon: Building2 }] : []),
     { id: 'reports' as TabType, label: 'Relatórios', icon: BarChart3 },
+    ...(isCoordinator ? [{ id: 'admin' as TabType, label: 'Cadastros', icon: Users }] : []),
   ];
 
   return (
@@ -181,6 +183,10 @@ export default function Dashboard() {
 
           {activeTab === 'reports' && (
             <AdvancedReports />
+          )}
+
+          {isCoordinator && activeTab === 'admin' && (
+            <AdminUsersPanel />
           )}
         </div>
       
