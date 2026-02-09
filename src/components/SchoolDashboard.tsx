@@ -106,11 +106,11 @@ export default function SchoolDashboard({
             </div>
           </CardContent>
         </Card>
-        <Card className="border-yellow-600/20">
+        <Card className="border-accent/20">
           <CardContent className="p-3 flex items-center gap-2">
-            <Zap className="h-4 w-4 text-yellow-600 flex-shrink-0" />
+            <Zap className="h-4 w-4 text-accent flex-shrink-0" />
             <div className="min-w-0">
-              <p className="text-base md:text-lg font-bold text-yellow-600">{lastEnergyConsumption}</p>
+              <p className="text-base md:text-lg font-bold text-accent">{lastEnergyConsumption}</p>
               <p className="text-[10px] text-muted-foreground">kWh/mês</p>
             </div>
           </CardContent>
@@ -149,31 +149,31 @@ export default function SchoolDashboard({
       <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-6">
         <div className="overflow-x-auto -mx-2 px-2 pb-1">
           <TabsList className="inline-flex w-auto gap-1 p-1 bg-muted/50 rounded-lg">
-            <TabsTrigger value="calculator" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm">
+            <TabsTrigger value="calculator" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap">
               <Calculator className="h-3.5 w-3.5" />
               Calculadora
             </TabsTrigger>
-            <TabsTrigger value="consumption" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap rounded-md data-[state=active]:bg-blue data-[state=active]:text-white data-[state=active]:shadow-sm">
+            <TabsTrigger value="consumption" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap">
               <Droplets className="h-3.5 w-3.5" />
               Consumo
             </TabsTrigger>
-            <TabsTrigger value="goals" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap rounded-md data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-sm">
+            <TabsTrigger value="goals" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap">
               <Target className="h-3.5 w-3.5" />
               Metas
             </TabsTrigger>
-            <TabsTrigger value="recycling-charts" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap rounded-md data-[state=active]:bg-success data-[state=active]:text-success-foreground data-[state=active]:shadow-sm">
+            <TabsTrigger value="recycling-charts" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap">
               <Recycle className="h-3.5 w-3.5" />
               Reciclagem
             </TabsTrigger>
-            <TabsTrigger value="consumption-charts" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm">
+            <TabsTrigger value="consumption-charts" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap">
               <BarChart3 className="h-3.5 w-3.5" />
               Gráficos
             </TabsTrigger>
-            <TabsTrigger value="history" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap rounded-md data-[state=active]:bg-purple data-[state=active]:text-purple-foreground data-[state=active]:shadow-sm">
+            <TabsTrigger value="history" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap">
               <History className="h-3.5 w-3.5" />
               Histórico
             </TabsTrigger>
-            <TabsTrigger value="resources" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap rounded-md data-[state=active]:bg-success data-[state=active]:text-success-foreground data-[state=active]:shadow-sm">
+            <TabsTrigger value="resources" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap">
               <Link className="h-3.5 w-3.5" />
               Dicas
             </TabsTrigger>
