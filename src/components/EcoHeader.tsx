@@ -56,12 +56,14 @@ export default function EcoHeader({ schoolName, schoolLogo }: EcoHeaderProps = {
       <div className="max-w-7xl mx-auto px-3 md:px-6 h-14 md:h-16 flex items-center justify-between gap-3">
         {/* Left - Logo + Name */}
         <div className="flex items-center gap-2.5 min-w-0 flex-1">
-          <img 
-            src={schoolLogo || oepLogo} 
-            alt={schoolName ? `Logo ${schoolName}` : "OEP Sustentável"} 
-            className="w-8 h-8 md:w-10 md:h-10 object-contain flex-shrink-0"
-            loading="eager"
-          />
+          <div className="w-9 h-9 md:w-11 md:h-11 rounded-xl bg-white/90 flex items-center justify-center flex-shrink-0 p-1">
+            <img 
+              src={schoolLogo || oepLogo} 
+              alt={schoolName ? `Logo ${schoolName}` : "OEP Sustentável"} 
+              className="w-full h-full object-contain"
+              loading="eager"
+            />
+          </div>
           <div className="min-w-0">
             <h1 className="text-sm md:text-base font-bold text-foreground truncate">
               {schoolName || 'OEP Sustentável'}
