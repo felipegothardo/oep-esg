@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { LogOut, User, ChevronDown } from 'lucide-react';
+import { LogOut, User, ChevronDown, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import oepLogo from '@/assets/oep-logo-new.png';
@@ -17,6 +17,20 @@ export default function EcoHeader({ schoolName, schoolLogo }: EcoHeaderProps = {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return saved ? saved === 'dark' : true;
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDark) {
+      root.classList.remove('light');
+    } else {
+      root.classList.add('light');
+    }
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  }, [isDark]);
 
   useEffect(() => {
     loadUserData();
@@ -73,6 +87,15 @@ export default function EcoHeader({ schoolName, schoolLogo }: EcoHeaderProps = {
             </p>
           </div>
         </div>
+
+        {/* Theme Toggle */}
+        <button
+          onClick={() => setIsDark(!isDark)}
+          className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-muted/50 transition-colors flex-shrink-0"
+          aria-label={isDark ? 'Ativar modo claro' : 'Ativar modo escuro'}
+        >
+          {isDark ? <Sun className="w-4 h-4 text-yellow-400" /> : <Moon className="w-4 h-4 text-primary" />}
+        </button>
 
         {/* Right - User Info */}
         <div className="relative flex-shrink-0">
