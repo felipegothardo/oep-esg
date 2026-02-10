@@ -85,12 +85,14 @@ export default function SchoolDashboard({
     .filter(entry => entry.type === 'energy').slice(-1)[0]?.consumption || 0;
 
   return (
-    <div className="space-y-6">
-      {/* Compact Stats Bar */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+    <div className="space-y-8">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
         <Card className="border-success/20">
-          <CardContent className="p-3 flex items-center gap-2">
-            <Leaf className="h-4 w-4 text-success flex-shrink-0" />
+          <CardContent className="p-4 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-success/15 flex items-center justify-center flex-shrink-0">
+              <Leaf className="h-4 w-4 text-success" />
+            </div>
             <div className="min-w-0">
               <p className="text-base md:text-lg font-bold text-success">{totalCO2Saved.toFixed(1)}</p>
               <p className="text-[10px] text-muted-foreground">kg CO₂ evitado</p>
@@ -98,8 +100,10 @@ export default function SchoolDashboard({
           </CardContent>
         </Card>
         <Card className="border-blue/20">
-          <CardContent className="p-3 flex items-center gap-2">
-            <Droplets className="h-4 w-4 text-blue flex-shrink-0" />
+          <CardContent className="p-4 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-blue/15 flex items-center justify-center flex-shrink-0">
+              <Droplets className="h-4 w-4 text-blue" />
+            </div>
             <div className="min-w-0">
               <p className="text-base md:text-lg font-bold text-blue">{lastWaterConsumption.toLocaleString()}</p>
               <p className="text-[10px] text-muted-foreground">L água/mês</p>
@@ -107,8 +111,10 @@ export default function SchoolDashboard({
           </CardContent>
         </Card>
         <Card className="border-accent/20">
-          <CardContent className="p-3 flex items-center gap-2">
-            <Zap className="h-4 w-4 text-accent flex-shrink-0" />
+          <CardContent className="p-4 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-accent/15 flex items-center justify-center flex-shrink-0">
+              <Zap className="h-4 w-4 text-accent" />
+            </div>
             <div className="min-w-0">
               <p className="text-base md:text-lg font-bold text-accent">{lastEnergyConsumption}</p>
               <p className="text-[10px] text-muted-foreground">kWh/mês</p>
@@ -116,8 +122,10 @@ export default function SchoolDashboard({
           </CardContent>
         </Card>
         <Card className="border-purple/20">
-          <CardContent className="p-3 flex items-center gap-2">
-            <Recycle className="h-4 w-4 text-purple flex-shrink-0" />
+          <CardContent className="p-4 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-purple/15 flex items-center justify-center flex-shrink-0">
+              <Recycle className="h-4 w-4 text-purple" />
+            </div>
             <div className="min-w-0">
               <p className="text-base md:text-lg font-bold text-purple">{totalRecycled.toFixed(1)}</p>
               <p className="text-[10px] text-muted-foreground">kg reciclados</p>
@@ -126,29 +134,32 @@ export default function SchoolDashboard({
         </Card>
       </div>
 
-      {/* Section divider - Painel de Controle Ambiental */}
-      <div className="flex items-center gap-4 pt-2">
-        <div className="flex-1 h-px bg-border" />
-        <div className="flex items-center gap-3 px-4 py-2 bg-primary/10 border border-primary/20 rounded-lg">
-          <BarChart3 className="h-5 w-5 text-primary" />
-          <h2 className="text-sm md:text-base font-bold text-primary tracking-wide uppercase">
-            Painel de Controle Ambiental
-          </h2>
-        </div>
-        <div className="flex-1 h-px bg-border" />
-      </div>
-      <div className="flex justify-end">
-        <ExportButton 
-          schoolName={schoolName}
-          recyclingEntries={safeData.recyclingEntries}
-          consumptionEntries={safeData.consumptionEntries}
-        />
-      </div>
+      {/* Painel de Controle Ambiental - Highlighted Section */}
+      <Card className="border-l-4 border-l-primary border-border">
+        <CardContent className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="w-11 h-11 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+              <BarChart3 className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-foreground tracking-wide uppercase">
+                Painel de Controle Ambiental
+              </h2>
+              <p className="text-sm text-muted-foreground">Monitoramento e registro de dados ambientais</p>
+            </div>
+          </div>
+          <ExportButton 
+            schoolName={schoolName}
+            recyclingEntries={safeData.recyclingEntries}
+            consumptionEntries={safeData.consumptionEntries}
+          />
+        </CardContent>
+      </Card>
 
       {/* Tabs - compact & scrollable */}
       <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-6">
         <div className="overflow-x-auto -mx-2 px-2 pb-1">
-          <TabsList className="inline-flex w-auto gap-1 p-1 bg-muted/50 rounded-lg">
+          <TabsList className="inline-flex w-auto gap-1 p-1.5 bg-card border border-border shadow-sm rounded-xl">
             <TabsTrigger value="calculator" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap">
               <Calculator className="h-3.5 w-3.5" />
               Calculadora
@@ -180,7 +191,7 @@ export default function SchoolDashboard({
           </TabsList>
         </div>
 
-        <TabsContent value="calculator" className="animate-fade-in">
+        <TabsContent value="calculator">
           <div className="space-y-4">
             {!viewOnly && safeData.recyclingEntries.length > 0 && (
               <div className="flex justify-end">
@@ -211,7 +222,7 @@ export default function SchoolDashboard({
           </div>
         </TabsContent>
 
-        <TabsContent value="consumption" className="animate-fade-in">
+        <TabsContent value="consumption">
           <div className="space-y-4">
             {!viewOnly && safeData.consumptionEntries.length > 0 && (
               <div className="flex justify-end gap-2">
@@ -254,7 +265,7 @@ export default function SchoolDashboard({
           </div>
         </TabsContent>
 
-        <TabsContent value="goals" className="space-y-4 animate-fade-in">
+        <TabsContent value="goals" className="space-y-4">
           <SmartGoalSuggestion 
             recyclingEntries={safeData.recyclingEntries}
             consumptionEntries={safeData.consumptionEntries}
@@ -273,7 +284,7 @@ export default function SchoolDashboard({
           <ProjectionCard entries={safeData.recyclingEntries} schoolName={schoolName} />
         </TabsContent>
 
-        <TabsContent value="recycling-charts" className="animate-fade-in">
+        <TabsContent value="recycling-charts">
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <h3 className="text-base font-semibold">Dados de Reciclagem</h3>
@@ -289,7 +300,7 @@ export default function SchoolDashboard({
           </div>
         </TabsContent>
 
-        <TabsContent value="consumption-charts" className="animate-fade-in">
+        <TabsContent value="consumption-charts">
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <h3 className="text-base font-semibold">Dados de Consumo</h3>
@@ -318,11 +329,11 @@ export default function SchoolDashboard({
           </div>
         </TabsContent>
 
-        <TabsContent value="history" className="animate-fade-in">
+        <TabsContent value="history">
           <ActionHistory history={history} onUndo={undoLastAction} onClear={clearHistory} hasHistory={hasHistory} />
         </TabsContent>
 
-        <TabsContent value="resources" className="animate-fade-in">
+        <TabsContent value="resources">
           <ResourcesTab />
         </TabsContent>
       </Tabs>
