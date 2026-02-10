@@ -9,17 +9,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-eco hover:shadow-glow hover:scale-[1.02] active:scale-[0.98]",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]",
         outline:
-          "border-2 border-primary bg-background text-primary hover:bg-primary hover:text-primary-foreground shadow-sm hover:shadow-eco hover:scale-[1.02] active:scale-[0.98]",
+          "border-2 border-primary bg-background text-primary hover:bg-primary hover:text-primary-foreground shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98]",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-purple hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]",
         ghost: "hover:bg-accent hover:text-accent-foreground hover:scale-[1.02] active:scale-[0.98]",
         link: "text-primary underline-offset-4 hover:underline",
-        vibrant: "bg-gradient-vibrant text-white shadow-glow hover:shadow-xl hover:scale-[1.05] active:scale-[0.98] font-bold",
-        success: "bg-success text-success-foreground hover:bg-success/90 shadow-eco hover:shadow-glow hover:scale-[1.02] active:scale-[0.98]",
+        vibrant: "bg-gradient-vibrant text-white shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] font-bold",
+        success: "bg-success text-success-foreground hover:bg-success/90 shadow-sm hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]",
       },
       size: {
         default: "h-11 px-6 py-3 text-base",
