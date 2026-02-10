@@ -10,69 +10,69 @@ All colors MUST be HSL.
   :root {
     /* Dark mode azul como padrão */
     --background: 220 25% 12%;
-    --foreground: 210 100% 95%;
+    --foreground: 210 20% 95%;
 
     --card: 220 22% 16%;
-    --card-foreground: 210 100% 95%;
+    --card-foreground: 210 20% 95%;
 
     --popover: 220 22% 16%;
-    --popover-foreground: 210 100% 95%;
+    --popover-foreground: 210 20% 95%;
 
     /* Cores azuis vibrantes com alto contraste */
-    --primary: 210 100% 55%;
+    --primary: 210 70% 50%;
     --primary-foreground: 220 30% 8%;
-    --primary-hover: 210 100% 50%;
-    --primary-glow: 210 100% 65%;
-    --primary-vibrant: 210 100% 60%;
+    --primary-hover: 210 70% 45%;
+    --primary-glow: 210 60% 58%;
+    --primary-vibrant: 210 65% 55%;
 
     --secondary: 220 22% 22%;
-    --secondary-foreground: 210 100% 95%;
+    --secondary-foreground: 210 20% 95%;
 
     --muted: 220 18% 20%;
     --muted-foreground: 210 40% 70%;
 
-    --accent: 195 100% 50%;
+    --accent: 195 65% 45%;
     --accent-foreground: 220 30% 8%;
 
-    --blue: 210 100% 55%;
+    --blue: 210 70% 50%;
     --blue-foreground: 220 30% 8%;
-    --blue-light: 210 100% 65%;
-    --blue-dark: 210 100% 45%;
+    --blue-light: 210 60% 58%;
+    --blue-dark: 210 70% 42%;
 
-    --green: 142 70% 50%;
+    --green: 142 55% 45%;
     --green-foreground: 220 30% 8%;
-    --green-light: 142 70% 60%;
+    --green-light: 142 55% 55%;
 
-    --success: 142 70% 50%;
+    --success: 142 55% 45%;
     --success-foreground: 220 30% 8%;
 
-    --destructive: 0 85% 60%;
-    --destructive-foreground: 210 100% 95%;
+    --destructive: 0 65% 52%;
+    --destructive-foreground: 210 20% 95%;
 
-    --purple: 265 70% 60%;
+    --purple: 265 50% 52%;
     --purple-foreground: 220 30% 8%;
-    --purple-vibrant: 265 80% 70%;
+    --purple-vibrant: 265 55% 58%;
 
-    /* Gradientes azuis vibrantes */
-    --gradient-eco: linear-gradient(135deg, hsl(210 100% 55%) 0%, hsl(195 100% 50%) 100%);
+    /* Gradientes com saturação reduzida */
+    --gradient-eco: linear-gradient(135deg, hsl(210 70% 50%) 0%, hsl(195 65% 45%) 100%);
     --gradient-tech: linear-gradient(180deg, hsl(220 28% 12%) 0%, hsl(220 30% 8%) 100%);
     --gradient-subtle: linear-gradient(180deg, transparent 0%, hsl(220 20% 18% / 0.3) 100%);
-    --gradient-nature: linear-gradient(135deg, hsl(142 70% 50%) 0%, hsl(160 70% 45%) 100%);
-    --gradient-sky: linear-gradient(135deg, hsl(210 100% 60%), hsl(195 100% 55%));
-    --gradient-ocean: linear-gradient(135deg, hsl(200 100% 50%), hsl(210 100% 60%));
-    --gradient-sunset: linear-gradient(135deg, hsl(20 100% 60%), hsl(340 100% 60%));
-    --gradient-purple: linear-gradient(135deg, hsl(265 70% 60%), hsl(280 70% 65%));
-    --gradient-vibrant: linear-gradient(135deg, hsl(210 100% 55%), hsl(265 70% 60%));
-    --gradient-blue: linear-gradient(135deg, hsl(210 100% 50%), hsl(195 100% 55%));
+    --gradient-nature: linear-gradient(135deg, hsl(142 55% 45%) 0%, hsl(160 55% 40%) 100%);
+    --gradient-sky: linear-gradient(135deg, hsl(210 70% 55%), hsl(195 65% 50%));
+    --gradient-ocean: linear-gradient(135deg, hsl(200 70% 48%), hsl(210 70% 55%));
+    --gradient-sunset: linear-gradient(135deg, hsl(20 80% 55%), hsl(340 70% 55%));
+    --gradient-purple: linear-gradient(135deg, hsl(265 50% 52%), hsl(280 50% 55%));
+    --gradient-vibrant: linear-gradient(135deg, hsl(210 70% 50%), hsl(265 50% 52%));
+    --gradient-blue: linear-gradient(135deg, hsl(210 70% 48%), hsl(195 65% 50%));
 
-    /* Sombras com glow azul */
-    --shadow-eco: 0 4px 20px -4px hsl(210 100% 55% / 0.3);
-    --shadow-soft: 0 2px 10px -2px hsl(210 80% 50% / 0.15);
-    --shadow-card: 0 4px 16px -4px hsl(210 80% 50% / 0.2);
-    --shadow-glow: 0 0 40px hsl(210 100% 55% / 0.4);
-    --shadow-elegant: 0 10px 50px -10px hsl(210 100% 55% / 0.3);
-    --shadow-accent: 0 0 30px hsl(195 100% 50% / 0.3);
-    --shadow-purple: 0 0 30px hsl(265 70% 60% / 0.3);
+    /* Sombras neutras e suaves */
+    --shadow-eco: 0 4px 20px -4px hsl(220 20% 4% / 0.3);
+    --shadow-soft: 0 2px 10px -2px hsl(220 15% 4% / 0.15);
+    --shadow-card: 0 4px 16px -4px hsl(220 15% 4% / 0.2);
+    --shadow-glow: 0 0 30px hsl(210 50% 50% / 0.15);
+    --shadow-elegant: 0 10px 50px -10px hsl(220 20% 4% / 0.25);
+    --shadow-accent: 0 0 20px hsl(195 40% 45% / 0.12);
+    --shadow-purple: 0 0 20px hsl(265 35% 50% / 0.12);
 
     /* Border Radius */
     --radius-card: 1rem;
@@ -83,25 +83,25 @@ All colors MUST be HSL.
 
     --border: 220 18% 28%;
     --input: 220 18% 22%;
-    --ring: 210 100% 55%;
+    --ring: 210 70% 50%;
 
     --radius: 0.5rem;
 
     --sidebar-background: 220 22% 14%;
-    --sidebar-foreground: 210 100% 95%;
-    --sidebar-primary: 210 100% 55%;
+    --sidebar-foreground: 210 20% 95%;
+    --sidebar-primary: 210 70% 50%;
     --sidebar-primary-foreground: 220 30% 8%;
     --sidebar-accent: 220 25% 20%;
-    --sidebar-accent-foreground: 210 100% 95%;
+    --sidebar-accent-foreground: 210 20% 95%;
     --sidebar-border: 220 20% 25%;
-    --sidebar-ring: 210 100% 55%;
+    --sidebar-ring: 210 70% 50%;
 
     /* Chart colors for data visualization */
-    --chart-1: 142 70% 50%;  /* Green - Reciclagem */
-    --chart-2: 210 100% 55%; /* Blue - CO2 */
-    --chart-3: 195 100% 50%; /* Cyan - Água */
-    --chart-4: 45 100% 55%;  /* Yellow/Orange - Energia */
-    --chart-5: 265 70% 60%;  /* Purple - Extra */
+    --chart-1: 142 55% 45%;  /* Green - Reciclagem */
+    --chart-2: 210 70% 50%; /* Blue - CO2 */
+    --chart-3: 195 65% 45%; /* Cyan - Água */
+    --chart-4: 45 80% 50%;  /* Yellow/Orange - Energia */
+    --chart-5: 265 50% 52%;  /* Purple - Extra */
   }
 
   .light {
@@ -114,9 +114,9 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 215 25% 15%;
 
-    --primary: 210 100% 45%;
+    --primary: 210 70% 42%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 210 100% 40%;
+    --primary-hover: 210 70% 38%;
 
     --secondary: 215 20% 50%;
     --secondary-foreground: 0 0% 100%;
@@ -124,43 +124,43 @@ All colors MUST be HSL.
     --muted: 210 15% 94%;
     --muted-foreground: 215 18% 40%;
 
-    --accent: 195 100% 40%;
+    --accent: 195 65% 38%;
     --accent-foreground: 0 0% 100%;
 
-    --blue: 210 100% 45%;
+    --blue: 210 70% 42%;
     --blue-foreground: 0 0% 100%;
 
-    --green: 142 70% 42%;
+    --green: 142 55% 38%;
     --green-foreground: 0 0% 100%;
 
-    --success: 142 70% 42%;
+    --success: 142 55% 38%;
     --success-foreground: 0 0% 100%;
 
-    --destructive: 0 85% 55%;
+    --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --purple: 265 70% 50%;
+    --purple: 265 50% 45%;
     --purple-foreground: 0 0% 100%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 210 100% 45%;
+    --ring: 210 70% 42%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 210 100% 45%;
+    --sidebar-primary: 210 70% 42%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 4.8% 95.9%;
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 210 100% 45%;
+    --sidebar-ring: 210 70% 42%;
 
     /* Chart colors for data visualization (light mode) */
-    --chart-1: 142 70% 42%;  /* Green - Reciclagem */
-    --chart-2: 210 100% 45%; /* Blue - CO2 */
-    --chart-3: 195 100% 40%; /* Cyan - Água */
-    --chart-4: 45 100% 45%;  /* Yellow/Orange - Energia */
-    --chart-5: 265 70% 50%;  /* Purple - Extra */
+    --chart-1: 142 55% 38%;  /* Green - Reciclagem */
+    --chart-2: 210 70% 42%; /* Blue - CO2 */
+    --chart-3: 195 65% 38%; /* Cyan - Água */
+    --chart-4: 45 80% 42%;  /* Yellow/Orange - Energia */
+    --chart-5: 265 50% 45%;  /* Purple - Extra */
   }
 }
 
