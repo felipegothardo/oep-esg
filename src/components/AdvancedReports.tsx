@@ -14,7 +14,8 @@ import {
 } from "recharts";
 import { 
   FileDown, TrendingUp, TrendingDown, Award, Users, 
-  Droplets, Zap, Recycle, Calendar, School, Target
+  Droplets, Zap, Recycle, Calendar, School, Target,
+  ArrowUpRight, ArrowDownRight, Leaf, Trophy, Filter
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from "jspdf";
@@ -33,16 +34,25 @@ interface SchoolData {
   goals: { type: string; target: number; current: number }[];
 }
 
+interface SchoolOption {
+  id: string;
+  name: string;
+}
+
 export default function AdvancedReports() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [selectedPeriod, setSelectedPeriod] = useState("3months");
   const [selectedSchool, setSelectedSchool] = useState("all");
   const [schools, setSchools] = useState<SchoolData[]>([]);
+  const [schoolOptions, setSchoolOptions] = useState<SchoolOption[]>([]);
   const [reportData, setReportData] = useState<any>(null);
   const [isCoordinator, setIsCoordinator] = useState(false);
 
-  const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
+  const COLORS = [
+    'hsl(142, 55%, 45%)', 'hsl(210, 70%, 50%)', 'hsl(35, 75%, 50%)', 
+    'hsl(0, 65%, 52%)', 'hsl(265, 50%, 52%)', 'hsl(195, 65%, 45%)'
+  ];
 
   useEffect(() => {
     let isMounted = true;
@@ -62,10 +72,21 @@ export default function AdvancedReports() {
         setIsCoordinator(!!roleData);
       }
     };
+
+    const loadSchoolOptions = async () => {
+      const { data } = await supabase
+        .from("schools")
+        .select("id, name")
+        .neq("code", "OEP")
+        .order("name");
+      if (isMounted && data) {
+        setSchoolOptions(data);
+      }
+    };
     
     const loadData = async () => {
       if (!isMounted) return;
-      await checkCoordinatorRole();
+      await Promise.all([checkCoordinatorRole(), loadSchoolOptions()]);
       await loadReportData();
     };
     
@@ -81,16 +102,13 @@ export default function AdvancedReports() {
       setLoading(true);
       setReportData(null);
 
-      // Check authentication first
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
-        console.warn("No user session found");
         setReportData(null);
         setLoading(false);
         return;
       }
 
-      // Get date range based on selected period
       const endDate = new Date();
       const startDate = new Date();
       if (selectedPeriod === "1month") {
@@ -103,7 +121,6 @@ export default function AdvancedReports() {
         startDate.setFullYear(startDate.getFullYear() - 1);
       }
 
-      // Load schools (excluding OEP)
       const { data: schoolsData, error: schoolsError } = await supabase
         .from("schools")
         .select("*")
@@ -111,7 +128,6 @@ export default function AdvancedReports() {
         .order("name");
 
       if (schoolsError) {
-        console.error("Error loading schools:", schoolsError);
         toast({
           title: "Erro ao carregar escolas",
           description: "Não foi possível carregar a lista de escolas",
@@ -128,14 +144,11 @@ export default function AdvancedReports() {
         return;
       }
 
-      // Load data for each school
       const schoolsWithData: SchoolData[] = [];
 
       for (const school of schoolsData) {
-        // Skip if specific school is selected and this isn't it
         if (selectedSchool !== "all" && school.id !== selectedSchool) continue;
 
-        // Load recycling data
         const { data: recyclingData } = await supabase
           .from("recycling_entries")
           .select("*")
@@ -143,7 +156,6 @@ export default function AdvancedReports() {
           .gte("entry_date", startDate.toISOString().split("T")[0])
           .lte("entry_date", endDate.toISOString().split("T")[0]);
 
-        // Load consumption data
         const { data: consumptionData } = await supabase
           .from("consumption_entries")
           .select("*")
@@ -151,17 +163,14 @@ export default function AdvancedReports() {
           .gte("entry_date", startDate.toISOString().split("T")[0])
           .lte("entry_date", endDate.toISOString().split("T")[0]);
 
-        // Load goals
         const { data: goalsData } = await supabase
           .from("consumption_goals")
           .select("*")
           .eq("school_id", school.id);
 
-        // Process data
         const totalRecycled = recyclingData?.reduce((sum, item) => sum + Number(item.quantity), 0) || 0;
         const totalCO2 = recyclingData?.reduce((sum, item) => sum + Number(item.co2_saved), 0) || 0;
 
-        // Group recycling by material
         const materialGroups = recyclingData?.reduce((acc: any, item) => {
           if (!acc[item.material]) acc[item.material] = 0;
           acc[item.material] += Number(item.quantity);
@@ -173,7 +182,6 @@ export default function AdvancedReports() {
           quantity: quantity as number
         }));
 
-        // Calculate monthly trends
         const monthlyData = recyclingData?.reduce((acc: any, item) => {
           const month = item.entry_date.substring(0, 7);
           if (!acc[month]) acc[month] = { recycling: 0, co2: 0 };
@@ -188,7 +196,6 @@ export default function AdvancedReports() {
           co2: data.co2
         })).sort((a, b) => a.month.localeCompare(b.month));
 
-        // Calculate consumption trends
         const waterData = consumptionData?.filter(item => item.type === "water") || [];
         const energyData = consumptionData?.filter(item => item.type === "energy") || [];
 
@@ -209,7 +216,6 @@ export default function AdvancedReports() {
           energy: data.energy
         })).sort((a, b) => a.month.localeCompare(b.month));
 
-        // Process goals
         const goals = goalsData?.map(goal => ({
           type: goal.type === "water" ? "Água" : "Energia",
           target: Number(goal.reduction_percentage),
@@ -269,7 +275,6 @@ export default function AdvancedReports() {
     }
 
     try {
-      // Ranking data
       const ranking = schoolsData
         .map(school => ({
           name: school.name,
@@ -279,7 +284,6 @@ export default function AdvancedReports() {
         }))
         .sort((a, b) => b.score - a.score);
 
-      // Comparison data
       const comparison = schoolsData.map(school => ({
         name: school.name.replace("Escola ", ""),
         Reciclagem: school.totalRecycled || 0,
@@ -288,7 +292,6 @@ export default function AdvancedReports() {
         Energia: school.energyConsumption || 0
       }));
 
-      // Materials distribution
       const allMaterials: any = {};
       schoolsData.forEach(school => {
         if (school.recyclingByMaterial && Array.isArray(school.recyclingByMaterial)) {
@@ -304,7 +307,6 @@ export default function AdvancedReports() {
         value: quantity as number
       }));
 
-      // Performance metrics
       const performanceData = schoolsData.map(school => ({
         school: school.name.replace("Escola ", ""),
         Reciclagem: Math.min(100, ((school.totalRecycled || 0) / 1000) * 100),
@@ -334,82 +336,43 @@ export default function AdvancedReports() {
 
   const exportPDF = async () => {
     if (!reportData) {
-      toast({
-        title: "Sem dados",
-        description: "Não há dados para exportar",
-        variant: "destructive"
-      });
+      toast({ title: "Sem dados", description: "Não há dados para exportar", variant: "destructive" });
       return;
     }
-    
     try {
       const reportElement = document.getElementById("advanced-report");
       if (!reportElement) return;
-
-      const canvas = await html2canvas(reportElement, {
-        scale: 2,
-        logging: false,
-        useCORS: true
-      });
-
+      const canvas = await html2canvas(reportElement, { scale: 2, logging: false, useCORS: true });
       const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF({
-        orientation: "landscape",
-        unit: "mm",
-        format: "a4"
-      });
-
+      const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
       const imgWidth = 297;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
       pdf.save(`relatorio-comparativo-${new Date().toISOString().split("T")[0]}.pdf`);
-
-      toast({
-        title: "Relatório exportado",
-        description: "O PDF foi baixado com sucesso",
-      });
+      toast({ title: "Relatório exportado", description: "O PDF foi baixado com sucesso" });
     } catch (error) {
-      console.error("Error exporting PDF:", error);
-      toast({
-        title: "Erro ao exportar",
-        description: "Não foi possível gerar o PDF",
-        variant: "destructive"
-      });
+      toast({ title: "Erro ao exportar", description: "Não foi possível gerar o PDF", variant: "destructive" });
     }
   };
 
   const exportCSV = () => {
     if (!reportData) {
-      toast({
-        title: "Sem dados",
-        description: "Não há dados para exportar",
-        variant: "destructive"
-      });
+      toast({ title: "Sem dados", description: "Não há dados para exportar", variant: "destructive" });
       return;
     }
-    
     try {
-      if (!reportData) return;
-
       let csv = "Relatório Comparativo OEP Sustentável\n";
       csv += `Período: ${selectedPeriod === "1month" ? "1 mês" : selectedPeriod === "3months" ? "3 meses" : selectedPeriod === "6months" ? "6 meses" : "1 ano"}\n\n`;
-
-      // Totals
       csv += "Resumo Geral\n";
       csv += `Total Reciclado,${reportData.totals.recycling} kg\n`;
       csv += `Total CO2 Evitado,${reportData.totals.co2} kg\n`;
       csv += `Consumo Total de Água,${reportData.totals.water} m³\n`;
       csv += `Consumo Total de Energia,${reportData.totals.energy} kWh\n\n`;
-
-      // Ranking
       csv += "Ranking das Escolas\n";
       csv += "Posição,Escola,Material Reciclado (kg),CO2 Evitado (kg),Pontuação\n";
       reportData.ranking.forEach((school: any, index: number) => {
         csv += `${index + 1},${school.name},${school.recycled},${school.co2},${school.score.toFixed(2)}\n`;
       });
-
-      // Download
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const link = document.createElement("a");
       const url = URL.createObjectURL(blob);
@@ -419,18 +382,9 @@ export default function AdvancedReports() {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-
-      toast({
-        title: "Relatório exportado",
-        description: "O CSV foi baixado com sucesso",
-      });
+      toast({ title: "Relatório exportado", description: "O CSV foi baixado com sucesso" });
     } catch (error) {
-      console.error("Error exporting CSV:", error);
-      toast({
-        title: "Erro ao exportar",
-        description: "Não foi possível gerar o CSV",
-        variant: "destructive"
-      });
+      toast({ title: "Erro ao exportar", description: "Não foi possível gerar o CSV", variant: "destructive" });
     }
   };
 
@@ -459,7 +413,6 @@ export default function AdvancedReports() {
     );
   }
 
-  // Garantir que os arrays existam, mesmo que vazios
   const safeReportData = {
     ...reportData,
     ranking: reportData.ranking || [],
@@ -468,161 +421,219 @@ export default function AdvancedReports() {
     performanceData: reportData.performanceData || []
   };
 
+  const selectedSchoolName = selectedSchool === "all" 
+    ? "Todas as Escolas" 
+    : schoolOptions.find(s => s.id === selectedSchool)?.name || "Escola";
+
   return (
-    <div id="advanced-report" className="space-y-6 p-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 className="text-3xl font-bold">Relatórios Avançados</h2>
-          <p className="text-muted-foreground">Análise comparativa entre escolas</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-            <SelectTrigger className="w-[140px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1month">1 mês</SelectItem>
-              <SelectItem value="3months">3 meses</SelectItem>
-              <SelectItem value="6months">6 meses</SelectItem>
-              <SelectItem value="1year">1 ano</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button onClick={exportPDF} variant="outline" className="gap-2">
-            <FileDown className="h-4 w-4" />
-            PDF
-          </Button>
-          <Button onClick={exportCSV} variant="outline" className="gap-2">
-            <FileDown className="h-4 w-4" />
-            CSV
-          </Button>
-        </div>
-      </div>
+    <div id="advanced-report" className="space-y-6 p-4 md:p-6">
+      {/* Header with Filters */}
+      <Card className="border-l-4 border-l-primary">
+        <CardContent className="py-5">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                </div>
+                Relatórios Avançados
+              </h2>
+              <p className="text-muted-foreground mt-1 ml-[52px]">
+                Análise comparativa e indicadores de desempenho
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+              {/* School Filter */}
+              <Select value={selectedSchool} onValueChange={setSelectedSchool}>
+                <SelectTrigger className="w-full sm:w-[200px] bg-card">
+                  <div className="flex items-center gap-2">
+                    <School className="h-4 w-4 text-muted-foreground" />
+                    <SelectValue placeholder="Todas as escolas" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">
+                    <span className="flex items-center gap-2">Todas as Escolas</span>
+                  </SelectItem>
+                  {schoolOptions.map(school => (
+                    <SelectItem key={school.id} value={school.id}>
+                      {school.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-      {/* KPI Cards */}
+              {/* Period Filter */}
+              <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                <SelectTrigger className="w-full sm:w-[150px] bg-card">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    <SelectValue />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1month">1 mês</SelectItem>
+                  <SelectItem value="3months">3 meses</SelectItem>
+                  <SelectItem value="6months">6 meses</SelectItem>
+                  <SelectItem value="1year">1 ano</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <div className="flex gap-2">
+                <Button onClick={exportPDF} variant="outline" size="sm" className="gap-1.5">
+                  <FileDown className="h-4 w-4" />
+                  PDF
+                </Button>
+                <Button onClick={exportCSV} variant="outline" size="sm" className="gap-1.5">
+                  <FileDown className="h-4 w-4" />
+                  CSV
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {selectedSchool !== "all" && (
+            <div className="mt-3 ml-[52px]">
+              <Badge variant="secondary" className="gap-1.5">
+                <Filter className="h-3 w-3" />
+                Filtrando: {selectedSchoolName}
+              </Badge>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Modern KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Reciclado
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              <Recycle className="h-4 w-4 text-green-500" />
-              <span className="text-2xl font-bold">
-                {safeReportData.totals.recycling.toFixed(1)} kg
-              </span>
+        <Card className="relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-green-500/5 rounded-bl-[40px]" />
+          <CardContent className="pt-5 pb-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Total Reciclado</p>
+                <p className="text-2xl font-bold mt-1">{safeReportData.totals.recycling.toFixed(1)}</p>
+                <p className="text-xs text-muted-foreground">quilogramas</p>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
+                <Recycle className="h-5 w-5 text-green-500" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              CO2 Evitado
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              <TrendingDown className="h-4 w-4 text-blue-500" />
-              <span className="text-2xl font-bold">
-                {safeReportData.totals.co2.toFixed(1)} kg
-              </span>
+        <Card className="relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-primary/5 rounded-bl-[40px]" />
+          <CardContent className="pt-5 pb-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">CO₂ Evitado</p>
+                <p className="text-2xl font-bold mt-1">{safeReportData.totals.co2.toFixed(1)}</p>
+                <p className="text-xs text-muted-foreground">kg de CO₂</p>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Leaf className="h-5 w-5 text-primary" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Consumo de Água
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              <Droplets className="h-4 w-4 text-cyan-500" />
-              <span className="text-2xl font-bold">
-                {safeReportData.totals.water.toFixed(0)} m³
-              </span>
+        <Card className="relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-blue-500/5 rounded-bl-[40px]" />
+          <CardContent className="pt-5 pb-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Consumo de Água</p>
+                <p className="text-2xl font-bold mt-1">{safeReportData.totals.water.toFixed(0)}</p>
+                <p className="text-xs text-muted-foreground">metros cúbicos</p>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                <Droplets className="h-5 w-5 text-blue-500" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Consumo de Energia
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              <Zap className="h-4 w-4 text-yellow-500" />
-              <span className="text-2xl font-bold">
-                {safeReportData.totals.energy.toFixed(0)} kWh
-              </span>
+        <Card className="relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-yellow-500/5 rounded-bl-[40px]" />
+          <CardContent className="pt-5 pb-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Consumo Energia</p>
+                <p className="text-2xl font-bold mt-1">{safeReportData.totals.energy.toFixed(0)}</p>
+                <p className="text-xs text-muted-foreground">quilowatt-hora</p>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center">
+                <Zap className="h-5 w-5 text-yellow-500" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Escolas Ativas
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-2">
-              <School className="h-4 w-4 text-purple-500" />
-              <span className="text-2xl font-bold">
-                {safeReportData.totals.schools}
-              </span>
+        <Card className="relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-purple-500/5 rounded-bl-[40px]" />
+          <CardContent className="pt-5 pb-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Escolas Ativas</p>
+                <p className="text-2xl font-bold mt-1">{safeReportData.totals.schools}</p>
+                <p className="text-xs text-muted-foreground">participantes</p>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                <School className="h-5 w-5 text-purple-500" />
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
       <Tabs defaultValue={isCoordinator ? "ranking" : "performance"} className="w-full">
-        <TabsList className={`grid w-full ${isCoordinator ? 'grid-cols-4' : 'grid-cols-2'}`}>
-          {isCoordinator && <TabsTrigger value="ranking">Ranking</TabsTrigger>}
-          {isCoordinator && <TabsTrigger value="comparison">Comparação</TabsTrigger>}
-          <TabsTrigger value="materials">Resíduos</TabsTrigger>
-          <TabsTrigger value="performance">Desempenho</TabsTrigger>
+        <TabsList className={`grid w-full ${isCoordinator ? 'grid-cols-4' : 'grid-cols-2'} bg-card border border-border shadow-sm p-1 rounded-xl`}>
+          {isCoordinator && <TabsTrigger value="ranking" className="gap-1.5"><Trophy className="h-4 w-4" />Ranking</TabsTrigger>}
+          {isCoordinator && <TabsTrigger value="comparison" className="gap-1.5"><Users className="h-4 w-4" />Comparação</TabsTrigger>}
+          <TabsTrigger value="materials" className="gap-1.5"><Recycle className="h-4 w-4" />Resíduos</TabsTrigger>
+          <TabsTrigger value="performance" className="gap-1.5"><Target className="h-4 w-4" />Desempenho</TabsTrigger>
         </TabsList>
 
         {isCoordinator && (
-          <TabsContent value="ranking" className="space-y-4">
+          <TabsContent value="ranking" className="space-y-4 mt-4">
             <Card>
               <CardHeader>
-                <CardTitle>Ranking de Sustentabilidade</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Trophy className="h-5 w-5 text-yellow-500" />
+                  Ranking de Sustentabilidade
+                </CardTitle>
                 <CardDescription>
-                  Classificação das escolas baseada em reciclagem e redução de CO2
+                  Classificação baseada em reciclagem e redução de CO₂
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {safeReportData.ranking.length > 0 ? (
                     safeReportData.ranking.map((school: any, index: number) => {
                       const maxScore = safeReportData.ranking[0]?.score || 1;
+                      const medals = ['🥇', '🥈', '🥉'];
                       return (
-                        <div key={index} className="flex items-center gap-4">
-                          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
-                            {index === 0 && <Award className="h-5 w-5 text-yellow-500" />}
-                            {index === 1 && <Award className="h-5 w-5 text-gray-400" />}
-                            {index === 2 && <Award className="h-5 w-5 text-orange-600" />}
-                            {index > 2 && <span className="font-bold">{index + 1}</span>}
+                        <div key={index} className="flex items-center gap-4 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+                          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-lg font-bold">
+                            {index < 3 ? medals[index] : <span className="text-sm">{index + 1}º</span>}
                           </div>
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="font-medium">{school.name}</span>
-                              <Badge variant="outline">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-1.5">
+                              <span className="font-semibold truncate">{school.name}</span>
+                              <Badge variant="outline" className="ml-2 shrink-0">
                                 {school.score.toFixed(0)} pts
                               </Badge>
                             </div>
                             <Progress value={(school.score / maxScore) * 100} className="h-2" />
-                            <div className="flex gap-4 mt-1 text-xs text-muted-foreground">
-                              <span>{school.recycled.toFixed(1)} kg reciclados</span>
-                              <span>{school.co2.toFixed(1)} kg CO2 evitados</span>
+                            <div className="flex gap-4 mt-1.5 text-xs text-muted-foreground">
+                              <span className="flex items-center gap-1">
+                                <Recycle className="h-3 w-3" />
+                                {school.recycled.toFixed(1)} kg
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Leaf className="h-3 w-3" />
+                                {school.co2.toFixed(1)} kg CO₂
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -640,10 +651,13 @@ export default function AdvancedReports() {
         )}
 
         {isCoordinator && (
-          <TabsContent value="comparison">
+          <TabsContent value="comparison" className="mt-4">
             <Card>
               <CardHeader>
-                <CardTitle>Comparação entre Escolas</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5 text-primary" />
+                  Comparação entre Escolas
+                </CardTitle>
                 <CardDescription>
                   Visualização comparativa de todos os indicadores
                 </CardDescription>
@@ -651,73 +665,104 @@ export default function AdvancedReports() {
               <CardContent>
                 {safeReportData.comparison.length > 0 ? (
                   <ResponsiveContainer width="100%" height={400}>
-                    <BarChart data={safeReportData.comparison}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Bar dataKey="Reciclagem" fill="#10b981" />
-                      <Bar dataKey="CO2" fill="#3b82f6" />
-                      <Bar dataKey="Água" fill="#06b6d4" />
-                      <Bar dataKey="Energia" fill="#f59e0b" />
+                    <BarChart data={safeReportData.comparison} margin={{ top: 10, right: 20, left: 10, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
+                      <XAxis dataKey="name" tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} />
+                      <YAxis tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'hsl(var(--popover))',
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '8px',
+                          fontSize: 12
+                        }}
+                      />
+                      <Legend iconType="circle" />
+                      <Bar dataKey="Reciclagem" fill="hsl(142, 55%, 45%)" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="CO2" fill="hsl(210, 70%, 50%)" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="Água" fill="hsl(195, 65%, 45%)" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="Energia" fill="hsl(35, 75%, 50%)" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 ) : (
-                  <div className="text-center py-20 text-muted-foreground">
-                    Sem dados para comparação
-                  </div>
+                  <div className="text-center py-20 text-muted-foreground">Sem dados para comparação</div>
                 )}
               </CardContent>
             </Card>
           </TabsContent>
         )}
 
-        <TabsContent value="materials">
+        <TabsContent value="materials" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Distribuição de Resíduos Reciclados</CardTitle>
-              <CardDescription>
-                Proporção de cada tipo de resíduo reciclado
-              </CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                <Recycle className="h-5 w-5 text-green-500" />
+                Distribuição de Resíduos Reciclados
+              </CardTitle>
+              <CardDescription>Proporção de cada tipo de resíduo reciclado</CardDescription>
             </CardHeader>
             <CardContent>
               {safeReportData.materialsData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={400}>
-                  <PieChart>
-                    <Pie
-                      data={safeReportData.materialsData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={120}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {safeReportData.materialsData.map((entry: any, index: number) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="text-center py-20 text-muted-foreground">
-                  Sem dados de resíduos reciclados
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <ResponsiveContainer width="100%" height={350}>
+                    <PieChart>
+                      <Pie
+                        data={safeReportData.materialsData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={60}
+                        outerRadius={120}
+                        paddingAngle={3}
+                        dataKey="value"
+                      >
+                        {safeReportData.materialsData.map((_: any, index: number) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} strokeWidth={0} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        formatter={(value: number) => [`${value.toFixed(1)} kg`, 'Quantidade']}
+                        contentStyle={{ 
+                          backgroundColor: 'hsl(var(--popover))',
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '8px'
+                        }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div className="flex flex-col justify-center space-y-3">
+                    {safeReportData.materialsData.map((item: any, index: number) => {
+                      const total = safeReportData.materialsData.reduce((sum: number, m: any) => sum + m.value, 0);
+                      const pct = total > 0 ? ((item.value / total) * 100).toFixed(1) : '0';
+                      return (
+                        <div key={index} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/30 transition-colors">
+                          <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium truncate">{item.name}</p>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <p className="text-sm font-bold">{item.value.toFixed(1)} kg</p>
+                            <p className="text-xs text-muted-foreground">{pct}%</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
+              ) : (
+                <div className="text-center py-20 text-muted-foreground">Sem dados de resíduos reciclados</div>
               )}
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="performance">
+        <TabsContent value="performance" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Indicadores de Desempenho</CardTitle>
-              <CardDescription>
-                Análise multidimensional do desempenho ambiental
-              </CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="h-5 w-5 text-primary" />
+                Indicadores de Desempenho
+              </CardTitle>
+              <CardDescription>Análise multidimensional do desempenho ambiental</CardDescription>
             </CardHeader>
             <CardContent>
               {safeReportData.performanceData.length > 0 ? (
@@ -742,104 +787,44 @@ export default function AdvancedReports() {
                           <stop offset="95%" stopColor="hsl(var(--chart-4))" stopOpacity={0.3}/>
                         </linearGradient>
                       </defs>
-                      <PolarGrid 
-                        strokeDasharray="3 3" 
-                        stroke="hsl(var(--muted-foreground))" 
-                        strokeOpacity={0.2}
-                      />
-                      <PolarAngleAxis 
-                        dataKey="school" 
-                        tick={{ fill: 'hsl(var(--foreground))', fontSize: 12, fontWeight: 500 }}
-                      />
-                      <PolarRadiusAxis 
-                        angle={90} 
-                        domain={[0, 100]} 
-                        tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
-                        tickFormatter={(value) => `${value}%`}
-                      />
-                      <Radar 
-                        name="Reciclagem" 
-                        dataKey="Reciclagem" 
-                        stroke="hsl(var(--chart-1))" 
-                        fill="url(#colorRecycling)" 
-                        strokeWidth={2}
-                        dot={{ fill: 'hsl(var(--chart-1))', r: 4 }}
-                        activeDot={{ r: 6 }}
-                      />
-                      <Radar 
-                        name="Redução CO2" 
-                        dataKey="Redução CO2" 
-                        stroke="hsl(var(--chart-2))" 
-                        fill="url(#colorCO2)" 
-                        strokeWidth={2}
-                        dot={{ fill: 'hsl(var(--chart-2))', r: 4 }}
-                        activeDot={{ r: 6 }}
-                      />
-                      <Radar 
-                        name="Economia Água" 
-                        dataKey="Economia Água" 
-                        stroke="hsl(var(--chart-3))" 
-                        fill="url(#colorWater)" 
-                        strokeWidth={2}
-                        dot={{ fill: 'hsl(var(--chart-3))', r: 4 }}
-                        activeDot={{ r: 6 }}
-                      />
-                      <Radar 
-                        name="Economia Energia" 
-                        dataKey="Economia Energia" 
-                        stroke="hsl(var(--chart-4))" 
-                        fill="url(#colorEnergy)" 
-                        strokeWidth={2}
-                        dot={{ fill: 'hsl(var(--chart-4))', r: 4 }}
-                        activeDot={{ r: 6 }}
-                      />
+                      <PolarGrid strokeDasharray="3 3" stroke="hsl(var(--muted-foreground))" strokeOpacity={0.2} />
+                      <PolarAngleAxis dataKey="school" tick={{ fill: 'hsl(var(--foreground))', fontSize: 12, fontWeight: 500 }} />
+                      <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }} tickFormatter={(value) => `${value}%`} />
+                      <Radar name="Reciclagem" dataKey="Reciclagem" stroke="hsl(var(--chart-1))" fill="url(#colorRecycling)" strokeWidth={2} dot={{ fill: 'hsl(var(--chart-1))', r: 4 }} activeDot={{ r: 6 }} />
+                      <Radar name="Redução CO2" dataKey="Redução CO2" stroke="hsl(var(--chart-2))" fill="url(#colorCO2)" strokeWidth={2} dot={{ fill: 'hsl(var(--chart-2))', r: 4 }} activeDot={{ r: 6 }} />
+                      <Radar name="Economia Água" dataKey="Economia Água" stroke="hsl(var(--chart-3))" fill="url(#colorWater)" strokeWidth={2} dot={{ fill: 'hsl(var(--chart-3))', r: 4 }} activeDot={{ r: 6 }} />
+                      <Radar name="Economia Energia" dataKey="Economia Energia" stroke="hsl(var(--chart-4))" fill="url(#colorEnergy)" strokeWidth={2} dot={{ fill: 'hsl(var(--chart-4))', r: 4 }} activeDot={{ r: 6 }} />
                       <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: 'hsl(var(--popover))',
-                          border: '1px solid hsl(var(--border))',
-                          borderRadius: '8px',
-                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                        }}
+                        contentStyle={{ backgroundColor: 'hsl(var(--popover))', border: '1px solid hsl(var(--border))', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
                         labelStyle={{ color: 'hsl(var(--popover-foreground))', fontWeight: 600 }}
                         formatter={(value: any) => [`${value.toFixed(1)}%`, '']}
                       />
-                      <Legend 
-                        wrapperStyle={{ paddingTop: '20px' }}
-                        iconType="circle"
-                      />
+                      <Legend wrapperStyle={{ paddingTop: '20px' }} iconType="circle" />
                     </RadarChart>
                   </ResponsiveContainer>
                   
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4 border-t border-border">
                     {safeReportData.performanceData.map((school: any, index: number) => (
                       <Card key={index} className="shadow-sm">
-                        <CardHeader className="pb-2">
-                          <CardTitle className="text-sm font-medium">{school.school}</CardTitle>
+                        <CardHeader className="pb-2 pt-3 px-3">
+                          <CardTitle className="text-sm font-semibold">{school.school}</CardTitle>
                         </CardHeader>
-                        <CardContent className="space-y-2">
+                        <CardContent className="space-y-1.5 px-3 pb-3">
                           <div className="flex justify-between text-xs">
                             <span className="text-muted-foreground">Reciclagem</span>
-                            <Badge variant="outline" className="text-xs">
-                              {school.Reciclagem.toFixed(0)}%
-                            </Badge>
+                            <Badge variant="outline" className="text-xs h-5">{school.Reciclagem.toFixed(0)}%</Badge>
                           </div>
                           <div className="flex justify-between text-xs">
-                            <span className="text-muted-foreground">CO2</span>
-                            <Badge variant="outline" className="text-xs">
-                              {school["Redução CO2"].toFixed(0)}%
-                            </Badge>
+                            <span className="text-muted-foreground">CO₂</span>
+                            <Badge variant="outline" className="text-xs h-5">{school["Redução CO2"].toFixed(0)}%</Badge>
                           </div>
                           <div className="flex justify-between text-xs">
                             <span className="text-muted-foreground">Água</span>
-                            <Badge variant="outline" className="text-xs">
-                              {school["Economia Água"].toFixed(0)}%
-                            </Badge>
+                            <Badge variant="outline" className="text-xs h-5">{school["Economia Água"].toFixed(0)}%</Badge>
                           </div>
                           <div className="flex justify-between text-xs">
                             <span className="text-muted-foreground">Energia</span>
-                            <Badge variant="outline" className="text-xs">
-                              {school["Economia Energia"].toFixed(0)}%
-                            </Badge>
+                            <Badge variant="outline" className="text-xs h-5">{school["Economia Energia"].toFixed(0)}%</Badge>
                           </div>
                         </CardContent>
                       </Card>
@@ -847,9 +832,7 @@ export default function AdvancedReports() {
                   </div>
                 </div>
               ) : (
-                <div className="text-center py-20 text-muted-foreground">
-                  Sem dados de desempenho
-                </div>
+                <div className="text-center py-20 text-muted-foreground">Sem dados de desempenho</div>
               )}
             </CardContent>
           </Card>
