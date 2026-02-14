@@ -15,7 +15,8 @@ import {
 import { 
   FileDown, TrendingUp, TrendingDown, Award, Users, 
   Droplets, Zap, Recycle, Calendar, School, Target,
-  ArrowUpRight, ArrowDownRight, Leaf, Trophy, Filter
+  ArrowUpRight, ArrowDownRight, Leaf, Trophy, Filter,
+  TreePine, Smartphone, Bus, Lightbulb, ShieldCheck, BarChart3
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from "jspdf";
@@ -587,11 +588,12 @@ export default function AdvancedReports() {
       </div>
 
       <Tabs defaultValue={isCoordinator ? "ranking" : "performance"} className="w-full">
-        <TabsList className={`grid w-full ${isCoordinator ? 'grid-cols-4' : 'grid-cols-2'} bg-card border border-border shadow-sm p-1 rounded-xl`}>
+        <TabsList className={`grid w-full ${isCoordinator ? 'grid-cols-5' : 'grid-cols-3'} bg-card border border-border shadow-sm p-1 rounded-xl`}>
           {isCoordinator && <TabsTrigger value="ranking" className="gap-1.5"><Trophy className="h-4 w-4" />Ranking</TabsTrigger>}
           {isCoordinator && <TabsTrigger value="comparison" className="gap-1.5"><Users className="h-4 w-4" />Comparação</TabsTrigger>}
           <TabsTrigger value="materials" className="gap-1.5"><Recycle className="h-4 w-4" />Resíduos</TabsTrigger>
           <TabsTrigger value="performance" className="gap-1.5"><Target className="h-4 w-4" />Desempenho</TabsTrigger>
+          <TabsTrigger value="esg" className="gap-1.5"><ShieldCheck className="h-4 w-4" />Impacto ESG</TabsTrigger>
         </TabsList>
 
         {isCoordinator && (
@@ -834,6 +836,229 @@ export default function AdvancedReports() {
               ) : (
                 <div className="text-center py-20 text-muted-foreground">Sem dados de desempenho</div>
               )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="esg" className="mt-4 space-y-6">
+          {/* Environmental Equivalencies */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Leaf className="h-5 w-5 text-primary" />
+                Equivalências Ambientais
+              </CardTitle>
+              <CardDescription>O impacto real dos seus esforços de sustentabilidade traduzido em equivalências do dia a dia</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {(() => {
+                const co2 = safeReportData.totals.co2;
+                const recycled = safeReportData.totals.recycling;
+                const treesEquiv = (co2 / 21.77).toFixed(1); // kg CO2 absorbed per tree/year
+                const smartphonesEquiv = Math.round(co2 / 0.008); // kg CO2 per charge
+                const busTripsEquiv = Math.round(co2 / 0.089); // kg CO2 per km bus
+                const ledHoursEquiv = Math.round((safeReportData.totals.energy > 0 ? safeReportData.totals.energy : recycled) / 0.01); // kWh per LED hour
+                const waterBottlesEquiv = Math.round(safeReportData.totals.water * 1000 / 0.5); // m³ to 500ml bottles
+                
+                const equivalencies = [
+                  { icon: TreePine, label: 'Árvores equivalentes', value: treesEquiv, unit: 'árvores/ano', description: 'Absorção anual de CO₂ equivalente', color: 'text-green-600', bg: 'bg-green-500/10' },
+                  { icon: Smartphone, label: 'Smartphones carregados', value: smartphonesEquiv.toLocaleString('pt-BR'), unit: 'cargas', description: 'Energia economizada em carregamentos', color: 'text-blue-600', bg: 'bg-blue-500/10' },
+                  { icon: Bus, label: 'Viagens de ônibus', value: busTripsEquiv.toLocaleString('pt-BR'), unit: 'km evitados', description: 'Emissões equivalentes em transporte público', color: 'text-orange-600', bg: 'bg-orange-500/10' },
+                  { icon: Lightbulb, label: 'Horas de LED', value: ledHoursEquiv.toLocaleString('pt-BR'), unit: 'horas', description: 'Energia para iluminação LED equivalente', color: 'text-yellow-600', bg: 'bg-yellow-500/10' },
+                  { icon: Droplets, label: 'Garrafas de água', value: waterBottlesEquiv.toLocaleString('pt-BR'), unit: 'garrafas 500ml', description: 'Volume de água monitorado', color: 'text-cyan-600', bg: 'bg-cyan-500/10' },
+                ];
+
+                return (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {equivalencies.map((eq, i) => {
+                      const Icon = eq.icon;
+                      return (
+                        <div key={i} className="flex items-start gap-4 p-4 rounded-xl border border-border bg-card hover:shadow-md transition-shadow">
+                          <div className={`w-12 h-12 rounded-xl ${eq.bg} flex items-center justify-center shrink-0`}>
+                            <Icon className={`h-6 w-6 ${eq.color}`} />
+                          </div>
+                          <div>
+                            <p className="text-2xl font-bold">{eq.value}</p>
+                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{eq.unit}</p>
+                            <p className="text-xs text-muted-foreground mt-1">{eq.description}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+            </CardContent>
+          </Card>
+
+          {/* ESG Score & Critical Analysis */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="border-l-4 border-l-green-500">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ShieldCheck className="h-5 w-5 text-green-600" />
+                  Indicador ESG Ambiental
+                </CardTitle>
+                <CardDescription>Avaliação baseada nos pilares Environmental, Social & Governance</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {(() => {
+                  const recyclingScore = Math.min(100, (safeReportData.totals.recycling / 500) * 100);
+                  const co2Score = Math.min(100, (safeReportData.totals.co2 / 200) * 100);
+                  const waterScore = safeReportData.totals.water > 0 ? Math.min(100, 50) : 0; // Base score for monitoring
+                  const energyScore = safeReportData.totals.energy > 0 ? Math.min(100, 50) : 0;
+                  const overallScore = Math.round((recyclingScore + co2Score + waterScore + energyScore) / 4);
+                  
+                  const getScoreLabel = (score: number) => {
+                    if (score >= 80) return { label: 'Excelente', color: 'text-green-600' };
+                    if (score >= 60) return { label: 'Bom', color: 'text-blue-600' };
+                    if (score >= 40) return { label: 'Regular', color: 'text-yellow-600' };
+                    return { label: 'Inicial', color: 'text-orange-600' };
+                  };
+                  
+                  const overall = getScoreLabel(overallScore);
+                  
+                  const pillars = [
+                    { label: 'Gestão de Resíduos', score: recyclingScore, icon: Recycle },
+                    { label: 'Pegada de Carbono', score: co2Score, icon: Leaf },
+                    { label: 'Gestão Hídrica', score: waterScore, icon: Droplets },
+                    { label: 'Eficiência Energética', score: energyScore, icon: Zap },
+                  ];
+
+                  return (
+                    <>
+                      <div className="text-center p-4 rounded-xl bg-muted/30">
+                        <p className="text-4xl font-bold">{overallScore}%</p>
+                        <p className={`text-sm font-semibold ${overall.color}`}>{overall.label}</p>
+                        <p className="text-xs text-muted-foreground mt-1">Índice ESG Ambiental</p>
+                      </div>
+                      <div className="space-y-3">
+                        {pillars.map((pillar, i) => {
+                          const PillarIcon = pillar.icon;
+                          return (
+                            <div key={i} className="space-y-1">
+                              <div className="flex items-center justify-between text-sm">
+                                <span className="flex items-center gap-2">
+                                  <PillarIcon className="h-3.5 w-3.5 text-muted-foreground" />
+                                  {pillar.label}
+                                </span>
+                                <span className="font-semibold">{pillar.score.toFixed(0)}%</span>
+                              </div>
+                              <Progress value={pillar.score} className="h-2" />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </>
+                  );
+                })()}
+              </CardContent>
+            </Card>
+
+            <Card className="border-l-4 border-l-primary">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-primary" />
+                  Análise Crítica & Recomendações
+                </CardTitle>
+                <CardDescription>Diagnóstico automático baseado nos dados coletados</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {(() => {
+                  const insights: { type: 'success' | 'warning' | 'info'; title: string; text: string }[] = [];
+                  const totals = safeReportData.totals;
+                  
+                  if (totals.recycling > 100) {
+                    insights.push({ type: 'success', title: 'Reciclagem Ativa', text: `Com ${totals.recycling.toFixed(1)} kg reciclados, a iniciativa demonstra engajamento significativo na gestão de resíduos sólidos.` });
+                  } else if (totals.recycling > 0) {
+                    insights.push({ type: 'warning', title: 'Reciclagem em Crescimento', text: `${totals.recycling.toFixed(1)} kg reciclados. Recomenda-se intensificar campanhas de coleta seletiva e conscientização.` });
+                  } else {
+                    insights.push({ type: 'info', title: 'Sem Dados de Reciclagem', text: 'Nenhum registro de reciclagem no período. Inicie o registro para acompanhar o progresso.' });
+                  }
+                  
+                  if (totals.co2 > 50) {
+                    insights.push({ type: 'success', title: 'Impacto Climático Positivo', text: `${totals.co2.toFixed(1)} kg de CO₂ evitados equivalem a ${(totals.co2 / 21.77).toFixed(1)} árvores absorvendo carbono por 1 ano.` });
+                  }
+                  
+                  if (totals.water > 0 && totals.energy > 0) {
+                    insights.push({ type: 'info', title: 'Monitoramento de Recursos', text: `Água: ${totals.water.toFixed(0)} m³ | Energia: ${totals.energy.toFixed(0)} kWh. O monitoramento contínuo é essencial para identificar oportunidades de redução.` });
+                  }
+                  
+                  insights.push({ type: 'info', title: 'Método de Economia', text: 'Para maximizar economias: (1) Compare consumo mensal para identificar picos, (2) Implemente metas progressivas de redução de 5-10% ao trimestre, (3) Registre todas as ações para documentar o progresso ESG.' });
+
+                  return (
+                    <div className="space-y-3">
+                      {insights.map((insight, i) => (
+                        <div key={i} className={`p-3 rounded-lg border ${
+                          insight.type === 'success' ? 'border-green-500/30 bg-green-500/5' :
+                          insight.type === 'warning' ? 'border-yellow-500/30 bg-yellow-500/5' :
+                          'border-primary/30 bg-primary/5'
+                        }`}>
+                          <p className="text-sm font-semibold">{insight.title}</p>
+                          <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{insight.text}</p>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Monthly Evolution Area Chart */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-primary" />
+                Evolução Mensal Consolidada
+              </CardTitle>
+              <CardDescription>Acompanhamento temporal de reciclagem e economia de CO₂</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {(() => {
+                const allMonthly = schools.flatMap(s => s.monthlyTrend || []);
+                const consolidated = allMonthly.reduce((acc: any, item) => {
+                  if (!acc[item.month]) acc[item.month] = { month: item.month, recycling: 0, co2: 0 };
+                  acc[item.month].recycling += item.recycling;
+                  acc[item.month].co2 += item.co2;
+                  return acc;
+                }, {});
+                const chartData = Object.values(consolidated).sort((a: any, b: any) => a.month.localeCompare(b.month));
+                
+                if (chartData.length === 0) {
+                  return <div className="text-center py-16 text-muted-foreground">Sem dados mensais para exibir</div>;
+                }
+
+                return (
+                  <ResponsiveContainer width="100%" height={350}>
+                    <AreaChart data={chartData as any[]} margin={{ top: 10, right: 20, left: 10, bottom: 5 }}>
+                      <defs>
+                        <linearGradient id="areaRecycling" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="hsl(142, 55%, 45%)" stopOpacity={0.4}/>
+                          <stop offset="95%" stopColor="hsl(142, 55%, 45%)" stopOpacity={0.05}/>
+                        </linearGradient>
+                        <linearGradient id="areaCO2" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="hsl(210, 70%, 50%)" stopOpacity={0.4}/>
+                          <stop offset="95%" stopColor="hsl(210, 70%, 50%)" stopOpacity={0.05}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" strokeOpacity={0.5} />
+                      <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
+                      <YAxis tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'hsl(var(--popover))',
+                          border: '1px solid hsl(var(--border))',
+                          borderRadius: '8px'
+                        }}
+                        formatter={(value: number, name: string) => [`${value.toFixed(1)} kg`, name]}
+                      />
+                      <Legend iconType="circle" />
+                      <Area type="monotone" dataKey="recycling" name="Reciclagem (kg)" stroke="hsl(142, 55%, 45%)" fill="url(#areaRecycling)" strokeWidth={2} />
+                      <Area type="monotone" dataKey="co2" name="CO₂ Evitado (kg)" stroke="hsl(210, 70%, 50%)" fill="url(#areaCO2)" strokeWidth={2} />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                );
+              })()}
             </CardContent>
           </Card>
         </TabsContent>
