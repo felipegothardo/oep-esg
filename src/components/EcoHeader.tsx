@@ -91,10 +91,13 @@ export default function EcoHeader({ schoolName, schoolLogo }: EcoHeaderProps = {
         {/* Theme Toggle */}
         <button
           onClick={() => setIsDark(!isDark)}
-          className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-muted/50 transition-colors flex-shrink-0"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg hover:bg-muted/50 transition-colors flex-shrink-0"
           aria-label={isDark ? 'Ativar modo claro' : 'Ativar modo escuro'}
         >
           {isDark ? <Sun className="w-4 h-4 text-yellow-400" /> : <Moon className="w-4 h-4 text-primary" />}
+          <span className="text-xs font-medium text-muted-foreground hidden sm:inline">
+            {isDark ? 'Modo Claro' : 'Modo Escuro'}
+          </span>
         </button>
 
         {/* Right - User Info */}
