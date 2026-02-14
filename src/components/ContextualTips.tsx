@@ -159,9 +159,9 @@ export default function ContextualTips({
   const currentTip = tips[currentTipIndex];
 
   return (
-    <div className="mb-3">
-      <Card className="border-0 shadow-sm bg-gradient-to-r from-primary/5 to-transparent">
-        <CardContent className="p-3">
+    <div className="mb-4">
+      <Card className="border border-accent/30 shadow-md bg-gradient-to-r from-accent/10 via-accent/5 to-transparent">
+        <CardContent className="px-5 py-4">
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-start gap-2 flex-1 min-w-0">
               <div className="flex-shrink-0 mt-0.5">{currentTip.icon}</div>
