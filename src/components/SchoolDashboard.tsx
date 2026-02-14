@@ -135,10 +135,10 @@ export default function SchoolDashboard({
       </div>
 
       {/* Painel de Controle Ambiental - Highlighted Section */}
-      <Card className="border-l-4 border-l-primary border-border">
-        <CardContent className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <Card className="border-l-4 border-l-primary border-border bg-primary/5">
+        <CardContent className="px-6 py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0">
               <BarChart3 className="h-6 w-6 text-primary" />
             </div>
             <div>
@@ -156,36 +156,36 @@ export default function SchoolDashboard({
         </CardContent>
       </Card>
 
-      {/* Tabs - compact & scrollable */}
+      {/* Tabs - DESTAQUE PRINCIPAL */}
       <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-6">
         <div className="overflow-x-auto -mx-2 px-2 pb-1">
-          <TabsList className="inline-flex w-auto gap-1 p-1.5 bg-card border border-border shadow-sm rounded-xl">
-            <TabsTrigger value="calculator" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap">
-              <Calculator className="h-3.5 w-3.5" />
+          <TabsList className="inline-flex w-full md:w-auto gap-1 p-2 bg-primary/10 border-2 border-primary/30 shadow-md rounded-xl">
+            <TabsTrigger value="calculator" className="gap-1.5 px-4 py-2.5 text-xs md:text-sm whitespace-nowrap font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md">
+              <Calculator className="h-4 w-4" />
               Calculadora
             </TabsTrigger>
-            <TabsTrigger value="consumption" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap">
-              <Droplets className="h-3.5 w-3.5" />
+            <TabsTrigger value="consumption" className="gap-1.5 px-4 py-2.5 text-xs md:text-sm whitespace-nowrap font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md">
+              <Droplets className="h-4 w-4" />
               Consumo
             </TabsTrigger>
-            <TabsTrigger value="goals" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap">
-              <Target className="h-3.5 w-3.5" />
+            <TabsTrigger value="goals" className="gap-1.5 px-4 py-2.5 text-xs md:text-sm whitespace-nowrap font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md">
+              <Target className="h-4 w-4" />
               Metas
             </TabsTrigger>
-            <TabsTrigger value="recycling-charts" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap">
-              <Recycle className="h-3.5 w-3.5" />
+            <TabsTrigger value="recycling-charts" className="gap-1.5 px-4 py-2.5 text-xs md:text-sm whitespace-nowrap font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md">
+              <Recycle className="h-4 w-4" />
               Reciclagem
             </TabsTrigger>
-            <TabsTrigger value="consumption-charts" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap">
-              <BarChart3 className="h-3.5 w-3.5" />
+            <TabsTrigger value="consumption-charts" className="gap-1.5 px-4 py-2.5 text-xs md:text-sm whitespace-nowrap font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md">
+              <BarChart3 className="h-4 w-4" />
               Gráficos
             </TabsTrigger>
-            <TabsTrigger value="history" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap">
-              <History className="h-3.5 w-3.5" />
+            <TabsTrigger value="history" className="gap-1.5 px-4 py-2.5 text-xs md:text-sm whitespace-nowrap font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md">
+              <History className="h-4 w-4" />
               Histórico
             </TabsTrigger>
-            <TabsTrigger value="resources" className="gap-1.5 px-3 py-2 text-xs md:text-sm whitespace-nowrap">
-              <Link className="h-3.5 w-3.5" />
+            <TabsTrigger value="resources" className="gap-1.5 px-4 py-2.5 text-xs md:text-sm whitespace-nowrap font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md">
+              <Link className="h-4 w-4" />
               Dicas
             </TabsTrigger>
           </TabsList>
