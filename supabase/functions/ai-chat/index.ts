@@ -39,6 +39,7 @@ serve(async (req) => {
 
     const { messages } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const LOVABLE_AI_MODEL = Deno.env.get("LOVABLE_AI_MODEL") ?? "openai/gpt-4o-mini";
     
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY não configurada");
@@ -51,7 +52,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: LOVABLE_AI_MODEL,
         messages: messages,
         temperature: 0.7,
         max_tokens: 1000,

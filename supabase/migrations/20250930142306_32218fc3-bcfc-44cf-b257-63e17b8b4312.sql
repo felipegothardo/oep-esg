@@ -9,7 +9,7 @@ CREATE TABLE public.schools (
 
 -- Inserir as escolas existentes
 INSERT INTO public.schools (name, code) VALUES
-  ('Escola Elvira Barros', 'elvira'),
+  ('Escola Elvira Brandão', 'elvira'),
   ('Escola Oswald Cruz', 'oswald'),
   ('Escola Piaget', 'piaget'),
   ('Escola Santo Antônio', 'santo-antonio');

@@ -1,10 +1,16 @@
 import { useState, useEffect } from "react";
 import { DataSyncService } from "@/services/dataSync";
+import { LocalDataSyncService } from "@/services/localDataSync";
 import { RecyclingEntry, ConsumptionEntry, ConsumptionGoal } from "./useSchoolData";
 import { useToast } from "@/hooks/use-toast";
+import { isLocalMode } from "@/lib/runtimeMode";
+
+type SyncService = DataSyncService | LocalDataSyncService;
 
 export function useCloudData() {
-  const [dataSync] = useState(() => new DataSyncService());
+  const [dataSync] = useState<SyncService>(() =>
+    isLocalMode ? new LocalDataSyncService() : new DataSyncService()
+  );
   const [recyclingEntries, setRecyclingEntries] = useState<RecyclingEntry[]>([]);
   const [consumptionEntries, setConsumptionEntries] = useState<ConsumptionEntry[]>([]);
   const [consumptionGoals, setConsumptionGoals] = useState<ConsumptionGoal[]>([]);
