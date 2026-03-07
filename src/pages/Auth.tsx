@@ -7,8 +7,18 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Leaf, Loader2 } from "lucide-react";
+import { Leaf, Loader2, Database } from "lucide-react";
 import oepLogo from "@/assets/oep-logo-new.png";
+import { isLocalMode } from "@/lib/runtimeMode";
+import {
+  getLocalSession,
+  localListSchools,
+  localSignIn,
+  localSignUp,
+  resetLocalDb,
+} from "@/services/localDb";
+
+type SchoolOption = { id: string; name: string; code: string };
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -18,39 +28,41 @@ export default function Auth() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [schoolId, setSchoolId] = useState("");
-  const [schools, setSchools] = useState<Array<{ id: string; name: string; code: string }>>([]);
+  const [schools, setSchools] = useState<SchoolOption[]>([]);
 
   useEffect(() => {
-    // Check if user is already logged in
     checkUser();
-    // Load schools list
     loadSchools();
   }, []);
 
   const checkUser = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-      navigate("/");
+    if (isLocalMode) {
+      if (getLocalSession()) navigate("/");
+      return;
     }
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (session) navigate("/");
   };
 
   const loadSchools = async () => {
+    if (isLocalMode) {
+      setSchools(localListSchools());
+      return;
+    }
+
     try {
-      console.log("Carregando escolas...");
-      const { data, error } = await supabase
-        .from("schools")
-        .select("id, name, code")
-        .order("name");
-      
+      const { data, error } = await supabase.from("schools").select("id, name, code").order("name");
+
       if (error) {
-        console.error("Erro ao carregar escolas:", error);
         toast({
           title: "Erro ao carregar escolas",
-          description: "Por favor, recarregue a página",
-          variant: "destructive"
+          description: "Recarregue a pagina e tente novamente.",
+          variant: "destructive",
         });
       } else if (data) {
-        console.log("Escolas carregadas:", data);
         setSchools(data);
       }
     } catch (err) {
@@ -61,21 +73,30 @@ export default function Auth() {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    console.log("Iniciando cadastro...", { fullName, email, schoolId });
-    
+
     if (!schoolId) {
       toast({
         title: "Erro",
-        description: "Por favor, selecione uma escola",
-        variant: "destructive"
+        description: "Selecione uma escola.",
+        variant: "destructive",
       });
       return;
     }
 
     setLoading(true);
-
     try {
+      if (isLocalMode) {
+        const result = localSignUp({ email, password, fullName, schoolId });
+        if (!result.ok) throw new Error(result.error);
+
+        toast({
+          title: "Conta criada no banco local",
+          description: "Voce foi autenticado no modo local.",
+        });
+        window.location.href = "/";
+        return;
+      }
+
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -83,49 +104,42 @@ export default function Auth() {
           emailRedirectTo: `${window.location.origin}/`,
           data: {
             full_name: fullName,
-            school_id: schoolId
-          }
-        }
+            school_id: schoolId,
+          },
+        },
       });
 
       if (error) throw error;
 
       if (data?.user) {
-        // Aguardar o trigger criar o perfil
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Garantir que o perfil foi criado com school_id
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
         const { error: profileError } = await supabase
           .from("profiles")
-          .upsert({ 
-            user_id: data.user.id,
-            full_name: fullName,
-            school_id: schoolId 
-          }, {
-            onConflict: 'user_id'
-          });
+          .upsert(
+            {
+              user_id: data.user.id,
+              full_name: fullName,
+              school_id: schoolId,
+            },
+            { onConflict: "user_id" }
+          );
 
-        if (profileError) {
-          console.error("Erro ao criar perfil:", profileError);
-          throw new Error("Erro ao criar perfil. Por favor, tente novamente.");
-        }
+        if (profileError) throw new Error("Erro ao criar perfil.");
 
         toast({
-          title: "Conta criada com sucesso!",
-          description: "Você está sendo redirecionado...",
+          title: "Conta criada com sucesso",
+          description: "Voce esta sendo redirecionado.",
         });
-        
-        // Aguardar o toast aparecer
         setTimeout(() => {
           window.location.href = "/";
-        }, 1500);
+        }, 1200);
       }
     } catch (error: any) {
-      console.error("Erro no cadastro:", error);
       toast({
         title: "Erro ao criar conta",
-        description: error.message || "Ocorreu um erro ao criar sua conta",
-        variant: "destructive"
+        description: error.message || "Falha no cadastro.",
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -138,24 +152,32 @@ export default function Auth() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
+      if (isLocalMode) {
+        const result = localSignIn(email, password);
+        if (!result.ok) throw new Error(result.error);
 
+        toast({
+          title: "Login local realizado",
+          description: "Entrando no painel.",
+        });
+        window.location.href = "/";
+        return;
+      }
+
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
 
       toast({
-        title: "Login realizado com sucesso!",
-        description: "Bem-vindo de volta!",
+        title: "Login realizado com sucesso",
+        description: "Bem-vindo de volta.",
       });
 
       window.location.href = "/";
     } catch (error: any) {
       toast({
         title: "Erro ao fazer login",
-        description: error.message || "Email ou senha incorretos",
-        variant: "destructive"
+        description: error.message || "Email ou senha incorretos.",
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -164,51 +186,80 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Subtle animated background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-success/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-20 left-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-success/10 rounded-full blur-3xl" />
       </div>
 
       <Card className="w-full max-w-lg shadow-2xl border border-border backdrop-blur-sm bg-card relative z-10">
         <CardHeader className="text-center space-y-6 pb-8">
           <div className="flex justify-center">
-            <img 
-              src={oepLogo} 
-              alt="OEP Logo" 
-              className="w-40 h-40 object-contain" 
-            />
+            <img src={oepLogo} alt="OEP Logo" className="w-40 h-40 object-contain" />
           </div>
           <div className="space-y-2">
-            <CardTitle className="text-3xl font-bold text-primary">
-              OEP Sustentável
-            </CardTitle>
+            <CardTitle className="text-3xl font-bold text-primary">OEP Sustentavel</CardTitle>
             <CardDescription className="text-sm text-muted-foreground">
-              Sistema de Gestão Ambiental Escolar
+              Sistema de Gestao Ambiental Escolar
             </CardDescription>
           </div>
         </CardHeader>
+
         <CardContent className="space-y-6">
+          {isLocalMode && (
+            <div className="rounded-lg border border-primary/30 bg-primary/5 p-3">
+              <div className="flex items-center justify-between gap-3 mb-2">
+                <p className="text-xs font-semibold text-primary flex items-center gap-1.5">
+                  <Database className="h-3.5 w-3.5" />
+                  Modo local ativo (banco em localStorage)
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    resetLocalDb();
+                    setSchools(localListSchools());
+                    toast({
+                      title: "Banco local resetado",
+                      description: "Contas e dados seed recriados.",
+                    });
+                  }}
+                >
+                  Resetar dados
+                </Button>
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                Contas seed: <span className="font-mono">elvira@oep.local</span>,{" "}
+                <span className="font-mono">oswald@oep.local</span>,{" "}
+                <span className="font-mono">piaget@oep.local</span>,{" "}
+                <span className="font-mono">santo-antonio@oep.local</span> (senha{" "}
+                <span className="font-mono">123456</span>)
+              </p>
+            </div>
+          )}
+
           <Tabs defaultValue="signin" className="w-full">
             <TabsList className="grid w-full grid-cols-2 h-11 p-1 bg-muted">
-              <TabsTrigger 
-                value="signin" 
+              <TabsTrigger
+                value="signin"
                 className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all duration-200 rounded font-medium"
               >
                 Entrar
               </TabsTrigger>
-              <TabsTrigger 
+              <TabsTrigger
                 value="signup"
                 className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all duration-200 rounded font-medium"
               >
                 Cadastrar
               </TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="signin" className="mt-6">
               <form onSubmit={handleSignIn} className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="email-signin" className="text-sm font-medium">Email</Label>
+                  <Label htmlFor="email-signin" className="text-sm font-medium">
+                    Email
+                  </Label>
                   <Input
                     id="email-signin"
                     type="email"
@@ -221,11 +272,13 @@ export default function Auth() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password-signin" className="text-sm font-medium">Senha</Label>
+                  <Label htmlFor="password-signin" className="text-sm font-medium">
+                    Senha
+                  </Label>
                   <Input
                     id="password-signin"
                     type="password"
-                    placeholder="••••••••"
+                    placeholder="********"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -233,12 +286,7 @@ export default function Auth() {
                     className="h-11"
                   />
                 </div>
-                <Button 
-                  type="submit" 
-                  size="lg"
-                  className="w-full mt-6" 
-                  disabled={loading}
-                >
+                <Button type="submit" size="lg" className="w-full mt-6" disabled={loading}>
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -253,11 +301,13 @@ export default function Auth() {
                 </Button>
               </form>
             </TabsContent>
-            
+
             <TabsContent value="signup" className="mt-6">
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="fullname" className="text-sm font-medium">Nome Completo</Label>
+                  <Label htmlFor="fullname" className="text-sm font-medium">
+                    Nome completo
+                  </Label>
                   <Input
                     id="fullname"
                     type="text"
@@ -270,19 +320,20 @@ export default function Auth() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="school" className="text-sm font-medium">Escola</Label>
+                  <Label htmlFor="school" className="text-sm font-medium">
+                    Escola
+                  </Label>
                   <select
                     id="school"
                     value={schoolId}
-                    onChange={(e) => {
-                      console.log("Escola selecionada:", e.target.value);
-                      setSchoolId(e.target.value);
-                    }}
+                    onChange={(e) => setSchoolId(e.target.value)}
                     disabled={loading}
                     required
                     className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-primary transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    <option value="" disabled>Selecione sua escola</option>
+                    <option value="" disabled>
+                      Selecione sua escola
+                    </option>
                     {schools.length > 0 ? (
                       schools.map((school) => (
                         <option key={school.id} value={school.id}>
@@ -295,7 +346,9 @@ export default function Auth() {
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email-signup" className="text-sm font-medium">Email</Label>
+                  <Label htmlFor="email-signup" className="text-sm font-medium">
+                    Email
+                  </Label>
                   <Input
                     id="email-signup"
                     type="email"
@@ -308,11 +361,13 @@ export default function Auth() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password-signup" className="text-sm font-medium">Senha</Label>
+                  <Label htmlFor="password-signup" className="text-sm font-medium">
+                    Senha
+                  </Label>
                   <Input
                     id="password-signup"
                     type="password"
-                    placeholder="Mínimo 6 caracteres"
+                    placeholder="Minimo 6 caracteres"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -321,12 +376,7 @@ export default function Auth() {
                     className="h-11"
                   />
                 </div>
-                <Button 
-                  type="submit" 
-                  size="lg"
-                  className="w-full mt-6" 
-                  disabled={loading}
-                >
+                <Button type="submit" size="lg" className="w-full mt-6" disabled={loading}>
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -335,7 +385,7 @@ export default function Auth() {
                   ) : (
                     <>
                       <Leaf className="mr-2 h-5 w-5" />
-                      Criar Conta
+                      Criar conta
                     </>
                   )}
                 </Button>
@@ -347,3 +397,4 @@ export default function Auth() {
     </div>
   );
 }
+
