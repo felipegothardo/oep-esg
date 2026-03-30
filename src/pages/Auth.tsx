@@ -154,7 +154,7 @@ export default function Auth() {
     try {
       if (isLocalMode) {
         const result = localSignIn(email, password);
-        if (!result.ok) throw new Error(result.error);
+        if (!result.ok) throw new Error((result as { ok: false; error: string }).error);
 
         toast({
           title: "Login local realizado",
