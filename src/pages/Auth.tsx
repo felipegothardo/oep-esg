@@ -229,7 +229,8 @@ export default function Auth() {
                 </Button>
               </div>
               <p className="text-[11px] text-muted-foreground">
-                Contas seed: <span className="font-mono">elvira@oep.local</span>,{" "}
+                Coordenador: <span className="font-mono">coordenador@oep.local</span> | Escolas:{" "}
+                <span className="font-mono">elvira@oep.local</span>,{" "}
                 <span className="font-mono">oswald@oep.local</span>,{" "}
                 <span className="font-mono">piaget@oep.local</span>,{" "}
                 <span className="font-mono">santo-antonio@oep.local</span> (senha{" "}
