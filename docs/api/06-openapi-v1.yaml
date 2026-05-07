@@ -1,0 +1,666 @@
+openapi: 3.1.0
+info:
+  title: API OEP Sustentável
+  version: 1.0.0
+  description: Contrato inicial da API FastAPI versionada em /api/v1.
+servers:
+  - url: https://api.oep.esg
+    description: Produção
+  - url: https://api-hml.oep.esg
+    description: Homologação
+  - url: http://localhost:8000
+    description: Local
+tags:
+  - name: Autenticação
+  - name: Escolas
+  - name: Usuários
+  - name: Reciclagem
+  - name: Consumo
+  - name: Relatórios
+  - name: IA
+security:
+  - bearerAuth: []
+paths:
+  /api/v1/autenticacao/cadastro:
+    post:
+      tags: [Autenticação]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CadastroRequest'
+      responses:
+        '201':
+          description: Usuário criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioResposta'
+        '422':
+          $ref: '#/components/responses/ErroValidacao'
+  /api/v1/autenticacao/login:
+    post:
+      tags: [Autenticação]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login efetuado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokensResposta'
+        '401':
+          $ref: '#/components/responses/NaoAutorizado'
+  /api/v1/autenticacao/atualizar-token:
+    post:
+      tags: [Autenticação]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '200':
+          description: Novo access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokensResposta'
+        '401':
+          $ref: '#/components/responses/NaoAutorizado'
+  /api/v1/autenticacao/logout:
+    post:
+      tags: [Autenticação]
+      responses:
+        '204':
+          description: Logout efetuado
+
+  /api/v1/escolas:
+    get:
+      tags: [Escolas]
+      responses:
+        '200':
+          description: Lista de escolas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Escola'
+    post:
+      tags: [Escolas]
+      summary: Somente coordinator
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EscolaCriacao'
+      responses:
+        '201':
+          description: Escola criada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Escola'
+        '403':
+          $ref: '#/components/responses/Proibido'
+
+  /api/v1/usuarios:
+    get:
+      tags: [Usuários]
+      summary: Painel administrativo (coordinator)
+      responses:
+        '200':
+          description: Lista de usuários/perfis
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UsuarioResposta'
+        '403':
+          $ref: '#/components/responses/Proibido'
+  /api/v1/usuarios/{usuario_id}/papel:
+    patch:
+      tags: [Usuários]
+      summary: Alterar papel do usuário (coordinator)
+      parameters:
+        - name: usuario_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlterarPapelRequest'
+      responses:
+        '200':
+          description: Papel atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioResposta'
+        '403':
+          $ref: '#/components/responses/Proibido'
+
+  /api/v1/reciclagem/entradas:
+    get:
+      tags: [Reciclagem]
+      parameters:
+        - name: escola_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: de
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: ate
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Entradas de reciclagem
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EntradaReciclagem'
+    post:
+      tags: [Reciclagem]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntradaReciclagemCriacao'
+      responses:
+        '201':
+          description: Entrada criada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntradaReciclagem'
+        '422':
+          $ref: '#/components/responses/ErroValidacao'
+
+  /api/v1/consumo/entradas:
+    get:
+      tags: [Consumo]
+      parameters:
+        - name: escola_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: tipo
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [agua, energia]
+      responses:
+        '200':
+          description: Entradas de consumo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EntradaConsumo'
+    post:
+      tags: [Consumo]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntradaConsumoCriacao'
+      responses:
+        '201':
+          description: Entrada criada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntradaConsumo'
+        '422':
+          $ref: '#/components/responses/ErroValidacao'
+
+  /api/v1/consumo/metas:
+    get:
+      tags: [Consumo]
+      responses:
+        '200':
+          description: Metas por escola/tipo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MetaConsumo'
+    put:
+      tags: [Consumo]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetaConsumo'
+      responses:
+        '200':
+          description: Meta atualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetaConsumo'
+
+  /api/v1/relatorios/dashboard-escola/{escola_id}:
+    get:
+      tags: [Relatórios]
+      parameters:
+        - name: escola_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Resumo por escola
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardEscola'
+
+  /api/v1/relatorios/painel-coordenacao:
+    get:
+      tags: [Relatórios]
+      summary: Somente coordinator
+      responses:
+        '200':
+          description: Consolidado multi-escola
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PainelCoordenacao'
+        '403':
+          $ref: '#/components/responses/Proibido'
+
+  /api/v1/relatorios/ranking:
+    get:
+      tags: [Relatórios]
+      responses:
+        '200':
+          description: Ranking oficial
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RankingEscola'
+
+  /api/v1/relatorios/exportar/csv:
+    get:
+      tags: [Relatórios]
+      responses:
+        '200':
+          description: Arquivo CSV
+          content:
+            text/csv:
+              schema:
+                type: string
+
+  /api/v1/relatorios/exportar/pdf:
+    get:
+      tags: [Relatórios]
+      responses:
+        '200':
+          description: Arquivo PDF
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+
+  /api/v1/ia/chat:
+    post:
+      tags: [IA]
+      summary: Endpoint desacoplado de vendor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IAChatRequest'
+      responses:
+        '200':
+          description: Resposta do assistente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IAChatResposta'
+        '429':
+          $ref: '#/components/responses/LimiteExcedido'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    NaoAutorizado:
+      description: Não autenticado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErroPadrao'
+    Proibido:
+      description: Sem permissão
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErroPadrao'
+    ErroValidacao:
+      description: Erro de validação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErroPadrao'
+    LimiteExcedido:
+      description: Limite de requisições excedido
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErroPadrao'
+  schemas:
+    ErroPadrao:
+      type: object
+      required: [codigo, mensagem]
+      properties:
+        codigo:
+          type: string
+        mensagem:
+          type: string
+        detalhes:
+          type: object
+          additionalProperties: true
+        correlation_id:
+          type: string
+    LoginRequest:
+      type: object
+      required: [email, senha]
+      properties:
+        email:
+          type: string
+          format: email
+        senha:
+          type: string
+    CadastroRequest:
+      type: object
+      required: [email, senha, nome_completo, escola_id]
+      properties:
+        email:
+          type: string
+          format: email
+        senha:
+          type: string
+          minLength: 8
+        nome_completo:
+          type: string
+        escola_id:
+          type: string
+          format: uuid
+    RefreshRequest:
+      type: object
+      required: [refresh_token]
+      properties:
+        refresh_token:
+          type: string
+    TokensResposta:
+      type: object
+      required: [access_token, refresh_token, token_type, expires_in]
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        token_type:
+          type: string
+          example: bearer
+        expires_in:
+          type: integer
+    Escola:
+      type: object
+      required: [id, nome, codigo]
+      properties:
+        id:
+          type: string
+          format: uuid
+        nome:
+          type: string
+        codigo:
+          type: string
+        cidade:
+          type: string
+          nullable: true
+        latitude:
+          type: number
+          nullable: true
+        longitude:
+          type: number
+          nullable: true
+    EscolaCriacao:
+      type: object
+      required: [nome, codigo]
+      properties:
+        nome:
+          type: string
+        codigo:
+          type: string
+        cidade:
+          type: string
+          nullable: true
+        latitude:
+          type: number
+          nullable: true
+        longitude:
+          type: number
+          nullable: true
+    UsuarioResposta:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        nome_completo:
+          type: string
+        escola_id:
+          type: string
+          format: uuid
+          nullable: true
+        papeis:
+          type: array
+          items:
+            type: string
+            enum: [coordinator, teacher, student]
+    AlterarPapelRequest:
+      type: object
+      required: [papel]
+      properties:
+        papel:
+          type: string
+          enum: [coordinator, teacher, student]
+    EntradaReciclagemCriacao:
+      type: object
+      required: [escola_id, material, quantidade, co2_evitado, data_lancamento]
+      properties:
+        escola_id:
+          type: string
+          format: uuid
+        material:
+          type: string
+        quantidade:
+          type: number
+          exclusiveMinimum: 0
+        co2_evitado:
+          type: number
+          exclusiveMinimum: 0
+        data_lancamento:
+          type: string
+          format: date
+    EntradaReciclagem:
+      allOf:
+        - $ref: '#/components/schemas/EntradaReciclagemCriacao'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            usuario_id:
+              type: string
+              format: uuid
+    EntradaConsumoCriacao:
+      type: object
+      required: [escola_id, tipo, mes_referencia, custo, consumo, data_lancamento]
+      properties:
+        escola_id:
+          type: string
+          format: uuid
+        tipo:
+          type: string
+          enum: [agua, energia]
+        mes_referencia:
+          type: string
+          pattern: "^[0-9]{4}-(0[1-9]|1[0-2])$"
+        custo:
+          type: number
+          minimum: 0
+        consumo:
+          type: number
+          minimum: 0
+        data_lancamento:
+          type: string
+          format: date
+    EntradaConsumo:
+      allOf:
+        - $ref: '#/components/schemas/EntradaConsumoCriacao'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            usuario_id:
+              type: string
+              format: uuid
+    MetaConsumo:
+      type: object
+      required: [escola_id, tipo, percentual_reducao]
+      properties:
+        escola_id:
+          type: string
+          format: uuid
+        tipo:
+          type: string
+          enum: [agua, energia]
+        percentual_reducao:
+          type: number
+          minimum: 0
+          maximum: 100
+    DashboardEscola:
+      type: object
+      properties:
+        escola_id:
+          type: string
+          format: uuid
+        total_reciclado:
+          type: number
+        total_co2_evitado:
+          type: number
+        consumo_agua:
+          type: number
+        consumo_energia:
+          type: number
+        custo_agua:
+          type: number
+        custo_energia:
+          type: number
+    RankingEscola:
+      type: object
+      properties:
+        escola_id:
+          type: string
+          format: uuid
+        nome_escola:
+          type: string
+        total_reciclado:
+          type: number
+        total_co2_evitado:
+          type: number
+        pontuacao:
+          type: number
+    PainelCoordenacao:
+      type: object
+      properties:
+        totais:
+          type: object
+          additionalProperties: true
+        ranking:
+          type: array
+          items:
+            $ref: '#/components/schemas/RankingEscola'
+        comparativo:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    IAChatRequest:
+      type: object
+      required: [mensagens]
+      properties:
+        mensagens:
+          type: array
+          items:
+            type: object
+            required: [role, content]
+            properties:
+              role:
+                type: string
+                enum: [system, user, assistant]
+              content:
+                type: string
+    IAChatResposta:
+      type: object
+      required: [resposta]
+      properties:
+        resposta:
+          type: string
+        provedor:
+          type: string

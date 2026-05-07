@@ -1,2 +1,4 @@
-export const isLocalMode = false;
+import { usarModoLocal } from "@/lib/fonteDados";
+
+export const isLocalMode = usarModoLocal;
 
